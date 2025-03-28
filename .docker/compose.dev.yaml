@@ -1,6 +1,8 @@
 services:
-  PhishingBackend:
+  phishing-backend:
     build:
-      context: ./../PhishingBackend/.docker
-      dockerfile: ../PhishingBackend/Dockerfile
-    env_file: ./../PhishingBackend/.docker/phishing_backend.dev.env
+      context: ../PhishingBackend
+      dockerfile: .docker/Dockerfile
+    env_file: ../PhishingBackend/.docker/phishing_backend.dev.env
+    ports:
+      - "8080:8080"
