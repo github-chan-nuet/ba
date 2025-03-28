@@ -1,0 +1,6 @@
+services:
+  PhishingBackend:
+    build:
+      context: ./../PhishingBackend/.docker
+      dockerfile: ../PhishingBackend/Dockerfile
+    env_file: ./../PhishingBackend/.docker/phishing_backend.dev.env

@@ -1,15 +1,17 @@
 package main
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
 )
 
 func main() {
+	listEnvironmentVariables()
 	sMux := http.NewServeMux()
 	sMux.HandleFunc("GET /api/health", getHealth)
-	addr, ok := os.LookupEnv("ORCH_WEBSERVER_ADDR")
+	addr, ok := os.LookupEnv("PHBA_WEBSERVER_ADDR")
 	if !ok {
 		addr = "localhost:8080"
 	}
@@ -21,4 +23,11 @@ func main() {
 
 func getHealth(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
+}
+
+func listEnvironmentVariables() {
+	envs := os.Environ()
+	for _, env := range envs {
+		fmt.Println(env)
+	}
 }
