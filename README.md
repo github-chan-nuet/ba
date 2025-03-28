@@ -1,5 +1,10 @@
 # Securaware
 
+## Structure
+- ./docker: application virtualization (docker) related configurations
+- api: HTTP API specification that the backend exposes in [OpenAPI format](https://swagger.io/specification/) 
+- PhishingBackend: golang source code of the Phishing Backend
+
 ## Docker compose
 ```bash
 # force rebuilding the images
