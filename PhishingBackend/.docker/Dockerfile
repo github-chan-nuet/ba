@@ -1,9 +1,8 @@
 # Golang images: https://hub.docker.com/_/golang
-FROM golang:1.24.1 as build
+FROM golang:1.24.1 AS build
 WORKDIR /app
 # copy only dependency related files in a first step to enable incremental build / improve performance
-# go.sum
-COPY go.mod ./
+COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 # CGO_ENABLED flag decides, if static or dynamic C libs should be used. 0 = static, 1 = dynamic. CGO_ENABLED=0

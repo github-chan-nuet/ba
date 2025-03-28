@@ -1,14 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
 )
 
 func main() {
+	setupDefaultLogger()
 	listEnvironmentVariables()
+
 	sMux := http.NewServeMux()
 	sMux.HandleFunc("GET /api/health", getHealth)
 	addr, ok := os.LookupEnv("PHBA_WEBSERVER_ADDR")
@@ -25,9 +26,14 @@ func getHealth(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func setupDefaultLogger() {
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+	slog.SetDefault(logger)
+}
+
 func listEnvironmentVariables() {
 	envs := os.Environ()
 	for _, env := range envs {
-		fmt.Println(env)
+		slog.Info(env)
 	}
 }
