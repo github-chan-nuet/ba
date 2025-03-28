@@ -8,6 +8,7 @@ import (
 type Email struct {
 }
 
+// https://zetcode.com/golang/email-smtp/
 func SendEmail() error {
 	from := "john.doe@example.com"
 
