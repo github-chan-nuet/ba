@@ -7,6 +7,7 @@ stages:
 build:
   stage: build
   script:
+    - cd PhishingBackend
     - go build -o /app/phishingBackend cmd/main.go
   artifacts:
     paths:
@@ -15,4 +16,5 @@ build:
 test:
   stage: test
   script:
+    - cd PhishingBackend
     - go test ./...
