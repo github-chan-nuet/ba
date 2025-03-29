@@ -4,15 +4,6 @@ stages:
   - build
   - test
 
-.goTesting:
-  image: golang:1.24.1
-  script:
-    - cd PhishingBackend
-    - go get -tool gotest.tools/gotestsum@latest
-  artifacts:
-    paths:
-      - .go/pkg/mod/
-
 build:
   stage: build
   script:
@@ -22,13 +13,13 @@ build:
     paths:
       - ./app/phishingBackend
 
+# https://gitlab.com/gitlab-org/gitlab/-/merge_requests/66787/diffs
 test:
-  #extends: .goTesting
   stage: test
   script:
     - cd PhishingBackend
-    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml
-    # -  go test ./...
+    - go get gotest.tools/gotestsum
+    - gotestsum --junitfile testResults.xml
   artifacts:
     when: always
     paths:
