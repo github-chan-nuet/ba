@@ -18,8 +18,7 @@ test:
   stage: test
   script:
     - cd PhishingBackend
-    - go get gotest.tools/gotestsum
-    - gotestsum --junitfile testResults.xml
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml
   artifacts:
     when: always
     paths:
