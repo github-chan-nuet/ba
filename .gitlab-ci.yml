@@ -19,6 +19,7 @@ build:
       - ./app/phishingBackend
 
 test:
+  extends: .goTesting
   stage: test
   script:
     - cd PhishingBackend
