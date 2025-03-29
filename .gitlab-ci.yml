@@ -32,6 +32,6 @@ test:
   artifacts:
     when: always
     paths:
-      - testResults.xml
+      - PhishingBackend/testResults.xml
     reports:
-      junit: testResults.xml
+      junit: PhishingBackend/testResults.xml
