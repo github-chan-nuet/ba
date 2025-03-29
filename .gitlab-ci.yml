@@ -32,6 +32,6 @@ test:
   artifacts:
     when: always
     paths:
-      - /**/testResults.xml
+      - testResults.xml
     reports:
-      junit: /**/testResults.xml
+      junit: testResults.xml
