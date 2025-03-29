@@ -4,6 +4,11 @@ stages:
   - build
   - test
 
+.goTesting:
+  image: golang:1.24.1
+  script:
+    - go get -tool gotest.tools/gotestsum@latest
+
 build:
   stage: build
   script:
@@ -17,4 +22,8 @@ test:
   stage: test
   script:
     - cd PhishingBackend
-    - go test ./...
+    - go tool gotestsum --junitfile testResults.xml
+    # -  go test ./...
+  artifacts:
+    paths:
+      - /**/testResults.xml
