@@ -23,11 +23,11 @@ build:
       - ./app/phishingBackend
 
 test:
-  extends: .goTesting
+  #extends: .goTesting
   stage: test
   script:
     - cd PhishingBackend
-    - go tool gotestsum --junitfile testResults.xml
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml
     # -  go test ./...
   artifacts:
     paths:
