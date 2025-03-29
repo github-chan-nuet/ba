@@ -30,5 +30,8 @@ test:
     - go run gotest.tools/gotestsum@latest --junitfile testResults.xml
     # -  go test ./...
   artifacts:
+    when: always
     paths:
       - /**/testResults.xml
+    reports:
+      junit: /**/testResults.xml
