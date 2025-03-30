@@ -6,3 +6,12 @@ services:
     env_file: ../PhishingBackend/.docker/phishing_backend.dev.env
     ports:
       - "8080:8080"
+  phishing_frontend:
+    build:
+      context: ../PhishingFrontend
+      dockerfile: .docker/dev.Dockerfile
+    volumes:
+      - "../PhishingFrontend/src:/app/src"
+      - "../PhishingFrontend/public:/app/public"
+    ports:
+      - "3000:5173"
