@@ -2,7 +2,6 @@ package email
 
 import (
 	"net/smtp"
-	"os"
 )
 
 type Email struct {
@@ -10,22 +9,22 @@ type Email struct {
 
 // https://zetcode.com/golang/email-smtp/
 func SendEmail() error {
-	from := "john.doe@example.com"
+	from := "info@securaware.ch"
 
-	user := os.Getenv("PHBA_SMTP_USER")
-	password := os.Getenv("PHBA_SMTP_PASSWORD")
+	user := "info" // os.Getenv("PHBA_SMTP_USER")
+	password := "" // os.Getenv("PHBA_SMTP_PASSWORD")
 
 	to := []string{
-		"roger.roe@example.com",
+		"patrick.scheidegger@ost.ch",
 	}
 
-	addr := "smtp.mailtrap.io:2525"
-	host := "smtp.mailtrap.io"
+	addr := "mail.securaware.ch:25"
+	host := "mail.securaware.ch"
 
-	msg := []byte("From: john.doe@example.com\r\n" +
-		"To: roger.roe@example.com\r\n" +
+	msg := []byte("From: info@securaware.ch\r\n" +
+		"To: patrick.scheidegger@ost.ch\r\n" +
 		"Subject: Test mail\r\n\r\n" +
-		"Email body\r\n")
+		"Sehr geehrte Damen und Herren. Dies ist eine Test-E-Mail und kann vernachlässigt werden. Freundliche Grüsse, Patrick.\r\n")
 
 	auth := smtp.PlainAuth("", user, password, host)
 

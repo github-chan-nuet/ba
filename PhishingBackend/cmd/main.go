@@ -4,12 +4,20 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"phishing_backend/internal/email"
 )
 
 func main() {
 	setupDefaultLogger()
-	listEnvironmentVariables()
+	// listEnvironmentVariables()
 
+	err := email.SendEmail()
+	if err != nil {
+		slog.Error(err.Error())
+	}
+}
+
+func setupHttpServer() {
 	sMux := http.NewServeMux()
 	sMux.HandleFunc("GET /api/health", getHealth)
 	addr, ok := os.LookupEnv("PHBA_WEBSERVER_ADDR")
