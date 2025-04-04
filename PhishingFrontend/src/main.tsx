@@ -13,17 +13,23 @@ import Courses from './Dashboard/Courses.tsx'
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '',
     element: <MarketingLayout />
   },
   {
-    path: '/dashboard',
+    path: 'dashboard',
     element: <DashboardLayout />,
     children: [
       { index: true, element: <Home /> },
-      { path: "courses", element: <Courses /> }
+      {
+        path: "courses",
+        children: [
+          { index: true, element: <Courses /> },
+          { path: ":course/lectures/:lecture", element: <Courses /> }
+        ]
+      }
     ]
-  }
+  },
 ])
 
 createRoot(document.getElementById('root')!).render(
