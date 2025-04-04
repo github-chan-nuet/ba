@@ -10,6 +10,7 @@ import MarketingLayout from './Marketing/Layout.tsx'
 import DashboardLayout from './Dashboard/Layout.tsx'
 import Home from './Dashboard/Home.tsx'
 import Courses from './Dashboard/Courses.tsx'
+import Lesson from './Dashboard/Lesson.tsx'
 
 const router = createBrowserRouter([
   {
@@ -25,7 +26,7 @@ const router = createBrowserRouter([
         path: "courses",
         children: [
           { index: true, element: <Courses /> },
-          { path: ":course/lectures/:lecture", element: <Courses /> }
+          { path: ":course/lectures/:lecture", element: <Lesson /> }
         ]
       }
     ]
