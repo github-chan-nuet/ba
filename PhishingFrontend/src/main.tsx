@@ -6,17 +6,31 @@ import {
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
+import MarketingLayout from './Marketing/Layout.tsx'
+import DashboardLayout from './Dashboard/Layout.tsx'
+import Home from './Dashboard/Home.tsx'
+import Courses from './Dashboard/Courses.tsx'
+import Lesson from './Dashboard/Lesson.tsx'
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <App />
+    path: '',
+    element: <MarketingLayout />
   },
   {
-    path: '/hello',
-    element: <div>Hello World!</div>
-  }
+    path: 'dashboard',
+    element: <DashboardLayout />,
+    children: [
+      { index: true, element: <Home /> },
+      {
+        path: "courses",
+        children: [
+          { index: true, element: <Courses /> },
+          { path: ":course/lectures/:lecture", element: <Lesson /> }
+        ]
+      }
+    ]
+  },
 ])
 
 createRoot(document.getElementById('root')!).render(
