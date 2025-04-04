@@ -1,11 +1,15 @@
 services:
-  phishing-backend:
+  phishing_backend:
     build:
       context: ../PhishingBackend
       dockerfile: .docker/Dockerfile
     env_file: ../PhishingBackend/.docker/phishing_backend.dev.env
     ports:
       - "8080:8080"
+    depends_on:
+      phishing_mail_storage:
+        condition: service_healthy
+
   phishing_frontend:
     build:
       context: ../PhishingFrontend
@@ -15,3 +19,25 @@ services:
       - "../PhishingFrontend/public:/app/public"
     ports:
       - "3000:5173"
+    depends_on:
+      - phishing-backend
+
+  phishing_mail_storage:
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: testdb
+    volumes:
+      - phishingMailStorage:/var/lib/postgresql/data
+    # https://stackoverflow.com/questions/35069027/docker-wait-for-postgresql-to-be-running
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d testdb -U testuser" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+# https://stackoverflow.com/a/45606440/12828371
+volumes:
+  phishingMailStorage:

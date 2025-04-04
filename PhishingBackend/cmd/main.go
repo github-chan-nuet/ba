@@ -4,17 +4,16 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
-	"phishing_backend/internal/email"
+	_ "phishing_backend/internal/domain/db" // include package so that init function is called
 )
 
 func main() {
-	setupDefaultLogger()
 	// listEnvironmentVariables()
-
-	err := email.SendEmail()
-	if err != nil {
-		slog.Error(err.Error())
-	}
+	//err := email.SendEmail()
+	//if err != nil {
+	//	slog.Error(err.Error())
+	//}
+	setupHttpServer()
 }
 
 func setupHttpServer() {
@@ -33,6 +32,10 @@ func setupHttpServer() {
 func getHealth(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.WriteHeader(http.StatusOK)
+}
+
+func init() {
+	setupDefaultLogger()
 }
 
 func setupDefaultLogger() {

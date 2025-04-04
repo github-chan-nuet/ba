@@ -39,6 +39,13 @@ paths:
       summary: TODO
       description: TODO
       operationId: createLessonCompletion
+      parameters:
+        - in: path
+          name: courseId
+          schema:
+            type: integer
+          required: true
+          description: Id of the course
       requestBody:
         content:
           application/json:
