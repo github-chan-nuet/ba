@@ -9,6 +9,9 @@ services:
     depends_on:
       phishing_mail_storage:
         condition: service_healthy
+    networks:
+      - frontend___backend
+      - backend___db
 
   phishing_frontend:
     build:
@@ -20,7 +23,9 @@ services:
     ports:
       - "3000:5173"
     depends_on:
-      - phishing-backend
+      - phishing_backend
+    networks:
+      - frontend___backend
 
   phishing_mail_storage:
     image: postgres:latest
@@ -37,7 +42,19 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - backend___db
+
 
 # https://stackoverflow.com/a/45606440/12828371
 volumes:
   phishingMailStorage:
+
+
+# https://docs.docker.com/compose/how-tos/networking/
+networks:
+  backend___db:
+    driver: bridge
+
+  frontend___backend:
+    driver: bridge
