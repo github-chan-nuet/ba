@@ -5,7 +5,7 @@ import (
 	"github.com/huandu/go-sqlbuilder"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"os/user"
+	"phishing_backend/internal/domain/model"
 
 	// needed to import PG driver
 	//_ "github.com/lib/pq"
@@ -92,7 +92,7 @@ func initGormAndDatabaseConnection() {
 }
 
 func createTables() {
-	if err := db.AutoMigrate(&user.User{}); err != nil {
+	if err := db.AutoMigrate(&model.User{}); err != nil {
 		slog.Error("Could not create table", "error", err)
 	}
 }

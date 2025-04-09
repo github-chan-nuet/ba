@@ -29,12 +29,12 @@ type AuthenticatorImpl struct {
 
 func (a *AuthenticatorImpl) Authenticate(username, password string) (string, error) {
 	// https://de.wikipedia.org/wiki/PBKDF2
-	hashedPassword, err := pbkdf2.Key(sha256.New, password, []byte(pbkdf2Salt), mustAtoi(pbkdf2Iter), 64)
+	hashedPassword, err := pbkdf2.Key(sha256.New, password, []byte(pbkdf2Salt), mustAtoi(pbkdf2Iter), 32)
 	if err != nil {
 		slog.Error("Could not hash password", "err", err)
 		return "", err
 	}
-	user, err := a.UserRepository.GetByUsernameAndPassword(username, string(hashedPassword))
+	user, err := a.UserRepository.GetByUsernameAndPassword(username, hashedPassword)
 	if err != nil {
 		return "", err
 	}
