@@ -10,6 +10,7 @@ require (
 	github.com/getkin/kin-openapi v0.127.0 // indirect
 	github.com/go-openapi/jsonpointer v0.21.0 // indirect
 	github.com/go-openapi/swag v0.23.0 // indirect
+	github.com/golang-jwt/jwt/v5 v5.2.2 // indirect
 	github.com/google/uuid v1.5.0 // indirect
 	github.com/huandu/go-sqlbuilder v1.35.0 // indirect
 	github.com/huandu/xstrings v1.4.0 // indirect

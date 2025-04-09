@@ -5,6 +5,7 @@ import (
 	"github.com/huandu/go-sqlbuilder"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"os/user"
 
 	// needed to import PG driver
 	//_ "github.com/lib/pq"
@@ -31,17 +32,18 @@ func (d *dbConfig) getConnectionString() string {
 
 func newDbConfig() *dbConfig {
 	return &dbConfig{
-		host:     os.Getenv("PHBA_WEBSERVER_DB_HOST"),
-		port:     os.Getenv("PHBA_WEBSERVER_DB_PORT"),
-		user:     os.Getenv("PHBA_WEBSERVER_DB_USER"),
-		password: os.Getenv("PHBA_WEBSERVER_DB_PASSWORD"),
-		dbname:   os.Getenv("PHBA_WEBSERVER_DB_NAME"),
+		host:     os.Getenv("PHBA_DB_HOST"),
+		port:     os.Getenv("PHBA_DB_PORT"),
+		user:     os.Getenv("PHBA_DB_USER"),
+		password: os.Getenv("PHBA_DB_PASSWORD"),
+		dbname:   os.Getenv("PHBA_DB_NAME"),
 	}
 }
 
 func init() {
 	sqlbuilder.DefaultFlavor = dbFlavor
 	initGormAndDatabaseConnection()
+	createTables()
 }
 
 //func initDatabaseConnection() {
@@ -69,7 +71,9 @@ func initGormAndDatabaseConnection() {
 	slog.Info("Trying to connect to DB", "connectionString", connString)
 
 	var err error
-	db, err = gorm.Open(postgres.Open(connString), &gorm.Config{})
+	db, err = gorm.Open(postgres.Open(connString), &gorm.Config{
+		PrepareStmt: true,
+	})
 	if err != nil {
 		slog.Error("Could not connect to db", "error", err)
 		os.Exit(1)
@@ -85,4 +89,10 @@ func initGormAndDatabaseConnection() {
 		os.Exit(1)
 	}
 	slog.Info("Connection to db successful")
+}
+
+func createTables() {
+	if err := db.AutoMigrate(&user.User{}); err != nil {
+		slog.Error("Could not create table", "error", err)
+	}
 }
