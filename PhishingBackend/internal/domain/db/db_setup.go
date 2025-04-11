@@ -69,7 +69,7 @@ func initGormAndDatabaseConnection() {
 }
 
 func createTables() {
-	if err := db.AutoMigrate(&model.User{}); err != nil {
+	if err := db.AutoMigrate(&model.User{}, &model.CourseCompletion{}); err != nil {
 		slog.Error("Could not create table", "error", err)
 	}
 }

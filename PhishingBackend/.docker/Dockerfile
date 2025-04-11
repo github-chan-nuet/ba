@@ -1,9 +1,9 @@
 # Golang images: https://hub.docker.com/_/golang
 FROM golang:1.24.1 AS build
 WORKDIR /app
-# create caches for external (go mods) and internal go code.
-RUN go env -w GOCACHE=/go-cache
-RUN go env -w GOMODCACHE=/gomod-cache
+# create go specific environment variables to cache build artificats for build optimization
+ENV GOCACHE=/go-cache
+ENV GOMODCACHE=/gomod-cache
 # copy only dependency related files in a first step to enable incremental build / improve performance
 COPY go.mod go.sum ./
 RUN --mount=type=cache,target=/gomod-cache go mod download

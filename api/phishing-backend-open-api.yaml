@@ -15,8 +15,7 @@ tags:
 paths:
   "/auth/login":
     post:
-      summary: TODO
-      description: TODO
+      summary: Authenticates and authorizes the user and returns a JWT token if the authentication was successful.
       operationId: loginAndReturnJwtToken
       requestBody:
         content:

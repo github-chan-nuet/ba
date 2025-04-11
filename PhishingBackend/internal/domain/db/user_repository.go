@@ -1,6 +1,8 @@
 package db
 
 import (
+	"errors"
+	"gorm.io/gorm"
 	"log/slog"
 	"phishing_backend/internal/domain/model"
 )
@@ -19,6 +21,9 @@ func (u *UserRepositoryImpl) GetByUsernameAndPassword(username string, password 
 	result := db.Where("name = ? AND password = ?", username, password).First(user)
 	if result.Error != nil {
 		slog.Error("Could not get user by username and password", "err", result.Error)
+		if errors.As(result.Error, &gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
 		return nil, result.Error
 	}
 	return user, nil

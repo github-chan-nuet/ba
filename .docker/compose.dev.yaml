@@ -36,6 +36,8 @@ services:
       POSTGRES_DB: testdb
     volumes:
       - phishingMailStorage:/var/lib/postgresql/data
+      # https://medium.com/@aedemirsen/execute-sql-commands-at-postgresql-db-startup-with-docker-2be0abadec48
+      - ./create-extension.sql:/docker-entrypoint-initdb.d/create-extension.sql
     # https://stackoverflow.com/questions/35069027/docker-wait-for-postgresql-to-be-running
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -d testdb -U testuser" ]
