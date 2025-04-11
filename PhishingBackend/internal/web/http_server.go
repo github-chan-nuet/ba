@@ -19,4 +19,5 @@ func SetupHttpServer() {
 func setupEndpoints(sMux *http.ServeMux) {
 	sMux.HandleFunc("GET /api/health", getHealth)
 	sMux.HandleFunc("POST /api/auth/login", loginAndReturnJwtToken)
+	sMux.HandleFunc("POST /api/courses/{courseId}/completions", createLessonCompletion)
 }

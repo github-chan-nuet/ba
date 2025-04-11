@@ -13,6 +13,7 @@ var courseCompletionService courseCompletion.Service = &courseCompletion.Service
 }
 
 func createLessonCompletion(w http.ResponseWriter, r *http.Request) {
+	courseId := r.PathValue("courseId")
 	var lesson api.Lesson
 	err := json.NewDecoder(r.Body).Decode(&lesson)
 	if err != nil {
