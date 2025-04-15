@@ -3,10 +3,12 @@ import { Home24Regular, Lightbulb24Filled, MailWarning24Regular, Trophy24Regular
 import { ReactElement } from "react";
 import { Link } from "react-router";
 
+import NavBarStyles from './NavBar.module.scss';
+
 function NavBar() {  
   return (
-    <div className="Dashboard__navBar">
-      <div className="Dashboard__navBarItems">
+    <div className={NavBarStyles.NavBar}>
+      <div className={NavBarStyles.NavBar__items}>
         <NavBarItem
           label="Securaware"
           icon={<Home24Regular />}
@@ -43,10 +45,10 @@ function NavBarItem({ href, label, icon }: NavBarItemProps) {
   return (
     <Link
       to={href}
-      className="Dashboard__navBarItem"
+      className={NavBarStyles.NavBar__item}
     >
       {icon}
-      <span className="Dashboard__navBarItem--label">{label}</span>
+      <span className={NavBarStyles.NavBar__itemLabel}>{label}</span>
     </Link>
   )
 }

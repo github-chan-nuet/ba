@@ -1,0 +1,26 @@
+.NavBar {
+  background-color: var(--colorNeutralBackground3);
+  width: 95px;
+  height: 100%;
+  padding-block: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: .5rem .25rem;
+    gap: .125rem;
+  }
+
+  &__itemLabel {
+    text-align: center;
+  }
+}

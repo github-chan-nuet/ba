@@ -5,6 +5,7 @@ import {
 
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import './reset.scss'
 import './index.scss'
 import MarketingLayout from './Marketing/Layout.tsx'
 import DashboardLayout from './Dashboard/Layout.tsx'
