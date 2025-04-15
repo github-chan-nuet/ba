@@ -5,23 +5,8 @@ import { Link } from "react-router";
 
 function NavBar() {  
   return (
-    <div
-      style={{
-        backgroundColor: tokens.colorNeutralBackground3,
-        width: 95,
-        height: '100%',
-        paddingBlock: 24,
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between'
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
+    <div className="Dashboard__navBar">
+      <div className="Dashboard__navBarItems">
         <NavBarItem
           label="Securaware"
           icon={<Home24Regular />}
@@ -58,16 +43,10 @@ function NavBarItem({ href, label, icon }: NavBarItemProps) {
   return (
     <Link
       to={href}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        padding: '8px 4px',
-        gap: 2
-      }}
+      className="Dashboard__navBarItem"
     >
       {icon}
-      <span style={{ textAlign: 'center' }}>{label}</span>
+      <span className="Dashboard__navBarItem--label">{label}</span>
     </Link>
   )
 }

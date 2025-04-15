@@ -4,13 +4,7 @@ import NavBar from './components/Navbar.tsx';
 function Layout() {
   return (
     <FluentProvider theme={webLightTheme}>
-      <div
-        style={{
-          display: 'flex',
-          height: '100vh',
-          overflow: 'hidden'
-        }}
-      >
+      <div className="Dashboard__container">
         <NavBar />
         <div></div>
       </div>

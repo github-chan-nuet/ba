@@ -8,7 +8,14 @@ RUN npm install
 # Copy the entire project
 COPY . .
 
-# Expose the port the app runs on
-EXPOSE 5173
+# Build the React app
+RUN npm run build
 
-CMD ["npm", "run", "dev"]
+# Use Nginx for serving the static files
+FROM nginx:alpine
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Expose the port the app runs on
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
