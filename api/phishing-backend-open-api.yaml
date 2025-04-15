@@ -339,4 +339,8 @@ components:
             type: integer
 
     ExamValidation:
+      type: object
+      properties:
+        placeholder:
+          type: string
 
