@@ -10,17 +10,17 @@ import (
 var _ UserRepository = (*UserRepositoryImpl)(nil)
 
 type UserRepository interface {
-	GetByUsernameAndPassword(username string, password []byte) (*model.User, error)
+	GetByEmailAndPassword(username string, password []byte) (*model.User, error)
 }
 
 type UserRepositoryImpl struct {
 }
 
-func (u *UserRepositoryImpl) GetByUsernameAndPassword(username string, password []byte) (*model.User, error) {
+func (u *UserRepositoryImpl) GetByEmailAndPassword(email string, password []byte) (*model.User, error) {
 	user := &model.User{}
-	result := db.Where("name = ? AND password = ?", username, password).First(user)
+	result := db.Where("email = ? AND password = ?", email, password).First(user)
 	if result.Error != nil {
-		slog.Error("Could not get user by username and password", "err", result.Error)
+		slog.Error("Could not get user by email and password", "err", result.Error)
 		if errors.As(result.Error, &gorm.ErrRecordNotFound) {
 			return nil, nil
 		}

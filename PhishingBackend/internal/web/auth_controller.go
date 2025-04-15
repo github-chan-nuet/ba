@@ -19,7 +19,7 @@ func loginAndReturnJwtToken(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	jwtToken, err := authenticator.Authenticate(auth.Username, auth.Password)
+	jwtToken, err := authenticator.Authenticate(auth.Email, auth.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))

@@ -6,11 +6,38 @@
 package api
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
 	"github.com/oapi-codegen/runtime"
+	openapi_types "github.com/oapi-codegen/runtime/types"
 )
+
+const (
+	BearerAuthScopes = "bearerAuth.Scopes"
+)
+
+// Defines values for QuestionType.
+const (
+	MultipleChoice QuestionType = "multiple_choice"
+	SingleChoice   QuestionType = "single_choice"
+)
+
+// Answer defines model for Answer.
+type Answer struct {
+	Answer *string `json:"answer,omitempty"`
+	Id     *int    `json:"id,omitempty"`
+}
+
+// Exam defines model for Exam.
+type Exam = []Question
+
+// ExamCompletion defines model for ExamCompletion.
+type ExamCompletion = []QuestionCompletion
+
+// ExamValidation defines model for ExamValidation.
+type ExamValidation = map[string]interface{}
 
 // ExperienceGain defines model for ExperienceGain.
 type ExperienceGain struct {
@@ -21,29 +48,98 @@ type ExperienceGain struct {
 
 // Lesson defines model for Lesson.
 type Lesson struct {
-	LessonId int64 `json:"lessonId"`
+	LessonId openapi_types.UUID `json:"lessonId"`
+}
+
+// Question defines model for Question.
+type Question struct {
+	Answers  *[]Answer     `json:"answers,omitempty"`
+	Id       *int          `json:"id,omitempty"`
+	Question *string       `json:"question,omitempty"`
+	Type     *QuestionType `json:"type,omitempty"`
+}
+
+// QuestionType defines model for Question.Type.
+type QuestionType string
+
+// QuestionCompletion defines model for QuestionCompletion.
+type QuestionCompletion struct {
+	Answers    *[]int `json:"answers,omitempty"`
+	QuestionId *int   `json:"questionId,omitempty"`
+}
+
+// User defines model for User.
+type User struct {
+	Email           *string `json:"email,omitempty"`
+	Firstname       *string `json:"firstname,omitempty"`
+	Lastname        *string `json:"lastname,omitempty"`
+	Level           *int    `json:"level,omitempty"`
+	Password        *string `json:"password,omitempty"`
+	TotalExperience *int    `json:"totalExperience,omitempty"`
 }
 
 // UserAuthentication defines model for UserAuthentication.
 type UserAuthentication struct {
+	Email    string `json:"email"`
 	Password string `json:"password"`
-	Username string `json:"username"`
 }
 
-// LoginAndReturnJwtTokenJSONRequestBody defines body for LoginAndReturnJwtToken for application/json ContentType.
-type LoginAndReturnJwtTokenJSONRequestBody = UserAuthentication
+// UserPatchModel defines model for UserPatchModel.
+type UserPatchModel struct {
+	Email     *string `json:"email,omitempty"`
+	Firstname *string `json:"firstname,omitempty"`
+	Lastname  *string `json:"lastname,omitempty"`
+	Password  *string `json:"password,omitempty"`
+}
+
+// UserPostModel defines model for UserPostModel.
+type UserPostModel struct {
+	Email           string `json:"email"`
+	Firstname       string `json:"firstname"`
+	Lastname        string `json:"lastname"`
+	Level           *int   `json:"level,omitempty"`
+	Password        string `json:"password"`
+	TotalExperience *int   `json:"totalExperience,omitempty"`
+}
 
 // CreateLessonCompletionJSONRequestBody defines body for CreateLessonCompletion for application/json ContentType.
 type CreateLessonCompletionJSONRequestBody = Lesson
 
+// CompleteExamJSONRequestBody defines body for CompleteExam for application/json ContentType.
+type CompleteExamJSONRequestBody = ExamCompletion
+
+// GetUsersJSONRequestBody defines body for GetUsers for application/json ContentType.
+type GetUsersJSONRequestBody = UserPostModel
+
+// LoginAndReturnJwtTokenJSONRequestBody defines body for LoginAndReturnJwtToken for application/json ContentType.
+type LoginAndReturnJwtTokenJSONRequestBody = UserAuthentication
+
+// UpdateUserJSONRequestBody defines body for UpdateUser for application/json ContentType.
+type UpdateUserJSONRequestBody = UserPatchModel
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// TODO
-	// (POST /auth/login)
-	LoginAndReturnJwtToken(w http.ResponseWriter, r *http.Request)
-	// TODO
 	// (POST /courses/{courseId}/completions)
 	CreateLessonCompletion(w http.ResponseWriter, r *http.Request, courseId int)
+	// TODO
+	// (GET /exams/{examId})
+	GetExamsExamId(w http.ResponseWriter, r *http.Request, examId openapi_types.UUID)
+	// TODO
+	// (POST /exams/{examId}/completions)
+	CompleteExam(w http.ResponseWriter, r *http.Request, examId openapi_types.UUID)
+	// todo
+	// (POST /users)
+	GetUsers(w http.ResponseWriter, r *http.Request)
+	// Authenticates and authorizes the user and returns a JWT token if the authentication was successful.
+	// (POST /users/login)
+	LoginAndReturnJwtToken(w http.ResponseWriter, r *http.Request)
+	// todo
+	// (GET /users/{userId})
+	GetUser(w http.ResponseWriter, r *http.Request, userId openapi_types.UUID)
+	// todo
+	// (PATCH /users/{userId})
+	UpdateUser(w http.ResponseWriter, r *http.Request, userId openapi_types.UUID)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -54,20 +150,6 @@ type ServerInterfaceWrapper struct {
 }
 
 type MiddlewareFunc func(http.Handler) http.Handler
-
-// LoginAndReturnJwtToken operation middleware
-func (siw *ServerInterfaceWrapper) LoginAndReturnJwtToken(w http.ResponseWriter, r *http.Request) {
-
-	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.LoginAndReturnJwtToken(w, r)
-	}))
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		handler = middleware(handler)
-	}
-
-	handler.ServeHTTP(w, r)
-}
 
 // CreateLessonCompletion operation middleware
 func (siw *ServerInterfaceWrapper) CreateLessonCompletion(w http.ResponseWriter, r *http.Request) {
@@ -83,8 +165,166 @@ func (siw *ServerInterfaceWrapper) CreateLessonCompletion(w http.ResponseWriter,
 		return
 	}
 
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.CreateLessonCompletion(w, r, courseId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetExamsExamId operation middleware
+func (siw *ServerInterfaceWrapper) GetExamsExamId(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "examId" -------------
+	var examId openapi_types.UUID
+
+	err = runtime.BindStyledParameterWithOptions("simple", "examId", r.PathValue("examId"), &examId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "examId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetExamsExamId(w, r, examId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// CompleteExam operation middleware
+func (siw *ServerInterfaceWrapper) CompleteExam(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "examId" -------------
+	var examId openapi_types.UUID
+
+	err = runtime.BindStyledParameterWithOptions("simple", "examId", r.PathValue("examId"), &examId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "examId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.CompleteExam(w, r, examId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetUsers operation middleware
+func (siw *ServerInterfaceWrapper) GetUsers(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetUsers(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// LoginAndReturnJwtToken operation middleware
+func (siw *ServerInterfaceWrapper) LoginAndReturnJwtToken(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.LoginAndReturnJwtToken(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetUser operation middleware
+func (siw *ServerInterfaceWrapper) GetUser(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "userId" -------------
+	var userId openapi_types.UUID
+
+	err = runtime.BindStyledParameterWithOptions("simple", "userId", r.PathValue("userId"), &userId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "userId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetUser(w, r, userId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// UpdateUser operation middleware
+func (siw *ServerInterfaceWrapper) UpdateUser(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "userId" -------------
+	var userId openapi_types.UUID
+
+	err = runtime.BindStyledParameterWithOptions("simple", "userId", r.PathValue("userId"), &userId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "userId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.UpdateUser(w, r, userId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -214,8 +454,13 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 		ErrorHandlerFunc:   options.ErrorHandlerFunc,
 	}
 
-	m.HandleFunc("POST "+options.BaseURL+"/auth/login", wrapper.LoginAndReturnJwtToken)
 	m.HandleFunc("POST "+options.BaseURL+"/courses/{courseId}/completions", wrapper.CreateLessonCompletion)
+	m.HandleFunc("GET "+options.BaseURL+"/exams/{examId}", wrapper.GetExamsExamId)
+	m.HandleFunc("POST "+options.BaseURL+"/exams/{examId}/completions", wrapper.CompleteExam)
+	m.HandleFunc("POST "+options.BaseURL+"/users", wrapper.GetUsers)
+	m.HandleFunc("POST "+options.BaseURL+"/users/login", wrapper.LoginAndReturnJwtToken)
+	m.HandleFunc("GET "+options.BaseURL+"/users/{userId}", wrapper.GetUser)
+	m.HandleFunc("PATCH "+options.BaseURL+"/users/{userId}", wrapper.UpdateUser)
 
 	return m
 }

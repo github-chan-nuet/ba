@@ -12,6 +12,7 @@ import (
 	"phishing_backend/internal/domain/db"
 	"phishing_backend/internal/domain/model"
 	"strconv"
+	"time"
 )
 
 var (
@@ -22,8 +23,11 @@ var (
 )
 
 const (
-	jwtIdKey   = "id"
-	jwtNameKey = "name"
+	jwtUserIdKey = "id"
+	// https://www.rfc-editor.org/rfc/rfc7519#section-4.1.6
+	jwtIssuedAtKey = "iat"
+	// https://www.rfc-editor.org/rfc/rfc7519#section-4.1.4
+	jwtExpirationTimeKey = "exp"
 )
 
 type Authenticator interface {
@@ -36,6 +40,9 @@ type AuthenticatorImpl struct {
 }
 
 func (a *AuthenticatorImpl) GetUser(rawToken string) (*model.User, error) {
+	if rawToken == "" {
+		return nil, errors.New("no token present")
+	}
 	token, err := jwt.Parse(rawToken, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -45,21 +52,26 @@ func (a *AuthenticatorImpl) GetUser(rawToken string) (*model.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	if claims, ok := token.Claims.(jwt.MapClaims); ok {
-		userId := claims[jwtIdKey]
-		return &model.User{ID: uuid.MustParse(userId.(string))}, nil
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil, errors.New("invalid token")
 	}
-	return nil, errors.New("invalid token")
+	exp, _ := claims.GetExpirationTime()
+	if time.Now().UTC().After(exp.UTC()) {
+		return nil, errors.New("token expired")
+	}
+	userId := claims[jwtUserIdKey]
+	return &model.User{ID: uuid.MustParse(userId.(string))}, nil
 }
 
-func (a *AuthenticatorImpl) Authenticate(username, password string) (string, error) {
+func (a *AuthenticatorImpl) Authenticate(email, password string) (string, error) {
 	// https://de.wikipedia.org/wiki/PBKDF2
 	hashedPassword, err := pbkdf2.Key(sha256.New, password, []byte(pbkdf2Salt), mustAtoi(pbkdf2Iter), 32)
 	if err != nil {
 		slog.Error("Could not hash password", "err", err)
 		return "", err
 	}
-	user, err := a.UserRepository.GetByUsernameAndPassword(username, hashedPassword)
+	user, err := a.UserRepository.GetByEmailAndPassword(email, hashedPassword)
 	if err != nil {
 		return "", err
 	}
@@ -74,10 +86,13 @@ func (a *AuthenticatorImpl) Authenticate(username, password string) (string, err
 }
 
 func (a *AuthenticatorImpl) createJwtToken(user *model.User) (string, error) {
+	currentTime := time.Now().UTC()
+	inOneWeek := currentTime.AddDate(0, 0, 7)
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		jwt.MapClaims{
-			jwtIdKey:   user.ID.String(),
-			jwtNameKey: user.Name,
+			jwtUserIdKey:         user.ID.String(),
+			jwtIssuedAtKey:       jwt.NewNumericDate(currentTime),
+			jwtExpirationTimeKey: jwt.NewNumericDate(inOneWeek),
 		})
 	signedToken, err := t.SignedString([]byte(jwtKey))
 	if err != nil {
