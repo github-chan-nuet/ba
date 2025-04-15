@@ -21,10 +21,12 @@ const router = createBrowserRouter([
   {
     path: 'dashboard',
     element: <DashboardLayout />,
+    handle: 'Securaware',
     children: [
       { index: true, element: <Home /> },
       {
         path: "courses",
+        handle: 'Online-Kurse',
         children: [
           { index: true, element: <Courses /> },
           { path: ":course/lectures/:lecture", element: <Lesson /> }

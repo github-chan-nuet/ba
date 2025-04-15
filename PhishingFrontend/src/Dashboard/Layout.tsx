@@ -1,16 +1,17 @@
 import { FluentProvider, webLightTheme } from '@fluentui/react-components';
 import NavBar from './components/Navbar.tsx';
-import { Outlet, useMatches } from 'react-router';
+import { Outlet } from 'react-router';
+import Breadcrumbs from './components/Breadrumbs.tsx';
 
 function Layout() {
-  const matches = useMatches();
-  console.log(matches);
-
   return (
     <FluentProvider theme={webLightTheme}>
       <div className="Dashboard__container">
         <NavBar />
         <div className="Dashboard__content">
+          <div className="Dashboard__header">
+            <Breadcrumbs />
+          </div>
           <Outlet />
         </div>
       </div>
