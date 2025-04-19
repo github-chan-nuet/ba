@@ -94,12 +94,10 @@ type UserPatchModel struct {
 
 // UserPostModel defines model for UserPostModel.
 type UserPostModel struct {
-	Email           string `json:"email"`
-	Firstname       string `json:"firstname"`
-	Lastname        string `json:"lastname"`
-	Level           *int   `json:"level,omitempty"`
-	Password        string `json:"password"`
-	TotalExperience *int   `json:"totalExperience,omitempty"`
+	Email     string `json:"email"`
+	Firstname string `json:"firstname"`
+	Lastname  string `json:"lastname"`
+	Password  string `json:"password"`
 }
 
 // CreateLessonCompletionJSONRequestBody defines body for CreateLessonCompletion for application/json ContentType.
@@ -108,8 +106,8 @@ type CreateLessonCompletionJSONRequestBody = Lesson
 // CompleteExamJSONRequestBody defines body for CompleteExam for application/json ContentType.
 type CompleteExamJSONRequestBody = ExamCompletion
 
-// GetUsersJSONRequestBody defines body for GetUsers for application/json ContentType.
-type GetUsersJSONRequestBody = UserPostModel
+// CreateUserJSONRequestBody defines body for CreateUser for application/json ContentType.
+type CreateUserJSONRequestBody = UserPostModel
 
 // LoginAndReturnJwtTokenJSONRequestBody defines body for LoginAndReturnJwtToken for application/json ContentType.
 type LoginAndReturnJwtTokenJSONRequestBody = UserAuthentication
@@ -130,7 +128,7 @@ type ServerInterface interface {
 	CompleteExam(w http.ResponseWriter, r *http.Request, examId openapi_types.UUID)
 	// todo
 	// (POST /users)
-	GetUsers(w http.ResponseWriter, r *http.Request)
+	CreateUser(w http.ResponseWriter, r *http.Request)
 	// Authenticates and authorizes the user and returns a JWT token if the authentication was successful.
 	// (POST /users/login)
 	LoginAndReturnJwtToken(w http.ResponseWriter, r *http.Request)
@@ -244,11 +242,11 @@ func (siw *ServerInterfaceWrapper) CompleteExam(w http.ResponseWriter, r *http.R
 	handler.ServeHTTP(w, r)
 }
 
-// GetUsers operation middleware
-func (siw *ServerInterfaceWrapper) GetUsers(w http.ResponseWriter, r *http.Request) {
+// CreateUser operation middleware
+func (siw *ServerInterfaceWrapper) CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetUsers(w, r)
+		siw.Handler.CreateUser(w, r)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -457,7 +455,7 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc("POST "+options.BaseURL+"/courses/{courseId}/completions", wrapper.CreateLessonCompletion)
 	m.HandleFunc("GET "+options.BaseURL+"/exams/{examId}", wrapper.GetExamsExamId)
 	m.HandleFunc("POST "+options.BaseURL+"/exams/{examId}/completions", wrapper.CompleteExam)
-	m.HandleFunc("POST "+options.BaseURL+"/users", wrapper.GetUsers)
+	m.HandleFunc("POST "+options.BaseURL+"/users", wrapper.CreateUser)
 	m.HandleFunc("POST "+options.BaseURL+"/users/login", wrapper.LoginAndReturnJwtToken)
 	m.HandleFunc("GET "+options.BaseURL+"/users/{userId}", wrapper.GetUser)
 	m.HandleFunc("PATCH "+options.BaseURL+"/users/{userId}", wrapper.UpdateUser)

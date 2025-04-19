@@ -1,8 +1,6 @@
 package auth
 
 import (
-	"crypto/pbkdf2"
-	"crypto/sha256"
 	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
@@ -11,15 +9,13 @@ import (
 	"os"
 	"phishing_backend/internal/domain/db"
 	"phishing_backend/internal/domain/model"
-	"strconv"
+	"phishing_backend/internal/user"
 	"time"
 )
 
 var (
-	pbkdf2Salt               = os.Getenv("PHBA_PBKDF2_SALT")
-	pbkdf2Iter               = os.Getenv("PHBA_PBKDF2_ITER")
-	jwtKey                   = os.Getenv("PHBA_JWT_KEY")
-	_          Authenticator = (*AuthenticatorImpl)(nil)
+	jwtKey               = os.Getenv("PHBA_JWT_KEY")
+	_      Authenticator = (*AuthenticatorImpl)(nil)
 )
 
 const (
@@ -66,9 +62,8 @@ func (a *AuthenticatorImpl) GetUser(rawToken string) (*model.User, error) {
 
 func (a *AuthenticatorImpl) Authenticate(email, password string) (string, error) {
 	// https://de.wikipedia.org/wiki/PBKDF2
-	hashedPassword, err := pbkdf2.Key(sha256.New, password, []byte(pbkdf2Salt), mustAtoi(pbkdf2Iter), 32)
+	hashedPassword, err := user.HashPassword(password)
 	if err != nil {
-		slog.Error("Could not hash password", "err", err)
 		return "", err
 	}
 	user, err := a.UserRepository.GetByEmailAndPassword(email, hashedPassword)
@@ -100,12 +95,4 @@ func (a *AuthenticatorImpl) createJwtToken(user *model.User) (string, error) {
 		return "", err
 	}
 	return signedToken, nil
-}
-
-func mustAtoi(s string) int {
-	i, err := strconv.Atoi(s)
-	if err != nil {
-		panic("could not convert string to int, string: " + s)
-	}
-	return i
 }
