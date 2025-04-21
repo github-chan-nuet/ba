@@ -8,6 +8,7 @@ import AuthProvider from "./auth/AuthProvider.tsx";
 import { client } from "./api/client.gen.ts";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
 import LandingPage from "./pages/Marketing/LandingPage.tsx";
+import GlobalToaster from "./toaster/GlobalToaster.tsx";
 
 client.setConfig({
   baseUrl: "http://localhost:8080/api"
@@ -44,6 +45,7 @@ const App = () => {
     <FluentProvider theme={webLightTheme}>
       <AuthProvider>
         <RouterProvider router={router} />
+        <GlobalToaster />
       </AuthProvider>
     </FluentProvider>
   )

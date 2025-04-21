@@ -1,10 +1,10 @@
-import { Button, Field, Input, Toast, Toaster, ToastTitle, useId, useToastController } from "@fluentui/react-components"
+import { Button, Field, Input, Toast, ToastTitle } from "@fluentui/react-components"
 import { ChangeEvent, FormEvent, useState } from "react";
 import { register } from "../api";
+import { useToaster } from "../toaster/useToaster";
 
 const RegisterForm = () => {
-  const toasterId = useId("toaster");
-  const { dispatchToast } = useToastController(toasterId);
+  const { dispatchToast } = useToaster();
   const [formData, setFormData] = useState({ firstname: "", lastname: "", email: "", password: "" });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +36,6 @@ const RegisterForm = () => {
         gap: 16
       }}
     >
-      <Toaster toasterId={toasterId} />
       <Field label="Vorname">
         <Input name="firstname" type="text" onChange={handleChange} />
       </Field>
