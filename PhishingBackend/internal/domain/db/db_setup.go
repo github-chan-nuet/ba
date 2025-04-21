@@ -2,19 +2,16 @@ package db
 
 import (
 	"fmt"
-	"github.com/huandu/go-sqlbuilder"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
+	"phishing_backend/internal/domain/model"
 
-	// needed to import PG driver
-	//_ "github.com/lib/pq"
 	"log/slog"
 	"os"
 )
 
 var db *gorm.DB
-
-const dbFlavor = sqlbuilder.PostgreSQL
 
 type dbConfig struct {
 	host     string
@@ -31,45 +28,29 @@ func (d *dbConfig) getConnectionString() string {
 
 func newDbConfig() *dbConfig {
 	return &dbConfig{
-		host:     os.Getenv("PHBA_WEBSERVER_DB_HOST"),
-		port:     os.Getenv("PHBA_WEBSERVER_DB_PORT"),
-		user:     os.Getenv("PHBA_WEBSERVER_DB_USER"),
-		password: os.Getenv("PHBA_WEBSERVER_DB_PASSWORD"),
-		dbname:   os.Getenv("PHBA_WEBSERVER_DB_NAME"),
+		host:     os.Getenv("PHBA_DB_HOST"),
+		port:     os.Getenv("PHBA_DB_PORT"),
+		user:     os.Getenv("PHBA_DB_USER"),
+		password: os.Getenv("PHBA_DB_PASSWORD"),
+		dbname:   os.Getenv("PHBA_DB_NAME"),
 	}
 }
 
 func init() {
-	sqlbuilder.DefaultFlavor = dbFlavor
 	initGormAndDatabaseConnection()
+	createTables()
 }
-
-//func initDatabaseConnection() {
-//	config := newDbConfig()
-//	connString := config.getConnectionString()
-//	slog.Info("Trying to connect to DB", "connectionString", connString)
-//	var err error
-//	db, err = sql.Open("postgres", connString)
-//	if err != nil {
-//		slog.Error("Could not connect to db", "error", err)
-//		os.Exit(1)
-//	}
-//	err = db.Ping()
-//	if err != nil {
-//		slog.Error("Could not ping db", "error", err)
-//		os.Exit(1)
-//	}
-//	slog.Info("Connection to db successful")
-//}
 
 func initGormAndDatabaseConnection() {
 	config := newDbConfig()
 	connString := config.getConnectionString()
-	//connString := "host=phishing_mail_storage user=testuser password=test dbname=testdb port=5432 sslmode=disable"
 	slog.Info("Trying to connect to DB", "connectionString", connString)
 
 	var err error
-	db, err = gorm.Open(postgres.Open(connString), &gorm.Config{})
+	db, err = gorm.Open(postgres.Open(connString), &gorm.Config{
+		PrepareStmt: true,
+		Logger:      logger.Discard, // https://stackoverflow.com/a/55892341
+	})
 	if err != nil {
 		slog.Error("Could not connect to db", "error", err)
 		os.Exit(1)
@@ -85,4 +66,10 @@ func initGormAndDatabaseConnection() {
 		os.Exit(1)
 	}
 	slog.Info("Connection to db successful")
+}
+
+func createTables() {
+	if err := db.AutoMigrate(&model.User{}, &model.LessonCompletion{}); err != nil {
+		slog.Error("Could not create table", "error", err)
+	}
 }

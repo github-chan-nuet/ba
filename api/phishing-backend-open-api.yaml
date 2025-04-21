@@ -1,10 +1,10 @@
-openapi: 3.1.1
+openapi: 3.0.0
 info:
   title: Phishing Backend - OpenAPI 3.0
   description: |-
     todo
   contact:
-    email: mischa.binder@ost.ch, patrick.scheidegger@ost.ch
+    email: mischa.binder@ost.ch
   version: 0.0.1
 servers:
   - url: "/api"
@@ -16,7 +16,7 @@ paths:
   "/users":
     post:
       summary: todo
-      operationId: register
+      operationId: createUser
       requestBody:
         content:
           application/json:
@@ -57,7 +57,7 @@ paths:
       security:
         - bearerAuth: [ ]
       summary: todo
-      operationId: todo1
+      operationId: getUser
       parameters:
         - in: path
           name: userId
@@ -88,7 +88,7 @@ paths:
       security:
         - bearerAuth: [ ]
       summary: todo
-      operationId: todo2
+      operationId: updateUser
       parameters:
         - in: path
           name: userId
@@ -159,8 +159,7 @@ paths:
       security:
         - bearerAuth: [ ]
       summary: TODO
-      description: TODO
-      operationId: todo3
+      description: getExam
       parameters:
         - in: path
           name: examId
@@ -187,8 +186,8 @@ paths:
       security:
         - bearerAuth: [ ]
       summary: TODO
+      operationId: completeExam
       description: TODO
-      operationId: todo4
       parameters:
         - in: path
           name: examId
@@ -229,8 +228,8 @@ components:
       type: object
       properties:
         lessonId:
-          type: integer
-          format: int64
+          type: string
+          format: uuid
 
     ExperienceGain:
       required:
@@ -250,11 +249,11 @@ components:
 
     UserAuthentication:
       required:
-        - username
+        - email
         - password
       type: object
       properties:
-        username:
+        email:
           type: string
         password:
           type: string
@@ -265,8 +264,6 @@ components:
         firstname:
           type: string
         lastname:
-          type: string
-        password:
           type: string
         email:
           type: string
@@ -289,7 +286,7 @@ components:
 
     UserPostModel:
       allOf:
-        - $ref: "#/components/schemas/User"
+        - $ref: "#/components/schemas/UserPatchModel"
         - type: object
           required:
             - firstname
@@ -306,7 +303,7 @@ components:
       type: object
       properties:
         id:
-          type: id
+          type: integer
         question:
           type: string
         type:
@@ -318,10 +315,12 @@ components:
             $ref: "#/components/schemas/Answer"
 
     Answer:
-      id:
-        type: id
-      answer:
-        type: string
+      type: object
+      properties:
+        id:
+          type: integer
+        answer:
+          type: string
 
     ExamCompletion:
       type: array
@@ -340,7 +339,3 @@ components:
 
     ExamValidation:
       type: object
-      properties:
-        placeholder:
-          type: string
-
