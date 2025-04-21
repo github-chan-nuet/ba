@@ -33,10 +33,9 @@ const Hero = () => {
       </div>
       <div
         style={{
-          marginTop: "5rem",
           maxWidth: "70rem",
           textAlign: "center",
-          margin: "auto"
+          margin: "5rem auto 0 auto"
         }}
       >
         <Display
