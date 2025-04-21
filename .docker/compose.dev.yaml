@@ -13,19 +13,19 @@ services:
       - frontend___backend
       - backend___db
 
-#  phishing_frontend:
-#    build:
-#      context: ../PhishingFrontend
-#      dockerfile: .docker/dev.Dockerfile
-#    volumes:
-#      - "../PhishingFrontend/src:/app/src"
-#      - "../PhishingFrontend/public:/app/public"
-#    ports:
-#      - "3000:5173"
-#    depends_on:
-#      - phishing_backend
-#    networks:
-#      - frontend___backend
+  phishing_frontend:
+    build:
+      context: ../PhishingFrontend
+      dockerfile: .docker/dev.Dockerfile
+    volumes:
+      - "../PhishingFrontend/src:/app/src"
+      - "../PhishingFrontend/public:/app/public"
+    ports:
+      - "3000:5173"
+    depends_on:
+      - phishing_backend
+    networks:
+      - frontend___backend
 
   phishing_mail_storage:
     image: postgres:latest
