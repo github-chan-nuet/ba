@@ -17,7 +17,7 @@ function Layout() {
           alignItems: 'center',
           paddingBlock: 24,
         }}>
-          <Body1Stronger>Securaware</Body1Stronger>
+          <Body1Stronger style={{ fontSize: '1.5rem' }}>Securaware</Body1Stronger>
           <ToggleButton
             appearance="primary"
             onClick={() => setIsAuthDrawerOpen(!isAuthDrawerOpen)}
