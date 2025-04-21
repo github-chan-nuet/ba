@@ -16,7 +16,7 @@ paths:
   "/users":
     post:
       summary: todo
-      operationId: todo
+      operationId: register
       requestBody:
         content:
           application/json:
@@ -57,7 +57,7 @@ paths:
       security:
         - bearerAuth: [ ]
       summary: todo
-      operationId: todo
+      operationId: todo1
       parameters:
         - in: path
           name: userId
@@ -88,7 +88,7 @@ paths:
       security:
         - bearerAuth: [ ]
       summary: todo
-      operationId: todo
+      operationId: todo2
       parameters:
         - in: path
           name: userId
@@ -160,7 +160,7 @@ paths:
         - bearerAuth: [ ]
       summary: TODO
       description: TODO
-      operationId: todo
+      operationId: todo3
       parameters:
         - in: path
           name: examId
@@ -188,7 +188,7 @@ paths:
         - bearerAuth: [ ]
       summary: TODO
       description: TODO
-      operationId: todo
+      operationId: todo4
       parameters:
         - in: path
           name: examId
