@@ -17,12 +17,32 @@ func SetupHttpServer() {
 }
 
 func setupEndpoints(sMux *http.ServeMux) {
-	sMux.HandleFunc("GET /api/health", getHealth)
+	sMux.HandleFunc("GET /api/health", withCORS(getHealth))
 
-	sMux.HandleFunc("POST /api/courses/{courseId}/completions", createLessonCompletion)
+	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", withCORS(handleOptions))
+	sMux.HandleFunc("POST /api/courses/{courseId}/completions", withCORS(createLessonCompletion))
 
-	sMux.HandleFunc("POST /api/users", createUser)
-	sMux.HandleFunc("POST /api/users/login", loginAndReturnJwtToken)
-	sMux.HandleFunc("GET /api/users/{userId}", getUser)
-	sMux.HandleFunc("PATH /api/users/{userId}", updateUser)
+	sMux.HandleFunc("OPTIONS /api/users", withCORS(handleOptions))
+	sMux.HandleFunc("POST /api/users", withCORS(createUser))
+
+	sMux.HandleFunc("OPTIONS /api/users/login", withCORS(handleOptions))
+	sMux.HandleFunc("POST /api/users/login", withCORS(loginAndReturnJwtToken))
+
+	sMux.HandleFunc("GET /api/users/{userId}", withCORS(getUser))
+	sMux.HandleFunc("PATH /api/users/{userId}", withCORS(updateUser))
+}
+
+func withCORS(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// TODO: Allow requests from any origin for now but tighten this is prod
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+		next(w, r)
+	}
+}
+
+func handleOptions(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Max-Age", "86400")
+	w.WriteHeader(http.StatusOK)
 }
