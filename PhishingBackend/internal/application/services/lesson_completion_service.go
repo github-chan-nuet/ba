@@ -1,0 +1,34 @@
+package services
+
+import (
+	"github.com/google/uuid"
+	"phishing_backend/internal/application/interfaces/repositories"
+	"phishing_backend/internal/domain"
+	"time"
+)
+
+type IsNewEntry bool
+
+var _ LessonCompletionService = (*LessonCompletionServiceImpl)(nil)
+
+type LessonCompletionService interface {
+	Create(courseId, lessonId, userId uuid.UUID) (IsNewEntry, error)
+}
+
+type LessonCompletionServiceImpl struct {
+	Repo repositories.LessonCompletionRepository
+}
+
+func (c *LessonCompletionServiceImpl) Create(courseId, lessonId, userId uuid.UUID) (IsNewEntry, error) {
+	lc := domain.LessonCompletion{
+		LessonId: lessonId,
+		CourseId: courseId,
+		UserFk:   userId,
+		Time:     time.Now().UTC(),
+	}
+	count, err := c.Repo.Create(&lc)
+	if err != nil {
+		return false, err
+	}
+	return count != 0, nil
+}

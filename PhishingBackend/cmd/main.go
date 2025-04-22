@@ -6,23 +6,15 @@ import (
 	"encoding/hex"
 	"log/slog"
 	"os"
-	"phishing_backend/internal/web"
+	"phishing_backend/internal/infrastructure/presentation"
 	"strconv"
 
-	_ "phishing_backend/internal/domain/db" // include package so that init function is called
-	"phishing_backend/internal/email"
+	_ "phishing_backend/internal/infrastructure/persistance" // include package so that init function is called
 )
 
 func main() {
 	//hashPassword()
-	web.SetupHttpServer()
-}
-
-func sendEmail() {
-	err := email.SendEmail()
-	if err != nil {
-		slog.Error(err.Error())
-	}
+	presentation.SetupHttpServer()
 }
 
 func hashPassword() {
