@@ -5,24 +5,22 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"phishing_backend/internal/application/services"
-	"phishing_backend/internal/infrastructure/persistance"
 	"phishing_backend/internal/infrastructure/presentation/api"
 )
 
-var (
-	userRepo                             = &persistance.UserRepositoryImpl{}
-	authenticator services.Authenticator = &services.AuthenticatorImpl{UserRepository: userRepo}
-	userService   services.UserService   = &services.UserServiceImpl{UserRepository: userRepo}
-)
+type UserController struct {
+	Authenticator services.Authenticator
+	UserService   services.UserService
+}
 
-func LoginAndReturnJwtToken(w http.ResponseWriter, r *http.Request) {
+func (c *UserController) LoginAndReturnJwtToken(w http.ResponseWriter, r *http.Request) {
 	var auth api.UserAuthentication
 	err := json.NewDecoder(r.Body).Decode(&auth)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	jwtToken, err := authenticator.Authenticate(auth.Email, auth.Password)
+	jwtToken, err := c.Authenticator.Authenticate(auth.Email, auth.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -32,14 +30,14 @@ func LoginAndReturnJwtToken(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(jwtToken))
 }
 
-func CreateUser(w http.ResponseWriter, r *http.Request) {
+func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user api.UserPostModel
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	err = userService.Create(user)
+	err = c.UserService.Create(user)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -47,14 +45,14 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func GetUser(w http.ResponseWriter, r *http.Request) {
+func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 	userIdStr := r.PathValue("userId")
 	userId, err := uuid.Parse(userIdStr)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	authUser, err := authenticator.GetUser(r.Header.Get("Authorization"))
+	authUser, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte(err.Error()))
@@ -64,7 +62,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
-	user, err := userService.Get(userId)
+	user, err := c.UserService.Get(userId)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -82,7 +80,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Write(userJson)
 }
 
-func UpdateUser(w http.ResponseWriter, r *http.Request) {
+func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	userIdStr := r.PathValue("userId")
 	userId, err := uuid.Parse(userIdStr)
 	if err != nil {
@@ -95,7 +93,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	authUser, err := authenticator.GetUser(r.Header.Get("Authorization"))
+	authUser, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte(err.Error()))
@@ -105,7 +103,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
-	err = userService.Update(userId, user)
+	err = c.UserService.Update(userId, user)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

@@ -4,6 +4,8 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"phishing_backend/internal/application/services"
+	"phishing_backend/internal/infrastructure/persistance"
 	"phishing_backend/internal/infrastructure/presentation/controllers"
 )
 
@@ -18,19 +20,37 @@ func SetupHttpServer() {
 }
 
 func setupEndpoints(sMux *http.ServeMux) {
+	userRepository := persistance.UserRepositoryImpl{}
+
+	authenticator := services.AuthenticatorImpl{
+		UserRepository: &userRepository,
+	}
+	userController := controllers.UserController{
+		Authenticator: &authenticator,
+		UserService: &services.UserServiceImpl{
+			UserRepository: &userRepository,
+		},
+	}
+	lessonCompletionController := controllers.LessonCompletionController{
+		Authenticator: &authenticator,
+		LessonCompletionService: &services.LessonCompletionServiceImpl{
+			Repo: &persistance.LessonCompletionRepositoryImpl{},
+		},
+	}
+
 	sMux.HandleFunc("GET /api/health", withCORS(controllers.GetHealth))
 
 	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", withCORS(handleOptions))
-	sMux.HandleFunc("POST /api/courses/{courseId}/completions", withCORS(controllers.CreateLessonCompletion))
+	sMux.HandleFunc("POST /api/courses/{courseId}/completions", withCORS(lessonCompletionController.CreateLessonCompletion))
 
 	sMux.HandleFunc("OPTIONS /api/users", withCORS(handleOptions))
-	sMux.HandleFunc("POST /api/users", withCORS(controllers.CreateUser))
+	sMux.HandleFunc("POST /api/users", withCORS(userController.CreateUser))
 
 	sMux.HandleFunc("OPTIONS /api/users/login", withCORS(handleOptions))
-	sMux.HandleFunc("POST /api/users/login", withCORS(controllers.LoginAndReturnJwtToken))
+	sMux.HandleFunc("POST /api/users/login", withCORS(userController.LoginAndReturnJwtToken))
 
-	sMux.HandleFunc("GET /api/users/{userId}", withCORS(controllers.GetUser))
-	sMux.HandleFunc("PATCH /api/users/{userId}", withCORS(controllers.UpdateUser))
+	sMux.HandleFunc("GET /api/users/{userId}", withCORS(userController.GetUser))
+	sMux.HandleFunc("PATCH /api/users/{userId}", withCORS(userController.UpdateUser))
 }
 
 func withCORS(next http.HandlerFunc) http.HandlerFunc {
