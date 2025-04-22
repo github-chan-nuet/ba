@@ -9,6 +9,7 @@ import { client } from "./api/client.gen.ts";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
 import LandingPage from "./pages/Marketing/LandingPage.tsx";
 import GlobalToaster from "./toaster/GlobalToaster.tsx";
+import ProtectedRoute from "./auth/ProtectedRoute.tsx";
 
 client.setConfig({
   baseUrl: "http://localhost:8080/api"
@@ -27,7 +28,10 @@ const router = createBrowserRouter([
       },
       {
         path: 'dashboard',
-        element: <DashboardLayout />,
+        element:
+          <ProtectedRoute>
+            <DashboardLayout />
+          </ProtectedRoute>,
         handle: 'Securaware',
         children: [
           { index: true, element: <Home /> },
