@@ -1,9 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import MarketingLayout from './pages/Marketing/_Layout.tsx'
 import DashboardLayout from './pages/Dashboard/_Layout.tsx'
-import Courses from "./pages/Dashboard/Courses";
-import Home from "./pages/Dashboard/Home";
-import Lesson from "./pages/Dashboard/Lesson";
+import Courses from "./pages/Dashboard/Courses.tsx";
+import Home from "./pages/Dashboard/Home.tsx";
+import Lesson from "./pages/Dashboard/Lesson.tsx";
 import AuthProvider from "./auth/AuthProvider.tsx";
 import { client } from "./api/client.gen.ts";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";

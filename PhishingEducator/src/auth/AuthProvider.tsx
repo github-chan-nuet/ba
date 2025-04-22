@@ -11,7 +11,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const handleLogin = async (email: string, password: string) => {
     const result = await loginAndReturnJwtToken({ body: { email, password } });
-    setToken(result.data);  
+    setToken(result.data);
   }
 
   const handleLogout = () => {
