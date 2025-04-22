@@ -1,9 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router";
 import MarketingLayout from './pages/Marketing/_Layout.tsx'
 import DashboardLayout from './pages/Dashboard/_Layout.tsx'
-import Courses from "./pages/Dashboard/Courses.tsx";
-import Home from "./pages/Dashboard/Home.tsx";
-import Lesson from "./pages/Dashboard/Lesson.tsx";
+import Courses from "./pages/Dashboard/Courses";
+import Home from "./pages/Dashboard/Home";
+import Lesson from "./pages/Dashboard/Lesson";
 import AuthProvider from "./auth/AuthProvider.tsx";
 import { client } from "./api/client.gen.ts";
 import { FluentProvider, webLightTheme } from "@fluentui/react-components";
@@ -16,24 +16,29 @@ client.setConfig({
 
 const router = createBrowserRouter([
   {
-    path: '',
-    element: <MarketingLayout />,
+    element: <AuthProvider />,
     children: [
-      { index: true, element: <LandingPage /> },
-    ]
-  },
-  {
-    path: 'dashboard',
-    element: <DashboardLayout />,
-    handle: 'Securaware',
-    children: [
-      { index: true, element: <Home /> },
       {
-        path: 'courses',
-        handle: 'Online-Kurse',
+        path: '/',
+        element: <MarketingLayout />,
         children: [
-          { index: true, element: <Courses /> },
-          { path: ':course/lectures/:lecture', element: <Lesson /> }
+          { index: true, element: <LandingPage /> },
+        ]
+      },
+      {
+        path: 'dashboard',
+        element: <DashboardLayout />,
+        handle: 'Securaware',
+        children: [
+          { index: true, element: <Home /> },
+          {
+            path: 'courses',
+            handle: 'Online-Kurse',
+            children: [
+              { index: true, element: <Courses /> },
+              { path: ':course/lectures/:lecture', element: <Lesson /> }
+            ]
+          }
         ]
       }
     ]
@@ -43,10 +48,8 @@ const router = createBrowserRouter([
 const App = () => {
   return (
     <FluentProvider theme={webLightTheme}>
-      <AuthProvider>
-        <RouterProvider router={router} />
-        <GlobalToaster />
-      </AuthProvider>
+      <RouterProvider router={router} />
+      <GlobalToaster />
     </FluentProvider>
   )
 }
