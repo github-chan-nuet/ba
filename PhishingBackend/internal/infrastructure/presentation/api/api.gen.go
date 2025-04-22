@@ -74,7 +74,6 @@ type User struct {
 	Firstname       *string `json:"firstname,omitempty"`
 	Lastname        *string `json:"lastname,omitempty"`
 	Level           *int    `json:"level,omitempty"`
-	Password        *string `json:"password,omitempty"`
 	TotalExperience *int    `json:"totalExperience,omitempty"`
 }
 
