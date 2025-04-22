@@ -1,23 +1,24 @@
 import { Button, Field, Input, Toast, ToastTitle } from "@fluentui/react-components"
 import { ChangeEvent, FormEvent, useState } from "react";
-import { register } from "../api";
+import { createUser } from "../api";
 import { useToaster } from "../toaster/useToaster";
+import useAuth from "../auth/useAuth";
 
 const RegisterForm = () => {
   const { dispatchToast } = useToaster();
+  const { onLogin } = useAuth();
   const [formData, setFormData] = useState({ firstname: "", lastname: "", email: "", password: "" });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    console.log(formData);
   }
 
   const handleRegister = async (event: FormEvent) => {
     event.preventDefault();
     try {
-      const result = await register();
-      console.log(result);
+      await createUser({ body: formData });
+      onLogin(formData.email, formData.password);
     } catch (e) {
       dispatchToast(<Toast>
         <ToastTitle>Aktion fehlgeschlagen!</ToastTitle>
