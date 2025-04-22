@@ -29,7 +29,7 @@ func setupEndpoints(sMux *http.ServeMux) {
 	sMux.HandleFunc("POST /api/users/login", withCORS(loginAndReturnJwtToken))
 
 	sMux.HandleFunc("GET /api/users/{userId}", withCORS(getUser))
-	sMux.HandleFunc("PATH /api/users/{userId}", withCORS(updateUser))
+	sMux.HandleFunc("PATCH /api/users/{userId}", withCORS(updateUser))
 }
 
 func withCORS(next http.HandlerFunc) http.HandlerFunc {

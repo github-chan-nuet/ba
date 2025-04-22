@@ -6,6 +6,16 @@ curl -X POST http://localhost:8080/api/users/login \
   }'
 
 
+curl -X POST http://localhost:8080/api/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstname": "hans",
+    "lastname": "noetig",
+    "email": "info@test.ch",
+    "password": "test"
+  }'
+
+
 
 curl -X POST http://localhost:8080/api/courses/123/completions \
   -H "Content-Type: application/json" \
