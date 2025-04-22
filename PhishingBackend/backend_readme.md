@@ -1,9 +1,10 @@
 # Structure
 Guidelines:
-- [Official Guidelines](https://go.dev/doc/modules/layout)
-- [Unofficial best practices](https://github.com/golang-standards/project-layout)
+- .docker: docker related configurations
+- cmd: executable application(s) (see [Official Guidelines](https://go.dev/doc/modules/layout) and [Unofficial best practices](https://github.com/golang-standards/project-layout))
+- internal: source code that can only be referenced within this project. This folder follows the onion architecture
 
-# Starting Phishing Backend
+# Starting the Phishing Backend
 ## with docker (recommended)
 ```bash
 docker build -f ./.docker/Dockerfile -t phishingbackend .
