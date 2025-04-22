@@ -12,10 +12,34 @@ var _ Service = (*ServiceImpl)(nil)
 type Service interface {
 	Create(userApiModel api.UserPostModel) error
 	Get(userId uuid.UUID) (*model.User, error)
+	Update(userId uuid.UUID, userPatchModel api.UserPatchModel) error
 }
 
 type ServiceImpl struct {
 	Repo db.UserRepository
+}
+
+func (s *ServiceImpl) Update(userId uuid.UUID, userPatchModel api.UserPatchModel) error {
+	user := &model.User{
+		ID: userId,
+	}
+	if userPatchModel.Firstname != nil {
+		user.Firstname = *userPatchModel.Firstname
+	}
+	if userPatchModel.Lastname != nil {
+		user.Lastname = *userPatchModel.Lastname
+	}
+	if userPatchModel.Email != nil {
+		user.Email = *userPatchModel.Email
+	}
+	if userPatchModel.Password != nil {
+		hashedPw, err := HashPassword(*userPatchModel.Password)
+		if err != nil {
+			return err
+		}
+		user.Password = hashedPw
+	}
+	return s.Repo.UpdateUser(user)
 }
 
 func (s *ServiceImpl) Get(userId uuid.UUID) (*model.User, error) {

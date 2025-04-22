@@ -14,16 +14,25 @@ type UserRepository interface {
 	GetByEmailAndPassword(username string, password []byte) (*model.User, error)
 	CreateUser(user *model.User) error
 	GetUser(userId uuid.UUID) (*model.User, error)
+	UpdateUser(user *model.User) error
 }
 
 type UserRepositoryImpl struct {
+}
+
+func (u *UserRepositoryImpl) UpdateUser(user *model.User) error {
+	result := db.Save(user)
+	if result.Error != nil {
+		slog.Error("Could not update user", "err", result.Error)
+	}
+	return result.Error
 }
 
 func (u *UserRepositoryImpl) GetUser(userId uuid.UUID) (*model.User, error) {
 	user := &model.User{}
 	result := db.First(&user, userId)
 	if result.Error != nil {
-		slog.Error("Could not get user by id ", "err", result.Error)
+		slog.Error("Could not get user by id", "err", result.Error)
 		return nil, result.Error
 	}
 	return user, nil

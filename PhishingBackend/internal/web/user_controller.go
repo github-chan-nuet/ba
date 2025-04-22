@@ -84,5 +84,32 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateUser(w http.ResponseWriter, r *http.Request) {
-
+	userIdStr := r.PathValue("userId")
+	userId, err := uuid.Parse(userIdStr)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	var user api.UserPatchModel
+	err = json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	authUser, err := authenticator.GetUser(r.Header.Get("Authorization"))
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	if userId != authUser.ID {
+		w.WriteHeader(http.StatusForbidden)
+		return
+	}
+	err = userService.Update(userId, user)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	w.WriteHeader(http.StatusOK)
 }
