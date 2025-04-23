@@ -11,6 +11,10 @@ a {
   text-decoration: none;
 }
 
+.card-revert-padding {
+  margin-inline: calc(-1 * var(--fui-Card--size));
+}
+
 .Dashboard {
   &__container {
     display: flex;
