@@ -8,8 +8,7 @@ import (
 	"os"
 	"phishing_backend/internal/infrastructure/presentation"
 	"strconv"
-
-	_ "phishing_backend/internal/infrastructure/persistance" // include package so that init function is called
+	//_ "phishing_backend/internal/infrastructure/persistance" // include package so that init function is called
 )
 
 func main() {
