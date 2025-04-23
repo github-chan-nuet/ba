@@ -3,6 +3,7 @@ Guidelines:
 - .docker: docker related configurations
 - cmd: executable application(s) (see [Official Guidelines](https://go.dev/doc/modules/layout) and [Unofficial best practices](https://github.com/golang-standards/project-layout))
 - internal: source code that can only be referenced within this project. This folder follows the onion architecture
+- integration_tests: folder in which integration tests including the setup is stored
 
 # Starting the Phishing Backend
 ## with docker (recommended)

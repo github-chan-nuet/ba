@@ -9,4 +9,4 @@ source integrationTests.env
 set +a
 
 echo "starting integration tests..."
-go test -tags integration ./../...
+go test -tags integration ./../... -v

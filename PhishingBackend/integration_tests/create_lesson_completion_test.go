@@ -5,9 +5,11 @@ package integration_tests
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
+	"phishing_backend/internal/domain"
 	"phishing_backend/internal/infrastructure/presentation"
 	"phishing_backend/internal/infrastructure/presentation/api"
 	"testing"
@@ -29,4 +31,10 @@ func Test(t *testing.T) {
 	// then
 	assert.NoError(t, err)
 	assert.Equal(t, resp.StatusCode, http.StatusCreated)
+	db := getDb()
+	var users []domain.User
+	db.Find(&users)
+	for _, user := range users {
+		fmt.Println(user.ID.String(), user.Firstname, user.Lastname, user.Email, string(user.Password))
+	}
 }
