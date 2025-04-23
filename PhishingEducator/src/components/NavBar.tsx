@@ -1,11 +1,14 @@
 import { tokens } from "@fluentui/react-components";
-import { Home24Regular, Lightbulb24Filled, MailWarning24Regular, Trophy24Regular } from "@fluentui/react-icons";
+import { Home24Regular, Lightbulb24Filled, MailWarning24Regular, SignOut24Regular, Trophy24Regular } from "@fluentui/react-icons";
 import { ReactElement } from "react";
 import { Link } from "react-router";
 
 import NavBarStyles from './NavBar.module.scss';
+import useAuth from "../auth/useAuth";
 
-function NavBar() {  
+function NavBar() { 
+  const { onLogout } = useAuth();
+
   return (
     <div className={NavBarStyles.NavBar}>
       <div className={NavBarStyles.NavBar__items}>
@@ -30,7 +33,12 @@ function NavBar() {
           href="/dashboard/courses"
         />
       </div>
-      <div></div>
+      <div className={NavBarStyles.NavBar__items}>
+        <button className={NavBarStyles.NavBar__item} onClick={onLogout}>
+          <SignOut24Regular />
+          <span className={NavBarStyles.NavBar__itemLabel}>Abmelden</span>
+        </button>
+      </div>
     </div>
   )
 }
