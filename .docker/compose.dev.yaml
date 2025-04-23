@@ -13,13 +13,13 @@ services:
       - frontend___backend
       - backend___db
 
-  phishing_frontend:
+  phishing_educator:
     build:
-      context: ../PhishingFrontend
+      context: ../PhishingEducator
       dockerfile: .docker/dev.Dockerfile
     volumes:
-      - "../PhishingFrontend/src:/app/src"
-      - "../PhishingFrontend/public:/app/public"
+      - "../PhishingEducator/src:/app/src"
+      - "../PhishingEducator/public:/app/public"
     ports:
       - "3000:5173"
     depends_on:
