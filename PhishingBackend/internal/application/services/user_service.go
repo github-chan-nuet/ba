@@ -52,6 +52,7 @@ func (s *UserServiceImpl) Create(userApiModel api.UserPostModel) error {
 		return err
 	}
 	user := &domain.User{
+		ID:        uuid.New(),
 		Firstname: userApiModel.Firstname,
 		Lastname:  userApiModel.Lastname,
 		Password:  hashedPw,

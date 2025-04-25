@@ -42,7 +42,7 @@ func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 }
 
 func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {

@@ -3,6 +3,7 @@ Guidelines:
 - .docker: docker related configurations
 - cmd: executable application(s) (see [Official Guidelines](https://go.dev/doc/modules/layout) and [Unofficial best practices](https://github.com/golang-standards/project-layout))
 - internal: source code that can only be referenced within this project. This folder follows the onion architecture
+- integration_tests: folder in which integration tests including the setup is stored
 
 # Starting the Phishing Backend
 ## with docker (recommended)
@@ -25,3 +26,6 @@ go build -o myapp
 ## verify that the server is running
 open http://127.0.0.1:8080/api/health
 
+
+# Executing integration tests
+C:\Users\Pat\GolandProjects\securaware\PhishingBackend\integration_tests\setup

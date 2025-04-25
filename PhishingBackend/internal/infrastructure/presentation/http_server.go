@@ -10,8 +10,7 @@ import (
 )
 
 func SetupHttpServer() {
-	sMux := http.NewServeMux()
-	setupEndpoints(sMux)
+	sMux := NewServeMux()
 	addr := os.Getenv("PHBA_WEBSERVER_ADDR")
 	slog.Info("Web server listening...", "address", addr)
 	err := http.ListenAndServe(addr, sMux)
@@ -19,7 +18,7 @@ func SetupHttpServer() {
 	os.Exit(1)
 }
 
-func setupEndpoints(sMux *http.ServeMux) {
+func NewServeMux() *http.ServeMux {
 	userRepository := persistance.UserRepositoryImpl{}
 
 	authenticator := services.AuthenticatorImpl{
@@ -38,6 +37,7 @@ func setupEndpoints(sMux *http.ServeMux) {
 		},
 	}
 
+	sMux := http.NewServeMux()
 	sMux.HandleFunc("GET /api/health", withCORS(controllers.GetHealth))
 
 	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", withCORS(handleOptions))
@@ -51,6 +51,7 @@ func setupEndpoints(sMux *http.ServeMux) {
 
 	sMux.HandleFunc("GET /api/users/{userId}", withCORS(userController.GetUser))
 	sMux.HandleFunc("PATCH /api/users/{userId}", withCORS(userController.UpdateUser))
+	return sMux
 }
 
 func withCORS(next http.HandlerFunc) http.HandlerFunc {
