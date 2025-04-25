@@ -52,13 +52,13 @@ func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	authUser, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
+	authUserId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte(err.Error()))
 		return
 	}
-	if userId != authUser.ID {
+	if userId != authUserId {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
@@ -93,13 +93,13 @@ func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	authUser, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
+	authUserId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte(err.Error()))
 		return
 	}
-	if userId != authUser.ID {
+	if userId != authUserId {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}

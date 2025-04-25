@@ -9,6 +9,7 @@ import (
 	"os"
 	"phishing_backend/internal/application/interfaces/repositories"
 	"phishing_backend/internal/domain"
+	"strings"
 	"time"
 )
 
@@ -27,36 +28,41 @@ const (
 
 type Authenticator interface {
 	Authenticate(username, password string) (string, error)
-	GetUser(rawToken string) (*domain.User, error)
+	GetUser(rawToken string) (uuid.UUID, error)
 }
 
 type AuthenticatorImpl struct {
 	UserRepository repositories.UserRepository
 }
 
-func (a *AuthenticatorImpl) GetUser(rawToken string) (*domain.User, error) {
+func (a *AuthenticatorImpl) GetUser(rawToken string) (uuid.UUID, error) {
 	if rawToken == "" {
-		return nil, errors.New("no token present")
+		return uuid.Nil, errors.New("no token present")
 	}
-	token, err := jwt.Parse(rawToken, func(token *jwt.Token) (interface{}, error) {
+	parts := strings.Split(rawToken, " ")
+	if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
+		return uuid.Nil, fmt.Errorf("authorization header format must be: Bearer <token>")
+	}
+	claimsString := parts[1]
+	token, err := jwt.Parse(claimsString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		return []byte(jwtKey), nil
 	})
 	if err != nil {
-		return nil, err
+		return uuid.Nil, err
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return nil, errors.New("invalid token")
+		return uuid.Nil, errors.New("invalid token")
 	}
 	exp, _ := claims.GetExpirationTime()
 	if time.Now().UTC().After(exp.UTC()) {
-		return nil, errors.New("token expired")
+		return uuid.Nil, errors.New("token expired")
 	}
 	userId := claims[jwtUserIdKey]
-	return &domain.User{ID: uuid.MustParse(userId.(string))}, nil
+	return uuid.MustParse(userId.(string)), nil
 }
 
 func (a *AuthenticatorImpl) Authenticate(email, password string) (string, error) {

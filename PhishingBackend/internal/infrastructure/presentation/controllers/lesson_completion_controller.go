@@ -26,14 +26,14 @@ func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWrite
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	user, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
+	userId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte(err.Error()))
 		return
 	}
 
-	isNew, err := c.LessonCompletionService.Create(courseId, lesson.LessonId, user.ID)
+	isNew, err := c.LessonCompletionService.Create(courseId, lesson.LessonId, userId)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
