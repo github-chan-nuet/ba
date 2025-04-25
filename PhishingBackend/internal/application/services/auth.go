@@ -35,11 +35,11 @@ type AuthenticatorImpl struct {
 	UserRepository repositories.UserRepository
 }
 
-func (a *AuthenticatorImpl) GetUser(rawToken string) (uuid.UUID, error) {
-	if rawToken == "" {
+func (a *AuthenticatorImpl) GetUser(authHeader string) (uuid.UUID, error) {
+	if authHeader == "" {
 		return uuid.Nil, errors.New("no token present")
 	}
-	parts := strings.Split(rawToken, " ")
+	parts := strings.Split(authHeader, " ")
 	if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
 		return uuid.Nil, fmt.Errorf("authorization header format must be: Bearer <token>")
 	}
@@ -66,7 +66,6 @@ func (a *AuthenticatorImpl) GetUser(rawToken string) (uuid.UUID, error) {
 }
 
 func (a *AuthenticatorImpl) Authenticate(email, password string) (string, error) {
-	// https://de.wikipedia.org/wiki/PBKDF2
 	hashedPassword, err := HashPassword(password)
 	if err != nil {
 		return "", err
