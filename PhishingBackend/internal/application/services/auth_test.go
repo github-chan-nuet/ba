@@ -1,10 +1,13 @@
 package services
 
 import (
+	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
+	"phishing_backend/internal/application/interfaces/repositories"
 	"phishing_backend/internal/domain"
 	"testing"
 	"time"
@@ -22,7 +25,6 @@ func TestCreateValidJwtToken(t *testing.T) {
 	token, err := sut.createJwtToken(&user)
 
 	// then
-	t.Log(token)
 	assert.Nil(t, err)
 	assert.NotNil(t, token)
 	// and token is valid
@@ -94,7 +96,6 @@ func TestReturnsErrorWhenTokenIsInvalid(t *testing.T) {
 	token, err := sut.GetUser("Bearer <invalidstring>")
 
 	// then
-	fmt.Println(err)
 	assert.Equal(t, uuid.Nil, token)
 	assert.Error(t, err)
 }
@@ -109,7 +110,6 @@ func TestReturnsErrorWhenTokenSignatureIsInvalid(t *testing.T) {
 	token, err := sut.GetUser("Bearer " + mockToken)
 
 	// then
-	fmt.Println(err)
 	assert.Equal(t, uuid.Nil, token)
 	assert.Error(t, err)
 }
@@ -125,9 +125,8 @@ func TestReturnsErrorWhenTokenIsExpired(t *testing.T) {
 	token, err := sut.GetUser("Bearer " + mockToken)
 
 	// then
-	fmt.Println(err)
 	assert.Equal(t, uuid.Nil, token)
-	assert.Error(t, err, "token expired")
+	assert.EqualError(t, err, "token has invalid claims: token is expired")
 }
 
 func createMockToken(key string) string {
@@ -138,4 +137,60 @@ func createMockToken(key string) string {
 		})
 	signedToken, _ := t.SignedString([]byte(key))
 	return signedToken
+}
+
+// ----- Authenticate -----
+
+func TestReturnJwtTokenWhenUserExists(t *testing.T) {
+	// given
+	pbkdf2Iter = "1"
+	ctrl := gomock.NewController(t)
+	m := repositories.NewMockUserRepository(ctrl)
+	m.EXPECT().GetByEmailAndPassword(gomock.Any(), gomock.Any()).Return(&domain.User{ID: uuid.New()}, nil)
+	sut := AuthenticatorImpl{
+		UserRepository: m,
+	}
+
+	// when
+	jtwToken, err := sut.Authenticate("", "")
+
+	// then
+	assert.NoError(t, err)
+	assert.NotNil(t, jtwToken)
+}
+
+func TestReturnErrorWhenUserDoesNotExist(t *testing.T) {
+	// given
+	pbkdf2Iter = "1"
+	ctrl := gomock.NewController(t)
+	m := repositories.NewMockUserRepository(ctrl)
+	m.EXPECT().GetByEmailAndPassword(gomock.Any(), gomock.Any()).Return(nil, nil)
+	sut := AuthenticatorImpl{
+		UserRepository: m,
+	}
+
+	// when
+	jtwToken, err := sut.Authenticate("", "")
+
+	// then
+	assert.Empty(t, jtwToken)
+	assert.EqualError(t, err, "authentication claims are invalid")
+}
+
+func TestReturnErrorWhenRepositoryReturnsError(t *testing.T) {
+	// given
+	pbkdf2Iter = "1"
+	ctrl := gomock.NewController(t)
+	m := repositories.NewMockUserRepository(ctrl)
+	m.EXPECT().GetByEmailAndPassword(gomock.Any(), gomock.Any()).Return(nil, errors.New("test error"))
+	sut := AuthenticatorImpl{
+		UserRepository: m,
+	}
+
+	// when
+	jtwToken, err := sut.Authenticate("", "")
+
+	// then
+	assert.Empty(t, jtwToken)
+	assert.EqualError(t, err, "test error")
 }

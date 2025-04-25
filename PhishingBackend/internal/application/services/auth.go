@@ -44,6 +44,7 @@ func (a *AuthenticatorImpl) GetUser(authHeader string) (uuid.UUID, error) {
 		return uuid.Nil, fmt.Errorf("authorization header format must be: Bearer <token>")
 	}
 	claimsString := parts[1]
+	// this code also verifies that the token is not expired
 	token, err := jwt.Parse(claimsString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -51,15 +52,12 @@ func (a *AuthenticatorImpl) GetUser(authHeader string) (uuid.UUID, error) {
 		return []byte(jwtKey), nil
 	})
 	if err != nil {
+		fmt.Println("ahhhhhhhh")
 		return uuid.Nil, err
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
 		return uuid.Nil, errors.New("invalid token")
-	}
-	exp, _ := claims.GetExpirationTime()
-	if time.Now().UTC().After(exp.UTC()) {
-		return uuid.Nil, errors.New("token expired")
 	}
 	userId := claims[jwtUserIdKey]
 	return uuid.MustParse(userId.(string)), nil
