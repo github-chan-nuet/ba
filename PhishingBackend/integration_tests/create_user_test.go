@@ -5,23 +5,22 @@ package integration_tests
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"net/http"
-	"net/http/httptest"
-	"phishing_backend/internal/domain"
-	"phishing_backend/internal/infrastructure/presentation"
+	"phishing_backend/internal/application/services"
 	"phishing_backend/internal/infrastructure/presentation/api"
 	"testing"
 )
 
 // https://medium.com/insiderengineering/integration-test-in-golang-899412b7e1bf
 func Test(t *testing.T) {
-	ts := httptest.NewServer(presentation.NewServeMux())
-	defer ts.Close()
-
 	// given
-	reqBody := api.UserPostModel{}
+	reqBody := api.UserPostModel{
+		Email:     "john.doe@test.com",
+		Password:  "password",
+		Firstname: "John",
+		Lastname:  "Doe",
+	}
 	marshal, _ := json.Marshal(reqBody)
 	req, _ := http.NewRequest(http.MethodPost, ts.URL+"/api/users", bytes.NewReader(marshal))
 
@@ -31,10 +30,12 @@ func Test(t *testing.T) {
 	// then
 	assert.NoError(t, err)
 	assert.Equal(t, resp.StatusCode, http.StatusCreated)
-	db := getDb()
-	var users []domain.User
-	db.Find(&users)
-	for _, user := range users {
-		fmt.Println(user.ID.String(), user.Firstname, user.Lastname, user.Email, string(user.Password))
-	}
+	// and user was stored into the DB
+	user := getUser(reqBody.Email)
+	assert.NotNil(t, user)
+	assert.Equal(t, reqBody.Email, user.Email)
+	assert.Equal(t, reqBody.Firstname, user.Firstname)
+	assert.Equal(t, reqBody.Lastname, user.Lastname)
+	expectedPw, _ := services.HashPassword(reqBody.Password)
+	assert.Equal(t, expectedPw, user.Password)
 }

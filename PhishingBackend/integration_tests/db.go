@@ -1,3 +1,5 @@
+//go:build integration
+
 package integration_tests
 
 import (
@@ -7,15 +9,22 @@ import (
 	"gorm.io/gorm/logger"
 	"log/slog"
 	"os"
+	"phishing_backend/internal/domain"
 )
 
-var db *gorm.DB
+var gormDb *gorm.DB
+
+func getUser(email string) *domain.User {
+	user := &domain.User{}
+	getDb().Where("email = ?", email).First(user)
+	return user
+}
 
 func getDb() *gorm.DB {
-	if db == nil {
-		db = initGormAndDatabaseConnection()
+	if gormDb == nil {
+		gormDb = initGormAndDatabaseConnection()
 	}
-	return db
+	return gormDb
 }
 
 type dbConfig struct {
