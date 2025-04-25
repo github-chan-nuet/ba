@@ -13,7 +13,7 @@ import (
 )
 
 // https://medium.com/insiderengineering/integration-test-in-golang-899412b7e1bf
-func Test(t *testing.T) {
+func TestNewUserCanBeCreated(t *testing.T) {
 	// given
 	reqBody := api.UserPostModel{
 		Email:     "john.doe@test.com",

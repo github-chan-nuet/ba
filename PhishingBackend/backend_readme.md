@@ -26,3 +26,6 @@ go build -o myapp
 ## verify that the server is running
 open http://127.0.0.1:8080/api/health
 
+
+# Executing integration tests
+C:\Users\Pat\GolandProjects\securaware\PhishingBackend\integration_tests\setup

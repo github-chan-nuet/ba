@@ -42,7 +42,7 @@ func (a *AuthenticatorImpl) GetUser(rawToken string) (*domain.User, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
-		return jwtKey, nil
+		return []byte(jwtKey), nil
 	})
 	if err != nil {
 		return nil, err
