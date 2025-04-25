@@ -1,7 +1,6 @@
 import { tokens } from "@fluentui/react-components";
-import { Home24Regular, Lightbulb24Filled, MailWarning24Regular, SignOut24Regular, Trophy24Regular } from "@fluentui/react-icons";
-import { ReactElement } from "react";
-import { Link } from "react-router";
+import * as FluentIcons from "@fluentui/react-icons";
+import { NavLink } from "react-router";
 
 import NavBarStyles from './NavBar.module.scss';
 import useAuth from "../auth/useAuth";
@@ -14,28 +13,28 @@ function NavBar() {
       <div className={NavBarStyles.NavBar__items}>
         <NavBarItem
           label="Securaware"
-          icon={<Home24Regular />}
+          iconBaseName="Home"
           href="/dashboard"
         />
         <NavBarItem
           label="Phishing-Simulation"
-          icon={<MailWarning24Regular />}
+          iconBaseName="MailWarning"
           href="/dashboard/phishing-simulation"
         />
         <NavBarItem
           label="Leaderboard"
-          icon={<Trophy24Regular />}
+          iconBaseName="Trophy"
           href="/dashboard/leaderboard"
         />
         <NavBarItem
           label="Online-Kurse"
-          icon={<Lightbulb24Filled color={tokens.colorNeutralForeground2BrandSelected} />}
+          iconBaseName="Lightbulb"
           href="/dashboard/courses"
         />
       </div>
       <div className={NavBarStyles.NavBar__items}>
         <button className={NavBarStyles.NavBar__item} onClick={onLogout}>
-          <SignOut24Regular />
+          <FluentIcons.SignOut24Regular />
           <span className={NavBarStyles.NavBar__itemLabel}>Abmelden</span>
         </button>
       </div>
@@ -43,21 +42,40 @@ function NavBar() {
   )
 }
 
+type FluentIconKey = keyof typeof FluentIcons;
+type Regular24Keys = Extract<FluentIconKey, `${string}24Regular`>;
+type Filled24Keys = Extract<FluentIconKey, `${string}24Filled`>;
+type IconBaseName = Regular24Keys extends `${infer Base}24Regular` ? Base : never;
+
 type NavBarItemProps = {
   href: string,
   label: string,
-  icon: ReactElement
+  iconBaseName: IconBaseName
 }
 
-function NavBarItem({ href, label, icon }: NavBarItemProps) {
+function NavBarItem({ href, label, iconBaseName }: NavBarItemProps) {
+  const iconKey = `${iconBaseName}24Regular` as Regular24Keys;
+  const iconKeyActive = `${iconBaseName}24Filled` as Filled24Keys;
+  const IconComponent = FluentIcons[iconKey];
+  const IconActiveComponent = FluentIcons[iconKeyActive];
+
   return (
-    <Link
+    <NavLink
       to={href}
+      end
       className={NavBarStyles.NavBar__item}
     >
-      {icon}
-      <span className={NavBarStyles.NavBar__itemLabel}>{label}</span>
-    </Link>
+      {({ isActive }) => (
+        <>
+          {
+            isActive ?
+            <IconActiveComponent color={tokens.colorNeutralForeground2BrandSelected}  /> :
+            <IconComponent  />
+          }
+          <span className={NavBarStyles.NavBar__itemLabel}>{label}</span>
+        </>
+      )}
+    </NavLink>
   )
 }
 
