@@ -2,11 +2,12 @@ package persistance
 
 import (
 	"errors"
-	"github.com/google/uuid"
-	"gorm.io/gorm"
 	"log/slog"
 	"phishing_backend/internal/application/interfaces/repositories"
 	"phishing_backend/internal/domain"
+
+	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 var _ repositories.UserRepository = (*UserRepositoryImpl)(nil)
@@ -37,7 +38,7 @@ func (u *UserRepositoryImpl) GetByEmailAndPassword(email string, password []byte
 	result := db.Where("email = ? AND password = ?", email, password).First(user)
 	if result.Error != nil {
 		slog.Error("Could not get user by email and password", "err", result.Error)
-		if errors.As(result.Error, &gorm.ErrRecordNotFound) {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 			return nil, nil
 		}
 		return nil, result.Error
