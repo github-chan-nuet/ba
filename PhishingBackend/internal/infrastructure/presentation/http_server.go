@@ -20,6 +20,9 @@ func SetupHttpServer() {
 
 func NewServeMux() *http.ServeMux {
 	userRepository := persistance.UserRepositoryImpl{}
+	expService := services.ExperienceServiceImpl{
+		Repo: &persistance.LessonCompletionRepositoryImpl{},
+	}
 
 	authenticator := services.AuthenticatorImpl{
 		UserRepository: &userRepository,
@@ -29,12 +32,14 @@ func NewServeMux() *http.ServeMux {
 		UserService: &services.UserServiceImpl{
 			UserRepository: &userRepository,
 		},
+		ExperienceService: &expService,
 	}
 	lessonCompletionController := controllers.LessonCompletionController{
 		Authenticator: &authenticator,
 		LessonCompletionService: &services.LessonCompletionServiceImpl{
 			Repo: &persistance.LessonCompletionRepositoryImpl{},
 		},
+		ExperienceService: &expService,
 	}
 
 	sMux := http.NewServeMux()

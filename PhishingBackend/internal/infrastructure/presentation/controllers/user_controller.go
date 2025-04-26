@@ -9,8 +9,9 @@ import (
 )
 
 type UserController struct {
-	Authenticator services.Authenticator
-	UserService   services.UserService
+	Authenticator     services.Authenticator
+	UserService       services.UserService
+	ExperienceService services.ExperienceService
 }
 
 func (c *UserController) LoginAndReturnJwtToken(w http.ResponseWriter, r *http.Request) {
@@ -68,14 +69,20 @@ func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 		return
 	}
-	userDto := api.User{
+	exp, err := c.ExperienceService.GetEntireExperience(userId)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	userResp := api.User{
 		Email:           &user.Email,
 		Firstname:       &user.Firstname,
 		Lastname:        &user.Lastname,
-		Level:           nil,
-		TotalExperience: nil,
+		Level:           &exp.Level,
+		TotalExperience: &exp.TotalExperience,
 	}
-	userJson, _ := json.Marshal(&userDto)
+	userJson, _ := json.Marshal(&userResp)
 	w.WriteHeader(http.StatusOK)
 	w.Write(userJson)
 }
