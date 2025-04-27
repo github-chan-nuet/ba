@@ -65,4 +65,4 @@ deploy:
     - ssh-add <(echo "$CD_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - scp -o StrictHostKeyChecking=no ./.docker/compose.yaml "$CD_USERNAME"@"$CD_HOST":/home/$CD_USERNAME/securaware/.docker
-    - ssh -o StrictHostKeyChecking=no "$CD_USERNAME"@"$CD_HOST" "docker compose -f /home/$CD_USERNAME/.docker/compose.yaml up -d"
+    - ssh -o StrictHostKeyChecking=no "$CD_USERNAME"@"$CD_HOST" "docker compose -f /home/$CD_USERNAME/securaware/.docker/compose.yaml up -d"
