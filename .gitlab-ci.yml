@@ -3,7 +3,7 @@ stages:
   - test
   - publish
 
-build:
+build-phishingbackend:
   stage: build
   image: golang:1.24.1
   script:
@@ -12,6 +12,17 @@ build:
   artifacts:
     paths:
       - ./app/phishingBackend
+
+build-phishingeducator:
+  stage: build
+  image: node:22-alpine
+  script:
+    - cd PhishingEducator
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - ./dist
 
 # https://gitlab.com/gitlab-org/gitlab/-/merge_requests/66787/diffs
 test:
@@ -27,16 +38,17 @@ test:
     reports:
       junit: PhishingBackend/testResults.xml
 
-publish-phishingbackend:
+publish:
   stage: publish
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   variables:
-    CONTAINER_RELEASE_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}
+    PHISHING_BACKEND_RELEASE_IMAGE: ${CI_REGISTRY_IMAGE}/phishingBackend:${CI_COMMIT_SHA}
   services:
     - name: docker:25.0.3-dind
       alias: docker
   before_script:
     - echo "${CI_REGISTRY_PASSWORD}" | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
   script:
-    - echo "Let's Deploy!"
+    - docker build . -t ${PHISHING_BACKEND_RELEASE_IMAGE} -f PhishingBackend/.docker/Dockerfile
+    - docker push ${PHISHING_BACKEND_RELEASE_IMAGE}
