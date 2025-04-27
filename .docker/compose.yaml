@@ -1,0 +1,15 @@
+services:
+  phishing_backend:
+    build:
+      context: ../PhishingBackend
+      dockerfile: .docker/Dockerfile
+    image: ${CI_REGISTRY_IMAGE}/phishingBackend:${CI_COMMIT_SHA}
+    env_file: ../PhishingBackend/.docker/phishing_backend.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      phishing_mail_storage:
+        condition: service_healthy
+    networks:
+      - frontend___backend
+      - backend___db
