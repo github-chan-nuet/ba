@@ -5,12 +5,14 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"phishing_backend/internal/application/services"
+	"phishing_backend/internal/domain"
 	"phishing_backend/internal/infrastructure/presentation/api"
 )
 
 type LessonCompletionController struct {
 	LessonCompletionService services.LessonCompletionService
 	Authenticator           services.Authenticator
+	ExperienceService       services.ExperienceService
 }
 
 func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWriter, r *http.Request) {
@@ -26,14 +28,14 @@ func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWrite
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	user, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
+	userId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		w.Write([]byte(err.Error()))
 		return
 	}
 
-	isNew, err := c.LessonCompletionService.Create(courseId, lesson.LessonId, user.ID)
+	isNew, err := c.LessonCompletionService.Create(courseId, lesson.LessonId, userId)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))
@@ -43,5 +45,20 @@ func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWrite
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
-	//api.ExperienceGain{}
+	expGain, err := c.ExperienceService.GetExperienceGain(userId, domain.LessonCompletionGain)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	expGainResp := api.ExperienceGain{
+		NewExperienceGained: int64(expGain.NewExperienceGained),
+		TotalExperience:     int64(expGain.TotalExperience),
+	}
+	if expGain.NewLevel != nil {
+		newLvl := int64(*expGain.NewLevel)
+		expGainResp.NewLevel = &newLvl
+	}
+	expGainJson, _ := json.Marshal(&expGainResp)
+	w.WriteHeader(http.StatusOK)
+	w.Write(expGainJson)
 }

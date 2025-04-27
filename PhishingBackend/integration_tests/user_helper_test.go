@@ -5,8 +5,8 @@ package integration_tests
 import (
 	"bytes"
 	"crypto/rand"
-	"encoding/base64"
 	"encoding/json"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"io"
@@ -57,9 +57,6 @@ func getJwtTokenForUser(t *testing.T, user *api.UserPostModel) string {
 }
 
 func getUserId(jwtToken string) uuid.UUID {
-	claimString := strings.Split(jwtToken, ".")[1]
-	decoded, _ := base64.StdEncoding.DecodeString(claimString)
-	var result map[string]interface{}
-	json.Unmarshal(decoded, &result)
-	return uuid.MustParse(result["id"].(string))
+	token, _, _ := new(jwt.Parser).ParseUnverified(jwtToken, jwt.MapClaims{})
+	return uuid.MustParse(token.Claims.(jwt.MapClaims)["id"].(string))
 }

@@ -28,4 +28,5 @@ open http://127.0.0.1:8080/api/health
 
 
 # Executing integration tests
-C:\Users\Pat\GolandProjects\securaware\PhishingBackend\integration_tests\setup
+Laptop:  C:\Users\Pat\GolandProjects\securaware\PhishingBackend\integration_tests\setup
+Desktop: C:\Users\psche\GolandProjects\securaware\PhishingBackend\integration_tests\setup

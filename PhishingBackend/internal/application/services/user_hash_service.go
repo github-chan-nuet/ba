@@ -14,6 +14,7 @@ var (
 )
 
 func HashPassword(password string) ([]byte, error) {
+	// https://de.wikipedia.org/wiki/PBKDF2
 	hashedPassword, err := pbkdf2.Key(sha256.New, password, []byte(pbkdf2Salt), mustAtoi(pbkdf2Iter), 32)
 	if err != nil {
 		slog.Error("Could not hash password", "err", err)
