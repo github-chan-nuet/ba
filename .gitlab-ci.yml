@@ -61,6 +61,7 @@ deploy:
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
   script:
+    - eval $(ssh-agent -s)
     - ssh-add <(echo "$CD_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - scp -o StrictHostKeyChecking=no /.docker/compose.yaml "$CD_USERNAME"@"$CD_HOST":/home/$CD_USERNAME/securaware/.docker
