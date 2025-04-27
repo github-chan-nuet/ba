@@ -3,6 +3,7 @@ image: golang:1.24.1
 stages:
   - build
   - test
+  - publish
 
 build:
   stage: build
@@ -25,3 +26,17 @@ test:
       - PhishingBackend/testResults.xml
     reports:
       junit: PhishingBackend/testResults.xml
+
+publish-phishingbackend:
+  stage: publish
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  variables:
+    CONTAINER_RELEASE_IMAGE: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}
+  services:
+    - name: docker:25.0.3-dind
+      alias: docker
+  before_script:
+    - echo "${CI_REGISTRY_PASSWORD}" | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+  script:
+    - echo "Let's Deploy!"
