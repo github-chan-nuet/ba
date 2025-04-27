@@ -1,0 +1,38 @@
+package integration_tests
+
+import (
+	"bytes"
+	"encoding/json"
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"net/http"
+	"phishing_backend/internal/domain"
+	"phishing_backend/internal/infrastructure/presentation/api"
+	"testing"
+)
+
+func TestLessonCanBeCompleted(t *testing.T) {
+	// given
+	user := createUser(t)
+	jwtToken := getJwtTokenForUser(t, user)
+
+	reqBody := api.Lesson{LessonId: uuid.New()}
+	marshal, _ := json.Marshal(reqBody)
+	url := ts.URL + "/api/courses/" + uuid.NewString() + "/completions"
+	req, _ := http.NewRequest(http.MethodPost, url, bytes.NewReader(marshal))
+	req.Header.Set("Authorization", "Bearer "+jwtToken)
+
+	// when
+	resp, err := http.DefaultClient.Do(req)
+
+	// then
+	assert.Nil(t, err)
+	assert.Equal(t, http.StatusCreated, resp.StatusCode)
+	var expGain api.ExperienceGain
+	err = json.NewDecoder(resp.Body).Decode(&expGain)
+	assert.NoError(t, err)
+	assert.Equal(t, int64(domain.LessonCompletionGain), expGain.NewExperienceGained)
+	assert.Equal(t, int64(domain.LessonCompletionGain), expGain.TotalExperience)
+	assert.NotNil(t, expGain.NewLevel)
+	assert.Equal(t, int64(2), *expGain.NewLevel)
+}

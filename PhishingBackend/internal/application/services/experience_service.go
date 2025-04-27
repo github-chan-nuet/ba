@@ -48,6 +48,8 @@ func (s *ExperienceServiceImpl) GetEntireExperience(userId uuid.UUID) (*domain.U
 
 func (s *ExperienceServiceImpl) calcLevel(totalExperience int) int {
 	// level is calculated by the formula: 1 + ln(x/200 + 1) / ln(1.5)
-	levelAsFloat := 1 + math.Log(float64((totalExperience/200)+1))/math.Log(1.5)
-	return int(math.Floor(levelAsFloat))
+	// Desmos: 1\ +\ \ln\left(\frac{x}{200}+1\right)\ \frac{1}{\ln\left(1.5\right)}
+	levelAsFloat := float64(1) + (math.Log((float64(totalExperience)/200)+1) / math.Log(1.5))
+	lvl := int(math.Floor(levelAsFloat))
+	return lvl
 }

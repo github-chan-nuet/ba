@@ -41,13 +41,14 @@ func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWrite
 		w.Write([]byte(err.Error()))
 		return
 	}
-	if isNew {
+	if !isNew {
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
 	expGain, err := c.ExperienceService.GetExperienceGain(userId, domain.LessonCompletionGain)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(err.Error()))
 		return
 	}
 	expGainResp := api.ExperienceGain{
@@ -59,6 +60,6 @@ func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWrite
 		expGainResp.NewLevel = &newLvl
 	}
 	expGainJson, _ := json.Marshal(&expGainResp)
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	w.Write(expGainJson)
 }

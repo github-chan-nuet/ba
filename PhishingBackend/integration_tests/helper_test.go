@@ -31,12 +31,10 @@ func createUser(t *testing.T) *api.UserPostModel {
 	req, _ := http.NewRequest(http.MethodPost, ts.URL+"/api/users", bytes.NewReader(marshal))
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
-		t.Error(err)
-		t.FailNow()
+		t.Fatal(err)
 	}
 	if resp.StatusCode != http.StatusCreated {
-		t.Errorf("could not create user, expected %d, got %d", http.StatusCreated, resp.StatusCode)
-		t.FailNow()
+		t.Fatalf("could not create user, expected %d, got %d", http.StatusCreated, resp.StatusCode)
 	}
 	return &reqBody
 }
@@ -59,4 +57,19 @@ func getJwtTokenForUser(t *testing.T, user *api.UserPostModel) string {
 func getUserId(jwtToken string) uuid.UUID {
 	token, _, _ := new(jwt.Parser).ParseUnverified(jwtToken, jwt.MapClaims{})
 	return uuid.MustParse(token.Claims.(jwt.MapClaims)["id"].(string))
+}
+
+func createLessonCompletion(t *testing.T, jwtToken string) *api.ExperienceGain {
+	reqBody := api.Lesson{LessonId: uuid.New()}
+	marshal, _ := json.Marshal(reqBody)
+	req, _ := http.NewRequest(http.MethodPost, ts.URL+"/api/courses/"+uuid.NewString()+"/completions", bytes.NewReader(marshal))
+	req.Header.Set("Authorization", "Bearer "+jwtToken)
+	resp, err := http.DefaultClient.Do(req)
+	assert.NoError(t, err)
+	assert.Equal(t, resp.StatusCode, http.StatusCreated)
+	var expGain api.ExperienceGain
+	if err := json.NewDecoder(resp.Body).Decode(&expGain); err != nil {
+		t.Fatal("failed to decode response:", err)
+	}
+	return &expGain
 }

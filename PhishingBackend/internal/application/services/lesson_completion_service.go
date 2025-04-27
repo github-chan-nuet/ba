@@ -21,6 +21,7 @@ type LessonCompletionServiceImpl struct {
 
 func (c *LessonCompletionServiceImpl) Create(courseId, lessonId, userId uuid.UUID) (IsNewEntry, error) {
 	lc := domain.LessonCompletion{
+		ID:       uuid.New(),
 		LessonId: lessonId,
 		CourseId: courseId,
 		UserFk:   userId,

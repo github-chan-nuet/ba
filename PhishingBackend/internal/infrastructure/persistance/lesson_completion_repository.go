@@ -14,7 +14,7 @@ type LessonCompletionRepositoryImpl struct {
 
 func (c *LessonCompletionRepositoryImpl) CountForUser(userId uuid.UUID) (int64, error) {
 	var count int64
-	result := db.Where("User = ?", userId).Count(&count)
+	result := db.Model(&domain.LessonCompletion{}).Where("user_fk = ?", userId).Count(&count)
 	if result.Error != nil {
 		slog.Error("Could not count lesson completions", "err", result.Error)
 		return 0, result.Error
