@@ -7,9 +7,17 @@ services:
     env_file: ../PhishingBackend/.docker/phishing_backend.env
     ports:
       - "8080:8080"
-    depends_on:
-      phishing_mail_storage:
-        condition: service_healthy
+#    depends_on:
+#      phishing_mail_storage:
+#        condition: service_healthy
     networks:
       - frontend___backend
       - backend___db
+
+# https://docs.docker.com/compose/how-tos/networking/
+networks:
+  backend___db:
+    driver: bridge
+  
+  frontend___backend:
+    driver: bridge
