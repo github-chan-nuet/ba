@@ -3,7 +3,7 @@ services:
     build:
       context: ../PhishingBackend
       dockerfile: .docker/Dockerfile
-    image: ${CI_REGISTRY_IMAGE}/phishingBackend:${CI_COMMIT_SHA}
+    image: ${CI_REGISTRY_IMAGE}/phishing-backend:${CI_COMMIT_SHA}
     env_file: ../PhishingBackend/.docker/phishing_backend.env
     ports:
       - "8080:8080"
