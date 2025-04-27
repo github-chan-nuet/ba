@@ -2,6 +2,7 @@ stages:
   - build
 #  - test
   - publish
+  - deploy
 
 build-phishingbackend:
   stage: build
@@ -52,3 +53,15 @@ publish:
   script:
     - docker compose -f .docker/compose.yaml build
     - docker compose -f .docker/compose.yaml push
+
+deploy:
+  stage: deploy
+  needs:
+    - job: publish
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  script:
+    - ssh-add <(echo "$CD_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - scp -o StrictHostKeyChecking=no /.docker/compose.yaml "$CD_USERNAME"@"$CD_HOST":/home/$CD_USERNAME/securaware/.docker
+    - scp -o StrictHostKeyChecking=no "$CD_USERNAME"@"$CD_HOST" "docker compose -f /home/$CD_USERNAME/.docker/compose.yaml up -d"
