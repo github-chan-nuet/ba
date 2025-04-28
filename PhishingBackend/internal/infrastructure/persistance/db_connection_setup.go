@@ -41,7 +41,11 @@ func newDbConfig() *dbConfig {
 
 func init() {
 	initGormAndDatabaseConnection()
-	createTables()
+	err := migrateDatabaseSchema()
+	if err != nil {
+		panic(err)
+	}
+	//createTables()
 }
 
 func initGormAndDatabaseConnection() {
