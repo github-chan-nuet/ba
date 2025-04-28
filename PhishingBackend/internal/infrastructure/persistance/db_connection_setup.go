@@ -43,6 +43,7 @@ func init() {
 	initGormAndDatabaseConnection()
 	err := migrateDatabaseSchema()
 	if err != nil {
+		slog.Error("Database schema could not be migrated", "err", err)
 		panic(err)
 	}
 	//createTables()
