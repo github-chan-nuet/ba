@@ -25,6 +25,10 @@ func (d *dbConfig) getConnectionString() string {
 		d.host, d.port, d.user, d.password, d.dbname)
 }
 
+func (d *dbConfig) getPostgresConnString() string {
+	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s", d.user, d.password, d.host, d.port, d.dbname)
+}
+
 func newDbConfig() *dbConfig {
 	return &dbConfig{
 		host:     os.Getenv("PHBA_DB_HOST"),
