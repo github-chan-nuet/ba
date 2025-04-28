@@ -1,0 +1,33 @@
+package persistance
+
+import (
+	"context"
+	"embed"
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/tern/v2/migrate"
+	"io/fs"
+)
+
+//go:embed postgresSchemaMigration/*.sql
+var postgresSchemaFS embed.FS
+
+func migrateDatabaseSchema() error {
+	config := newDbConfig()
+	conn, err := pgx.Connect(context.TODO(), config.getPostgresConnString())
+	if err != nil {
+		return err
+	}
+	m, err := migrate.NewMigrator(context.TODO(), conn, "schema_version")
+	if err != nil {
+		return err
+	}
+	// migrate.FindMigrations in LoadMigrations scans dir non-recursively
+	schema, err := fs.Sub(postgresSchemaFS, "postgresSchemaMigration")
+	if err != nil {
+		return err
+	}
+	if err := m.LoadMigrations(schema); err != nil {
+		return err
+	}
+	return m.Migrate(context.TODO())
+}
