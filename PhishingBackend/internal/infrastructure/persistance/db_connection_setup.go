@@ -7,7 +7,6 @@ import (
 	"gorm.io/gorm/logger"
 	"log/slog"
 	"os"
-	"phishing_backend/internal/domain"
 )
 
 var db *gorm.DB
@@ -18,11 +17,6 @@ type dbConfig struct {
 	user     string
 	password string
 	dbname   string
-}
-
-func (d *dbConfig) getConnectionString() string {
-	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		d.host, d.port, d.user, d.password, d.dbname)
 }
 
 func (d *dbConfig) getPostgresConnString() string {
@@ -51,8 +45,8 @@ func init() {
 
 func initGormAndDatabaseConnection() {
 	config := newDbConfig()
-	connString := config.getConnectionString()
-	slog.Info("Trying to connect to DB", "connectionString", connString)
+	connString := config.getPostgresConnString()
+	slog.Info("Trying to connect to DB")
 
 	var err error
 	db, err = gorm.Open(postgres.Open(connString), &gorm.Config{
@@ -76,8 +70,8 @@ func initGormAndDatabaseConnection() {
 	slog.Info("Connection to db successful")
 }
 
-func createTables() {
-	if err := db.AutoMigrate(&domain.User{}, &domain.LessonCompletion{}); err != nil {
-		slog.Error("Could not create table", "error", err)
-	}
-}
+//func createTables() {
+//	if err := db.AutoMigrate(&domain.User{}, &domain.LessonCompletion{}); err != nil {
+//		slog.Error("Could not create table", "error", err)
+//	}
+//}
