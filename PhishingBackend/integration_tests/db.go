@@ -36,8 +36,7 @@ type dbConfig struct {
 }
 
 func (d *dbConfig) getConnectionString() string {
-	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		d.host, d.port, d.user, d.password, d.dbname)
+	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s", d.user, d.password, d.host, d.port, d.dbname)
 }
 
 func newDbConfig() *dbConfig {
