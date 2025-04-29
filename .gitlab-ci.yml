@@ -31,7 +31,7 @@ test:
    image: golang:1.24.1
    script:
      - cd PhishingBackend
-     - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./... | grep -vE '/phishing_backend/integration_tests')
+     - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./... | grep -vE '/integration_tests')
    artifacts:
      when: always
      paths:
