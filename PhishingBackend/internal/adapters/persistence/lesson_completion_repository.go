@@ -16,6 +16,26 @@ const uniqueLessonCompletion = "unique_lesson_completion_per_usr"
 type LessonCompletionRepositoryImpl struct {
 }
 
+func (c *LessonCompletionRepositoryImpl) GetLessonCompletionsOfCourseAndUser(userId, courseId uuid.UUID) ([]domain_model.LessonCompletion, error) {
+	var lessonCompletions []domain_model.LessonCompletion
+	result := db.Where("user_fk = ? AND CourseId = ?", userId, courseId).Find(&lessonCompletions)
+	if result.Error != nil {
+		slog.Error("Could not fetch lesson completions by user and courseId", "err", result.Error)
+		return nil, result.Error
+	}
+	return lessonCompletions, nil
+}
+
+func (c *LessonCompletionRepositoryImpl) GetAllCompletedLessonsInAllCourses(userId uuid.UUID) ([]domain_model.LessonCompletion, error) {
+	var lessonCompletions []domain_model.LessonCompletion
+	result := db.Where("user_fk = ?", userId).Find(&lessonCompletions)
+	if result.Error != nil {
+		slog.Error("Could not fetch lesson completions by user", "err", result.Error)
+		return nil, result.Error
+	}
+	return lessonCompletions, nil
+}
+
 func (c *LessonCompletionRepositoryImpl) CountForUser(userId uuid.UUID) (int64, error) {
 	var count int64
 	result := db.Model(&domain_model.LessonCompletion{}).Where("user_fk = ?", userId).Count(&count)

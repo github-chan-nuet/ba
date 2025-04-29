@@ -6,13 +6,15 @@ import (
 	"net/http"
 	"phishing_backend/internal/adapters/presentation/api"
 	"phishing_backend/internal/domain_model"
+	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"phishing_backend/internal/domain_services/services"
 )
 
 type LessonCompletionController struct {
-	LessonCompletionService services.LessonCompletionService
-	Authenticator           services.Authenticator
-	ExperienceService       services.ExperienceService
+	LessonCompletionService    services.LessonCompletionService
+	LessonCompletionRepository repositories.LessonCompletionRepository
+	Authenticator              services.Authenticator
+	ExperienceService          services.ExperienceService
 }
 
 func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWriter, r *http.Request) {
@@ -62,4 +64,74 @@ func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWrite
 	expGainJson, _ := json.Marshal(&expGainResp)
 	w.WriteHeader(http.StatusCreated)
 	w.Write(expGainJson)
+}
+
+func (c *LessonCompletionController) GetAllLessonCompletionsOfUser(w http.ResponseWriter, r *http.Request) {
+	userId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	completions, err := c.LessonCompletionRepository.GetAllCompletedLessonsInAllCourses(userId)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	ccs := toApiCourseCompletions(completions)
+	ccsJson, _ := json.Marshal(&ccs)
+	w.WriteHeader(http.StatusCreated)
+	w.Write(ccsJson)
+}
+
+func (c *LessonCompletionController) GetLessonCompletionsOfCourseAndUser(w http.ResponseWriter, r *http.Request) {
+	courseIdStr := r.PathValue("courseId")
+	courseId, err := uuid.Parse(courseIdStr)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	userId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	lcs, err := c.LessonCompletionRepository.GetLessonCompletionsOfCourseAndUser(userId, courseId)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	lessonIds := aggregateLessonIds(lcs)
+	idsJson, _ := json.Marshal(&lessonIds)
+	w.WriteHeader(http.StatusCreated)
+	w.Write(idsJson)
+}
+
+func toApiCourseCompletions(completions []domain_model.LessonCompletion) []api.CourseCompletion {
+	courseToCompletedLessons := make(map[uuid.UUID][]uuid.UUID)
+	for _, completion := range completions {
+		lessons, ok := courseToCompletedLessons[completion.CourseId]
+		if !ok {
+			lessons = make([]uuid.UUID, 10)
+		}
+		lessons = append(lessons, completion.LessonId)
+	}
+	ccs := make([]api.CourseCompletion, len(courseToCompletedLessons))
+	for courseId, lessons := range courseToCompletedLessons {
+		ccs = append(ccs, api.CourseCompletion{
+			CourseId:         courseId,
+			CompletedLessons: lessons,
+		})
+	}
+	return ccs
+}
+
+func aggregateLessonIds(lcs []domain_model.LessonCompletion) []uuid.UUID {
+	ids := make([]uuid.UUID, len(lcs))
+	for _, lc := range lcs {
+		ids = append(ids, lc.CourseId)
+	}
+	return ids
 }
