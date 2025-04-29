@@ -11,7 +11,7 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"phishing_backend/internal/infrastructure/presentation/api"
+	"phishing_backend/internal/adapters/presentation/api"
 	"testing"
 	"time"
 )

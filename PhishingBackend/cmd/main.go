@@ -3,7 +3,7 @@ package main
 import (
 	"log/slog"
 	"os"
-	"phishing_backend/internal/infrastructure/presentation"
+	"phishing_backend/internal/adapters/presentation"
 )
 
 func main() {

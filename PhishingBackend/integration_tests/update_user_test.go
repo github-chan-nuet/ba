@@ -7,8 +7,8 @@ import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"net/http"
-	"phishing_backend/internal/application/services"
-	"phishing_backend/internal/infrastructure/presentation/api"
+	"phishing_backend/internal/adapters/presentation/api"
+	"phishing_backend/internal/domain_services/services"
 	"testing"
 )
 

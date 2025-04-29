@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"github.com/google/uuid"
 	"net/http"
-	"phishing_backend/internal/application/services"
-	"phishing_backend/internal/domain"
-	"phishing_backend/internal/infrastructure/presentation/api"
+	"phishing_backend/internal/adapters/presentation/api"
+	"phishing_backend/internal/domain_model"
+	"phishing_backend/internal/domain_services/services"
 )
 
 type LessonCompletionController struct {
@@ -45,7 +45,7 @@ func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWrite
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
-	expGain, err := c.ExperienceService.GetExperienceGain(userId, domain.LessonCompletionGain)
+	expGain, err := c.ExperienceService.GetExperienceGain(userId, domain_model.LessonCompletionGain)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte(err.Error()))

@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
-	"phishing_backend/internal/infrastructure/presentation/api"
+	"phishing_backend/internal/adapters/presentation/api"
 	"strings"
 	"testing"
 )

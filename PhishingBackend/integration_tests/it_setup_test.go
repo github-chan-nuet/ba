@@ -8,7 +8,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"os/exec"
-	"phishing_backend/internal/infrastructure/presentation"
+	"phishing_backend/internal/adapters/presentation"
 	"testing"
 )
 

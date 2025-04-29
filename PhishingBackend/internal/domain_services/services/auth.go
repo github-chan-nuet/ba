@@ -7,8 +7,8 @@ import (
 	"github.com/google/uuid"
 	"log/slog"
 	"os"
-	"phishing_backend/internal/application/interfaces/repositories"
-	"phishing_backend/internal/domain"
+	"phishing_backend/internal/domain_model"
+	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"strings"
 	"time"
 )
@@ -82,7 +82,7 @@ func (a *AuthenticatorImpl) Authenticate(email, password string) (string, error)
 	return jwtToken, nil
 }
 
-func (a *AuthenticatorImpl) createJwtToken(user *domain.User) (string, error) {
+func (a *AuthenticatorImpl) createJwtToken(user *domain_model.User) (string, error) {
 	currentTime := time.Now().UTC()
 	inOneWeek := currentTime.AddDate(0, 0, 7)
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256,

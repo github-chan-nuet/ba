@@ -9,13 +9,13 @@ import (
 	"gorm.io/gorm/logger"
 	"log/slog"
 	"os"
-	"phishing_backend/internal/domain"
+	"phishing_backend/internal/domain_model"
 )
 
 var gormDb *gorm.DB
 
-func getUser(email string) *domain.User {
-	user := &domain.User{}
+func getUser(email string) *domain_model.User {
+	user := &domain_model.User{}
 	getDb().Where("email = ?", email).First(user)
 	return user
 }

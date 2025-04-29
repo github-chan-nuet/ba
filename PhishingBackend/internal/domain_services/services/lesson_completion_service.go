@@ -2,8 +2,8 @@ package services
 
 import (
 	"github.com/google/uuid"
-	"phishing_backend/internal/application/interfaces/repositories"
-	"phishing_backend/internal/domain"
+	"phishing_backend/internal/domain_model"
+	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"time"
 )
 
@@ -20,7 +20,7 @@ type LessonCompletionServiceImpl struct {
 }
 
 func (c *LessonCompletionServiceImpl) Create(courseId, lessonId, userId uuid.UUID) (IsNewEntry, error) {
-	lc := domain.LessonCompletion{
+	lc := domain_model.LessonCompletion{
 		ID:       uuid.New(),
 		LessonId: lessonId,
 		CourseId: courseId,
