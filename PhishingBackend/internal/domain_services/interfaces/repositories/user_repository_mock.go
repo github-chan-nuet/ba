@@ -10,7 +10,7 @@
 package repositories
 
 import (
-	domain "phishing_backend/internal/domain"
+	domain "phishing_backend/internal/domain_model"
 	reflect "reflect"
 
 	uuid "github.com/google/uuid"

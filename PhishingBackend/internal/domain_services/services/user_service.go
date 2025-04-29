@@ -2,16 +2,16 @@ package services
 
 import (
 	"github.com/google/uuid"
-	"phishing_backend/internal/application/interfaces/repositories"
-	"phishing_backend/internal/domain"
-	"phishing_backend/internal/infrastructure/presentation/api"
+	"phishing_backend/internal/adapters/presentation/api"
+	"phishing_backend/internal/domain_model"
+	"phishing_backend/internal/domain_services/interfaces/repositories"
 )
 
 var _ UserService = (*UserServiceImpl)(nil)
 
 type UserService interface {
 	Create(userApiModel api.UserPostModel) error
-	Get(userId uuid.UUID) (*domain.User, error)
+	Get(userId uuid.UUID) (*domain_model.User, error)
 	Update(userId uuid.UUID, userPatchModel api.UserPatchModel) error
 }
 
@@ -20,7 +20,7 @@ type UserServiceImpl struct {
 }
 
 func (s *UserServiceImpl) Update(userId uuid.UUID, userPatchModel api.UserPatchModel) error {
-	user := &domain.User{
+	user := &domain_model.User{
 		ID: userId,
 	}
 	if userPatchModel.Firstname != nil {
@@ -42,7 +42,7 @@ func (s *UserServiceImpl) Update(userId uuid.UUID, userPatchModel api.UserPatchM
 	return s.UserRepository.UpdateUser(user)
 }
 
-func (s *UserServiceImpl) Get(userId uuid.UUID) (*domain.User, error) {
+func (s *UserServiceImpl) Get(userId uuid.UUID) (*domain_model.User, error) {
 	return s.UserRepository.GetUser(userId)
 }
 
@@ -51,7 +51,7 @@ func (s *UserServiceImpl) Create(userApiModel api.UserPostModel) error {
 	if err != nil {
 		return err
 	}
-	user := &domain.User{
+	user := &domain_model.User{
 		ID:        uuid.New(),
 		Firstname: userApiModel.Firstname,
 		Lastname:  userApiModel.Lastname,

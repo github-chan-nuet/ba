@@ -1,4 +1,4 @@
-package domain
+package domain_model
 
 import (
 	"github.com/google/uuid"

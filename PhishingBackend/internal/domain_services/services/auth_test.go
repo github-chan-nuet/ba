@@ -7,8 +7,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
-	"phishing_backend/internal/application/interfaces/repositories"
-	"phishing_backend/internal/domain"
+	"phishing_backend/internal/domain_model"
+	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"testing"
 	"time"
 )
@@ -19,7 +19,7 @@ func TestCreateValidJwtToken(t *testing.T) {
 	// given
 	sut := AuthenticatorImpl{}
 	jwtKey = "3WVX3chChmoTVFjir5itbyKW5tnge7VY" // mock jwtKey
-	user := domain.User{ID: uuid.MustParse("f5fe589e-481e-491b-914a-b0429ac842b4")}
+	user := domain_model.User{ID: uuid.MustParse("f5fe589e-481e-491b-914a-b0429ac842b4")}
 
 	// when
 	token, err := sut.createJwtToken(&user)
@@ -146,7 +146,7 @@ func TestReturnJwtTokenWhenUserExists(t *testing.T) {
 	pbkdf2Iter = "1"
 	ctrl := gomock.NewController(t)
 	m := repositories.NewMockUserRepository(ctrl)
-	m.EXPECT().GetByEmailAndPassword(gomock.Any(), gomock.Any()).Return(&domain.User{ID: uuid.New()}, nil)
+	m.EXPECT().GetByEmailAndPassword(gomock.Any(), gomock.Any()).Return(&domain_model.User{ID: uuid.New()}, nil)
 	sut := AuthenticatorImpl{
 		UserRepository: m,
 	}

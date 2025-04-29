@@ -4,9 +4,9 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
-	"phishing_backend/internal/application/services"
-	"phishing_backend/internal/infrastructure/persistance"
-	"phishing_backend/internal/infrastructure/presentation/controllers"
+	"phishing_backend/internal/adapters/persistence"
+	"phishing_backend/internal/adapters/presentation/controllers"
+	"phishing_backend/internal/domain_services/services"
 )
 
 func SetupHttpServer() {
@@ -19,9 +19,9 @@ func SetupHttpServer() {
 }
 
 func NewServeMux() *http.ServeMux {
-	userRepository := persistance.UserRepositoryImpl{}
+	userRepository := persistence.UserRepositoryImpl{}
 	expService := services.ExperienceServiceImpl{
-		Repo: &persistance.LessonCompletionRepositoryImpl{},
+		Repo: &persistence.LessonCompletionRepositoryImpl{},
 	}
 
 	authenticator := services.AuthenticatorImpl{
@@ -37,7 +37,7 @@ func NewServeMux() *http.ServeMux {
 	lessonCompletionController := controllers.LessonCompletionController{
 		Authenticator: &authenticator,
 		LessonCompletionService: &services.LessonCompletionServiceImpl{
-			Repo: &persistance.LessonCompletionRepositoryImpl{},
+			Repo: &persistence.LessonCompletionRepositoryImpl{},
 		},
 		ExperienceService: &expService,
 	}

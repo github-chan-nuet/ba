@@ -2,7 +2,7 @@ package communication
 
 import (
 	"net/smtp"
-	"phishing_backend/internal/application/interfaces/email"
+	"phishing_backend/internal/domain_services/interfaces/email"
 )
 
 var _ email.EmailSender = (*EmailSenderImpl)(nil)

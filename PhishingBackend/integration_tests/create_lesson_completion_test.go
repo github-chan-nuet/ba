@@ -6,8 +6,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"net/http"
-	"phishing_backend/internal/domain"
-	"phishing_backend/internal/infrastructure/presentation/api"
+	"phishing_backend/internal/adapters/presentation/api"
+	"phishing_backend/internal/domain_model"
 	"testing"
 )
 
@@ -31,8 +31,8 @@ func TestLessonCanBeCompleted(t *testing.T) {
 	var expGain api.ExperienceGain
 	err = json.NewDecoder(resp.Body).Decode(&expGain)
 	assert.NoError(t, err)
-	assert.Equal(t, int64(domain.LessonCompletionGain), expGain.NewExperienceGained)
-	assert.Equal(t, int64(domain.LessonCompletionGain), expGain.TotalExperience)
+	assert.Equal(t, int64(domain_model.LessonCompletionGain), expGain.NewExperienceGained)
+	assert.Equal(t, int64(domain_model.LessonCompletionGain), expGain.TotalExperience)
 	assert.NotNil(t, expGain.NewLevel)
 	assert.Equal(t, int64(2), *expGain.NewLevel)
 }

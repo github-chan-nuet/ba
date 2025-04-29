@@ -3,15 +3,15 @@ package services
 import (
 	"github.com/google/uuid"
 	"math"
-	"phishing_backend/internal/application/interfaces/repositories"
-	"phishing_backend/internal/domain"
+	"phishing_backend/internal/domain_model"
+	"phishing_backend/internal/domain_services/interfaces/repositories"
 )
 
 var _ ExperienceService = (*ExperienceServiceImpl)(nil)
 
 type ExperienceService interface {
-	GetEntireExperience(userId uuid.UUID) (*domain.UserExperience, error)
-	GetExperienceGain(userId uuid.UUID, gain int) (*domain.ExperienceGain, error)
+	GetEntireExperience(userId uuid.UUID) (*domain_model.UserExperience, error)
+	GetExperienceGain(userId uuid.UUID, gain int) (*domain_model.ExperienceGain, error)
 	calcLevel(totalExperience int) int
 }
 
@@ -19,13 +19,13 @@ type ExperienceServiceImpl struct {
 	Repo repositories.LessonCompletionRepository
 }
 
-func (s *ExperienceServiceImpl) GetExperienceGain(userId uuid.UUID, gain int) (*domain.ExperienceGain, error) {
+func (s *ExperienceServiceImpl) GetExperienceGain(userId uuid.UUID, gain int) (*domain_model.ExperienceGain, error) {
 	exp, err := s.GetEntireExperience(userId)
 	if err != nil {
 		return nil, err
 	}
 	previousLvl := s.calcLevel(exp.TotalExperience - gain)
-	expGain := domain.ExperienceGain{
+	expGain := domain_model.ExperienceGain{
 		NewExperienceGained: gain,
 		TotalExperience:     exp.TotalExperience,
 	}
@@ -35,14 +35,14 @@ func (s *ExperienceServiceImpl) GetExperienceGain(userId uuid.UUID, gain int) (*
 	return &expGain, nil
 }
 
-func (s *ExperienceServiceImpl) GetEntireExperience(userId uuid.UUID) (*domain.UserExperience, error) {
+func (s *ExperienceServiceImpl) GetEntireExperience(userId uuid.UUID) (*domain_model.UserExperience, error) {
 	numLessons, err := s.Repo.CountForUser(userId)
 	if err != nil {
 		return nil, err
 	}
-	totExp := int(numLessons * domain.LessonCompletionGain)
+	totExp := int(numLessons * domain_model.LessonCompletionGain)
 	level := s.calcLevel(totExp)
-	userExp := domain.UserExperience{TotalExperience: totExp, Level: level}
+	userExp := domain_model.UserExperience{TotalExperience: totExp, Level: level}
 	return &userExp, nil
 }
 

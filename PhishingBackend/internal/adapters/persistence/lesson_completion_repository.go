@@ -1,12 +1,12 @@
-package persistance
+package persistence
 
 import (
 	"errors"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
 	"log/slog"
-	"phishing_backend/internal/application/interfaces/repositories"
-	"phishing_backend/internal/domain"
+	"phishing_backend/internal/domain_model"
+	"phishing_backend/internal/domain_services/interfaces/repositories"
 )
 
 var _ repositories.LessonCompletionRepository = (*LessonCompletionRepositoryImpl)(nil)
@@ -18,7 +18,7 @@ type LessonCompletionRepositoryImpl struct {
 
 func (c *LessonCompletionRepositoryImpl) CountForUser(userId uuid.UUID) (int64, error) {
 	var count int64
-	result := db.Model(&domain.LessonCompletion{}).Where("user_fk = ?", userId).Count(&count)
+	result := db.Model(&domain_model.LessonCompletion{}).Where("user_fk = ?", userId).Count(&count)
 	if result.Error != nil {
 		slog.Error("Could not count lesson completions", "err", result.Error)
 		return 0, result.Error
@@ -26,7 +26,7 @@ func (c *LessonCompletionRepositoryImpl) CountForUser(userId uuid.UUID) (int64, 
 	return count, nil
 }
 
-func (c *LessonCompletionRepositoryImpl) Create(cc *domain.LessonCompletion) (int64, error) {
+func (c *LessonCompletionRepositoryImpl) Create(cc *domain_model.LessonCompletion) (int64, error) {
 	result := db.Create(cc)
 	if result.Error != nil {
 		var e *pgconn.PgError
