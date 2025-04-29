@@ -1,6 +1,6 @@
 stages:
   - build
-#  - test
+  - test
   - publish
   - deploy
 
@@ -26,18 +26,18 @@ build-phishingeducator:
       - ./dist
 
 # https://gitlab.com/gitlab-org/gitlab/-/merge_requests/66787/diffs
-# test:
-#   stage: test
-#   image: golang:1.24.1
-#   script:
-#     - cd PhishingBackend
-#     - go run gotest.tools/gotestsum@latest --junitfile testResults.xml
-#   artifacts:
-#     when: always
-#     paths:
-#       - PhishingBackend/testResults.xml
-#     reports:
-#       junit: PhishingBackend/testResults.xml
+test:
+   stage: test
+   image: golang:1.24.1
+   script:
+     - cd PhishingBackend
+     - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./... | grep -vE '/phishing_backend/integration_tests')
+   artifacts:
+     when: always
+     paths:
+       - PhishingBackend/testResults.xml
+     reports:
+       junit: PhishingBackend/testResults.xml
 
 # TODO: Add tests for frontend
 
