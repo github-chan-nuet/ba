@@ -4,10 +4,7 @@ package integration_tests
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
 	"net/http/httptest"
-	"os"
-	"os/exec"
 	"phishing_backend/internal/adapters/presentation"
 	"testing"
 )
@@ -31,26 +28,26 @@ func TestMain(m *testing.M) {
 	fmt.Println("Cleaning up after tests")
 }
 
-func loadEnvVariables() {
-	err := godotenv.Load("setup/integrationTests.env")
-	if err != nil {
-		fmt.Println("Error loading .env file", err)
-		os.Exit(1)
-	}
-}
-
-func startTestDB() error {
-	fmt.Println("Starting test DB...")
-	cmd := exec.Command("docker", "compose", "-f", "setup/docker-compose.integration.yml", "up", "-d", "--wait")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
-}
-
-func stopTestDB() error {
-	fmt.Println("Stopping test DB...")
-	cmd := exec.Command("docker", "compose", "-f", "setup/docker-compose.integration.yml", "down", "-v")
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	return cmd.Run()
-}
+//func loadEnvVariables() {
+//	err := godotenv.Load("setup/integrationTests.env")
+//	if err != nil {
+//		fmt.Println("Error loading .env file", err)
+//		os.Exit(1)
+//	}
+//}
+//
+//func startTestDB() error {
+//	fmt.Println("Starting test DB...")
+//	cmd := exec.Command("docker", "compose", "-f", "setup/docker-compose.integration.yml", "up", "-d", "--wait")
+//	cmd.Stdout = os.Stdout
+//	cmd.Stderr = os.Stderr
+//	return cmd.Run()
+//}
+//
+//func stopTestDB() error {
+//	fmt.Println("Stopping test DB...")
+//	cmd := exec.Command("docker", "compose", "-f", "setup/docker-compose.integration.yml", "down", "-v")
+//	cmd.Stdout = os.Stdout
+//	cmd.Stderr = os.Stderr
+//	return cmd.Run()
+//}
