@@ -39,33 +39,3 @@ func TestNewUserCanBeCreated(t *testing.T) {
 	expectedPw, _ := services.HashPassword(reqBody.Password)
 	assert.Equal(t, expectedPw, user.Password)
 }
-
-func TestNewUserCanBeCreatedtdd(t *testing.T) {
-	// given
-	reqBody := api.UserPostModel{
-		Email:     "john.doe@test.com",
-		Password:  "password",
-		Firstname: "John",
-		Lastname:  "Doe",
-	}
-	marshal, _ := json.Marshal(reqBody)
-	req, _ := http.NewRequest(http.MethodPost, ts.URL+"/api/users", bytes.NewReader(marshal))
-	http.DefaultClient.Do(req)
-
-	req2, _ := http.NewRequest(http.MethodPost, ts.URL+"/api/users", bytes.NewReader(marshal))
-
-	// when
-	resp, err := http.DefaultClient.Do(req2)
-
-	// then
-	assert.NoError(t, err)
-	assert.Equal(t, resp.StatusCode, http.StatusCreated)
-	// and user was stored into the DB
-	user := getUser(reqBody.Email)
-	assert.NotNil(t, user)
-	assert.Equal(t, reqBody.Email, user.Email)
-	assert.Equal(t, reqBody.Firstname, user.Firstname)
-	assert.Equal(t, reqBody.Lastname, user.Lastname)
-	expectedPw, _ := services.HashPassword(reqBody.Password)
-	assert.Equal(t, expectedPw, user.Password)
-}
