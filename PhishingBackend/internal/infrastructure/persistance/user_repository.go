@@ -2,15 +2,17 @@ package persistance
 
 import (
 	"errors"
+	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgconn"
+	"gorm.io/gorm"
 	"log/slog"
 	"phishing_backend/internal/application/interfaces/repositories"
 	"phishing_backend/internal/domain"
-
-	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 var _ repositories.UserRepository = (*UserRepositoryImpl)(nil)
+
+const uniqueEmailConstraint = "users_email_key"
 
 type UserRepositoryImpl struct {
 }
@@ -49,6 +51,12 @@ func (u *UserRepositoryImpl) GetByEmailAndPassword(email string, password []byte
 func (u *UserRepositoryImpl) CreateUser(user *domain.User) error {
 	result := db.Create(user)
 	if result.Error != nil {
+		var e *pgconn.PgError
+		if errors.As(result.Error, &e) {
+			if e.Code == "23505" && e.ConstraintName == uniqueEmailConstraint {
+				return repositories.EmailAlreadyUsed
+			}
+		}
 		slog.Error("Could not create user", "err", result.Error)
 		return result.Error
 	}
