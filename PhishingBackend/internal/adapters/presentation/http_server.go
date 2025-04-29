@@ -20,8 +20,9 @@ func SetupHttpServer() {
 
 func NewServeMux() *http.ServeMux {
 	userRepository := persistence.UserRepositoryImpl{}
+	lessonCompletionRepository := persistence.LessonCompletionRepositoryImpl{}
 	expService := services.ExperienceServiceImpl{
-		Repo: &persistence.LessonCompletionRepositoryImpl{},
+		Repo: &lessonCompletionRepository,
 	}
 
 	authenticator := services.AuthenticatorImpl{
@@ -37,9 +38,10 @@ func NewServeMux() *http.ServeMux {
 	lessonCompletionController := controllers.LessonCompletionController{
 		Authenticator: &authenticator,
 		LessonCompletionService: &services.LessonCompletionServiceImpl{
-			Repo: &persistence.LessonCompletionRepositoryImpl{},
+			Repo: &lessonCompletionRepository,
 		},
-		ExperienceService: &expService,
+		ExperienceService:          &expService,
+		LessonCompletionRepository: &lessonCompletionRepository,
 	}
 
 	sMux := http.NewServeMux()
@@ -47,6 +49,9 @@ func NewServeMux() *http.ServeMux {
 
 	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", withCORS(handleOptions))
 	sMux.HandleFunc("POST /api/courses/{courseId}/completions", withCORS(lessonCompletionController.CreateLessonCompletion))
+
+	sMux.HandleFunc("GET /api/courses/completions", withCORS(lessonCompletionController.GetAllLessonCompletionsOfUser))
+	sMux.HandleFunc("GET /api/courses/{courseId}/completions", withCORS(lessonCompletionController.GetLessonCompletionsOfCourseAndUser))
 
 	sMux.HandleFunc("OPTIONS /api/users", withCORS(handleOptions))
 	sMux.HandleFunc("POST /api/users", withCORS(userController.CreateUser))

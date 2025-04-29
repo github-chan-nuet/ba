@@ -30,6 +30,12 @@ type Answer struct {
 	Id     *int    `json:"id,omitempty"`
 }
 
+// CourseCompletion defines model for CourseCompletion.
+type CourseCompletion struct {
+	CompletedLessons []openapi_types.UUID `json:"completedLessons"`
+	CourseId         openapi_types.UUID   `json:"courseId"`
+}
+
 // Exam defines model for Exam.
 type Exam = []Question
 
@@ -117,6 +123,12 @@ type UpdateUserJSONRequestBody = UserPatchModel
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// TODO
+	// (GET /courses/completions)
+	GetAllLessonCompletionsOfUser(w http.ResponseWriter, r *http.Request)
+	// TODO
+	// (GET /courses/{courseId}/completions)
+	GetLessonCompletionsOfCourseAndUser(w http.ResponseWriter, r *http.Request, courseId int)
+	// TODO
 	// (POST /courses/{courseId}/completions)
 	CreateLessonCompletion(w http.ResponseWriter, r *http.Request, courseId int)
 	// TODO
@@ -147,6 +159,57 @@ type ServerInterfaceWrapper struct {
 }
 
 type MiddlewareFunc func(http.Handler) http.Handler
+
+// GetAllLessonCompletionsOfUser operation middleware
+func (siw *ServerInterfaceWrapper) GetAllLessonCompletionsOfUser(w http.ResponseWriter, r *http.Request) {
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetAllLessonCompletionsOfUser(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetLessonCompletionsOfCourseAndUser operation middleware
+func (siw *ServerInterfaceWrapper) GetLessonCompletionsOfCourseAndUser(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "courseId" -------------
+	var courseId int
+
+	err = runtime.BindStyledParameterWithOptions("simple", "courseId", r.PathValue("courseId"), &courseId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "courseId", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetLessonCompletionsOfCourseAndUser(w, r, courseId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
 
 // CreateLessonCompletion operation middleware
 func (siw *ServerInterfaceWrapper) CreateLessonCompletion(w http.ResponseWriter, r *http.Request) {
@@ -451,6 +514,8 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 		ErrorHandlerFunc:   options.ErrorHandlerFunc,
 	}
 
+	m.HandleFunc("GET "+options.BaseURL+"/courses/completions", wrapper.GetAllLessonCompletionsOfUser)
+	m.HandleFunc("GET "+options.BaseURL+"/courses/{courseId}/completions", wrapper.GetLessonCompletionsOfCourseAndUser)
 	m.HandleFunc("POST "+options.BaseURL+"/courses/{courseId}/completions", wrapper.CreateLessonCompletion)
 	m.HandleFunc("GET "+options.BaseURL+"/exams/{examId}", wrapper.GetExamsExamId)
 	m.HandleFunc("POST "+options.BaseURL+"/exams/{examId}/completions", wrapper.CompleteExam)

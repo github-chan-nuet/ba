@@ -146,6 +146,13 @@ paths:
       summary: TODO
       description: TODO
       operationId: getLessonCompletionsOfCourseAndUser
+      parameters:
+        - in: path
+          name: courseId
+          schema:
+            type: integer
+          required: true
+          description: Id of the course
       responses:
         '200':
           description: Completed lessons of user in specific course
@@ -397,3 +404,6 @@ components:
           items:
             type: string
             format: uuid
+      required:
+        - courseId
+        - completedLessons
