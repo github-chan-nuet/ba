@@ -116,7 +116,53 @@ paths:
         '500':
           description: Internal Server Error
 
+  "/courses/completions":
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: TODO
+      description: TODO
+      operationId: getAllLessonCompletionsOfUser
+      responses:
+        '200':
+          description: Completed lessons of user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/CourseCompletion"
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
   "/courses/{courseId}/completions":
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: TODO
+      description: TODO
+      operationId: getLessonCompletionsOfCourseAndUser
+      responses:
+        '200':
+          description: Completed lessons of user in specific course
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+
     post:
       security:
         - bearerAuth: [ ]
@@ -339,3 +385,15 @@ components:
 
     ExamValidation:
       type: object
+
+    CourseCompletion:
+      type: object
+      properties:
+        courseId:
+          type: string
+          format: uuid
+        completedLessons:
+          type: array
+          items:
+            type: string
+            format: uuid
