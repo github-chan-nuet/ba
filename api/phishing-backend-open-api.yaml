@@ -150,7 +150,8 @@ paths:
         - in: path
           name: courseId
           schema:
-            type: integer
+            type: string
+            format: uuid
           required: true
           description: Id of the course
       responses:
