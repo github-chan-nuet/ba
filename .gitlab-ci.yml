@@ -54,7 +54,7 @@ integration-test-phishingbackend:
     - source setup/integrationTests.env
     - PHBA_DB_HOST=postgres
     - set +a
-    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list -tags integration ...) -- -tags integration
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list -tags integration ./...) -- -tags integration
   artifacts:
     when: always
     paths:
