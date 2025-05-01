@@ -52,7 +52,6 @@ func (a *AuthenticatorImpl) GetUser(authHeader string) (uuid.UUID, error) {
 		return []byte(jwtKey), nil
 	})
 	if err != nil {
-		fmt.Println("ahhhhhhhh")
 		return uuid.Nil, err
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
