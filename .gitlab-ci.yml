@@ -41,10 +41,10 @@ unit-test-phishingbackend:
 
 integration-test-phishingbackend:
   stage: test
-  image: golang:1.24.1
   services:
     - name: docker:25.0.3-dind
       alias: docker
+    - name: golang:1.24.1
   script:
     - which docker
     - cd PhishingBackend/integration_tests/setup
