@@ -57,7 +57,7 @@ integration-test-phishingbackend:
     - source integrationTests.env
     - set +a
 #    - pwd
-    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml -- -tags integration --packages $(go list -tags integration ../...)
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list -tags integration ../...) -- -tags integration
   artifacts:
     when: always
     paths:
