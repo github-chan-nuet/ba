@@ -29,7 +29,7 @@ func TestNewUserCanBeCreated(t *testing.T) {
 
 	// then
 	assert.NoError(t, err)
-	assert.Equal(t, resp.StatusCode, http.StatusCreated)
+	assert.Equal(t, http.StatusCreated, resp.StatusCode)
 	// and user was stored into the DB
 	user := getUser(reqBody.Email)
 	assert.NotNil(t, user)

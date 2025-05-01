@@ -18,7 +18,7 @@ type LessonCompletionRepositoryImpl struct {
 
 func (c *LessonCompletionRepositoryImpl) GetLessonCompletionsOfCourseAndUser(userId, courseId uuid.UUID) ([]domain_model.LessonCompletion, error) {
 	var lessonCompletions []domain_model.LessonCompletion
-	result := db.Where("user_fk = ? AND CourseId = ?", userId, courseId).Find(&lessonCompletions)
+	result := db.Where("user_fk = ? AND course_id = ?", userId, courseId).Find(&lessonCompletions)
 	if result.Error != nil {
 		slog.Error("Could not fetch lesson completions by user and courseId", "err", result.Error)
 		return nil, result.Error

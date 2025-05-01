@@ -50,7 +50,7 @@ func TestLevelAndExperienceCanBeRetrieved(t *testing.T) {
 
 	// then
 	assert.NoError(t, err)
-	assert.Equal(t, resp.StatusCode, http.StatusOK)
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	var gotUser api.User
 	err = json.NewDecoder(resp.Body).Decode(&gotUser)
 	assert.NoError(t, err)

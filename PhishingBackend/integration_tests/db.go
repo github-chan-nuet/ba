@@ -52,7 +52,7 @@ func newDbConfig() *dbConfig {
 func initGormAndDatabaseConnection() *gorm.DB {
 	config := newDbConfig()
 	connString := config.getConnectionString()
-	slog.Info("Trying to connect to DB", "connectionString", connString)
+	slog.Info("Trying to connect to DB")
 	db, err := gorm.Open(postgres.Open(connString), &gorm.Config{
 		PrepareStmt: true,
 		Logger:      logger.Discard, // https://stackoverflow.com/a/55892341
