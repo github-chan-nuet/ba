@@ -27,17 +27,37 @@ build-phishingeducator:
 
 # https://gitlab.com/gitlab-org/gitlab/-/merge_requests/66787/diffs
 unit-test-phishingbackend:
-   stage: test
-   image: golang:1.24.1
-   script:
-     - cd PhishingBackend
-     - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./... | grep -vE '/integration_tests')
-   artifacts:
-     when: always
-     paths:
-       - PhishingBackend/testResults.xml
-     reports:
-       junit: PhishingBackend/testResults.xml
+  stage: test
+  image: golang:1.24.1
+  script:
+    - cd PhishingBackend
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./... | grep -vE '/integration_tests')
+  artifacts:
+    when: always
+    paths:
+      - PhishingBackend/testResults.xml
+    reports:
+      junit: PhishingBackend/testResults.xml
+
+integration-test-phishingbackend:
+  stage: test
+  image: golang:1.24.1
+  services:
+    - name: docker:25.0.3-dind
+      alias: docker
+  script:
+    - cd PhishingBackend/integration_tests/setup
+    - docker compose -f compose.integration.yaml up -d
+    - set -a
+    - source integrationTests.env
+    - set +a
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./../...')
+  artifacts:
+    when: always
+    paths:
+      - PhishingBackend/testResults.xml
+    reports:
+      junit: PhishingBackend/testResults.xml
 
 # TODO: Add tests for frontend
 
