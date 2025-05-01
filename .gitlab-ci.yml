@@ -54,10 +54,10 @@ integration-test-phishingbackend:
   script:
     - cd PhishingBackend/integration_tests/setup
 #    - docker compose -f compose.integration.yaml up -d
-#    - set -a
+    - set -a
     - source integrationTests.env
-#    - set +a
-    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./../...')
+    - set +a
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./../...)
   artifacts:
     when: always
     paths:
