@@ -46,6 +46,7 @@ integration-test-phishingbackend:
     - name: docker:25.0.3-dind
       alias: docker
   script:
+    - which docker
     - cd PhishingBackend/integration_tests/setup
     - docker compose -f compose.integration.yaml up -d
     - set -a
