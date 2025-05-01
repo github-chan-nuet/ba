@@ -41,15 +41,15 @@ stages:
 
 integration-test-phishingbackend:
   stage: test
-  services:
-#    - name: docker:25.0.3-dind
-#      alias: docker
-    - golang:1.24.1
-    - postgres:latest
+  image: golang:1.24.1
   variables:
     POSTGRES_USER: testuser
     POSTGRES_PASSWORD: test
     POSTGRES_DB: testdb
+  services:
+#    - name: docker:25.0.3-dind
+#      alias: docker
+    - postgres:latest
   script:
     - which go
     - cd PhishingBackend/integration_tests/setup
