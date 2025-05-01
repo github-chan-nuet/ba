@@ -51,14 +51,13 @@ integration-test-phishingbackend:
 #      alias: docker
     - postgres:latest
   script:
-    - which go
     - cd PhishingBackend/integration_tests/setup
 #    - docker compose -f compose.integration.yaml up -d
     - set -a
     - source integrationTests.env
     - set +a
-    - pwd
-    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./../...)
+#    - pwd
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list -tags integration ../...)
   artifacts:
     when: always
     paths:
