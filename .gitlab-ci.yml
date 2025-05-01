@@ -53,11 +53,13 @@ integration-test-phishingbackend:
     POSTGRES_PASSWORD: test
     POSTGRES_DB: testdb
   script:
+    - which go
     - cd PhishingBackend/integration_tests/setup
 #    - docker compose -f compose.integration.yaml up -d
     - set -a
     - source integrationTests.env
     - set +a
+    - pwd
     - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./../...)
   artifacts:
     when: always
