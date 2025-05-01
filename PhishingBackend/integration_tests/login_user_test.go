@@ -31,7 +31,7 @@ func TestUserCanLogin(t *testing.T) {
 
 	// then
 	assert.NoError(t, err)
-	assert.Equal(t, resp.StatusCode, http.StatusOK)
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	// and token is valid
 	binToken, _ := io.ReadAll(resp.Body)
 	claims := validateTokenAndGetClaims(t, string(binToken))

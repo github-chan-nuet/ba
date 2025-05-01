@@ -81,7 +81,7 @@ func (c *LessonCompletionController) GetAllLessonCompletionsOfUser(w http.Respon
 	}
 	ccs := toApiCourseCompletions(completions)
 	ccsJson, _ := json.Marshal(&ccs)
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 	w.Write(ccsJson)
 }
 
@@ -105,21 +105,22 @@ func (c *LessonCompletionController) GetLessonCompletionsOfCourseAndUser(w http.
 	}
 	lessonIds := aggregateLessonIds(lcs)
 	idsJson, _ := json.Marshal(&lessonIds)
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 	w.Write(idsJson)
 }
 
 func toApiCourseCompletions(completions []domain_model.LessonCompletion) []api.CourseCompletion {
-	courseToCompletedLessons := make(map[uuid.UUID][]uuid.UUID)
-	for _, completion := range completions {
-		lessons, ok := courseToCompletedLessons[completion.CourseId]
+	courseToLessons := make(map[uuid.UUID][]uuid.UUID)
+	for _, c := range completions {
+		lessons, ok := courseToLessons[c.CourseId]
 		if !ok {
-			lessons = make([]uuid.UUID, 10)
+			courseToLessons[c.CourseId] = make([]uuid.UUID, 10)
 		}
-		lessons = append(lessons, completion.LessonId)
+		courseToLessons[c.CourseId] = append(lessons, c.LessonId)
 	}
-	ccs := make([]api.CourseCompletion, len(courseToCompletedLessons))
-	for courseId, lessons := range courseToCompletedLessons {
+
+	ccs := make([]api.CourseCompletion, 0, len(courseToLessons))
+	for courseId, lessons := range courseToLessons {
 		ccs = append(ccs, api.CourseCompletion{
 			CourseId:         courseId,
 			CompletedLessons: lessons,
@@ -129,9 +130,9 @@ func toApiCourseCompletions(completions []domain_model.LessonCompletion) []api.C
 }
 
 func aggregateLessonIds(lcs []domain_model.LessonCompletion) []uuid.UUID {
-	ids := make([]uuid.UUID, len(lcs))
+	ids := make([]uuid.UUID, 0, len(lcs))
 	for _, lc := range lcs {
-		ids = append(ids, lc.CourseId)
+		ids = append(ids, lc.LessonId)
 	}
 	return ids
 }
