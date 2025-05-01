@@ -47,24 +47,20 @@ integration-test-phishingbackend:
     POSTGRES_PASSWORD: test
     POSTGRES_DB: testdb
   services:
-#    - name: docker:25.0.3-dind
-#      alias: docker
     - postgres:latest
   script:
-    - cd PhishingBackend/integration_tests/setup
-#    - docker compose -f compose.integration.yaml up -d
+    - cd PhishingBackend/integration_tests
     - set -a
-    - source integrationTests.env
+    - source setup/integrationTests.env
     - PHBA_DB_HOST=postgres
     - set +a
-#    - pwd
-    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list -tags integration ../...) -- -tags integration
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list -tags integration ...) -- -tags integration
   artifacts:
     when: always
     paths:
-      - PhishingBackend/testResults.xml
+      - PhishingBackend/integration_tests/testResults.xml
     reports:
-      junit: PhishingBackend/testResults.xml
+      junit: PhishingBackend/integration_tests/testResults.xml
 
 # TODO: Add tests for frontend
 
