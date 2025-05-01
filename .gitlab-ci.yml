@@ -4,40 +4,40 @@ stages:
   - publish
   - deploy
 
-#build-phishingbackend:
-#  stage: build
-#  image: golang:1.24.1
-#  script:
-#    - cd PhishingBackend
-#    - go build -o /app/phishingBackend cmd/main.go
-#  artifacts:
-#    paths:
-#      - ./app/phishingBackend
-#
-#build-phishingeducator:
-#  stage: build
-#  image: node:22-alpine
-#  script:
-#    - cd PhishingEducator
-#    - npm ci
-#    - npm run build
-#  artifacts:
-#    paths:
-#      - ./dist
+build-phishingbackend:
+  stage: build
+  image: golang:1.24.1
+  script:
+    - cd PhishingBackend
+    - go build -o /app/phishingBackend cmd/main.go
+  artifacts:
+    paths:
+      - ./app/phishingBackend
+
+build-phishingeducator:
+  stage: build
+  image: node:22-alpine
+  script:
+    - cd PhishingEducator
+    - npm ci
+    - npm run build
+  artifacts:
+    paths:
+      - ./dist
 
 # https://gitlab.com/gitlab-org/gitlab/-/merge_requests/66787/diffs
-#unit-test-phishingbackend:
-#  stage: test
-#  image: golang:1.24.1
-#  script:
-#    - cd PhishingBackend
-#    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./... | grep -vE '/integration_tests')
-#  artifacts:
-#    when: always
-#    paths:
-#      - PhishingBackend/testResults.xml
-#    reports:
-#      junit: PhishingBackend/testResults.xml
+unit-test-phishingbackend:
+  stage: test
+  image: golang:1.24.1
+  script:
+    - cd PhishingBackend
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./... | grep -vE '/integration_tests')
+  artifacts:
+    when: always
+    paths:
+      - PhishingBackend/testResults.xml
+    reports:
+      junit: PhishingBackend/testResults.xml
 
 integration-test-phishingbackend:
   stage: test
