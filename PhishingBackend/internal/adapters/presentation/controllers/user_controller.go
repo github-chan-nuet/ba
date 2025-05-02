@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"phishing_backend/internal/adapters/presentation/api"
+	"phishing_backend/internal/adapters/presentation/mappers"
 	"phishing_backend/internal/domain_services/services"
 )
 
@@ -38,7 +39,7 @@ func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	err = c.UserService.Create(user)
+	err = c.UserService.Create(mappers.ToUserPostDto(user))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -110,7 +111,7 @@ func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusForbidden)
 		return
 	}
-	err = c.UserService.Update(userId, user)
+	err = c.UserService.Update(userId, mappers.ToUserPatchDto(user))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

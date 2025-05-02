@@ -14,3 +14,7 @@ type Reminder struct {
 	TemplateFk    int
 	EmailTemplate *ReminderEmailTemplate `gorm:"foreignKey:TemplateFk"`
 }
+
+type Email struct {
+	Content, Recipient, Subject string
+}

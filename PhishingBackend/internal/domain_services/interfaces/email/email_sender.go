@@ -1,5 +1,7 @@
 package email
 
+import "phishing_backend/internal/domain_model"
+
 type EmailSender interface {
-	Send(content, recipient string) error
+	Send(email *domain_model.Email) error
 }
