@@ -2,7 +2,6 @@ package services
 
 import (
 	"github.com/google/uuid"
-	"phishing_backend/internal/adapters/presentation/api"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
 )
@@ -10,30 +9,30 @@ import (
 var _ UserService = (*UserServiceImpl)(nil)
 
 type UserService interface {
-	Create(userApiModel api.UserPostModel) error
+	Create(dto *domain_model.UserPostDto) error
 	Get(userId uuid.UUID) (*domain_model.User, error)
-	Update(userId uuid.UUID, userPatchModel api.UserPatchModel) error
+	Update(userId uuid.UUID, dto *domain_model.UserPatchDto) error
 }
 
 type UserServiceImpl struct {
 	UserRepository repositories.UserRepository
 }
 
-func (s *UserServiceImpl) Update(userId uuid.UUID, userPatchModel api.UserPatchModel) error {
+func (s *UserServiceImpl) Update(userId uuid.UUID, dto *domain_model.UserPatchDto) error {
 	user := &domain_model.User{
 		ID: userId,
 	}
-	if userPatchModel.Firstname != nil {
-		user.Firstname = *userPatchModel.Firstname
+	if dto.Firstname != nil {
+		user.Firstname = *dto.Firstname
 	}
-	if userPatchModel.Lastname != nil {
-		user.Lastname = *userPatchModel.Lastname
+	if dto.Lastname != nil {
+		user.Lastname = *dto.Lastname
 	}
-	if userPatchModel.Email != nil {
-		user.Email = *userPatchModel.Email
+	if dto.Email != nil {
+		user.Email = *dto.Email
 	}
-	if userPatchModel.Password != nil {
-		hashedPw, err := HashPassword(*userPatchModel.Password)
+	if dto.Password != nil {
+		hashedPw, err := HashPassword(*dto.Password)
 		if err != nil {
 			return err
 		}
@@ -46,17 +45,17 @@ func (s *UserServiceImpl) Get(userId uuid.UUID) (*domain_model.User, error) {
 	return s.UserRepository.GetUser(userId)
 }
 
-func (s *UserServiceImpl) Create(userApiModel api.UserPostModel) error {
-	hashedPw, err := HashPassword(userApiModel.Password)
+func (s *UserServiceImpl) Create(dto *domain_model.UserPostDto) error {
+	hashedPw, err := HashPassword(dto.Password)
 	if err != nil {
 		return err
 	}
 	user := &domain_model.User{
 		ID:        uuid.New(),
-		Firstname: userApiModel.Firstname,
-		Lastname:  userApiModel.Lastname,
+		Firstname: dto.Firstname,
+		Lastname:  dto.Lastname,
 		Password:  hashedPw,
-		Email:     userApiModel.Email,
+		Email:     dto.Email,
 	}
 	err = s.UserRepository.CreateUser(user)
 	return err
