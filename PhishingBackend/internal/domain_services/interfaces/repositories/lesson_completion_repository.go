@@ -9,8 +9,8 @@ import (
 var LessonAlreadyCompleted = errors.New("lesson already completed")
 
 type LessonCompletionRepository interface {
-	Create(cc *domain_model.LessonCompletion) (int64, error)
-	CountForUser(userId uuid.UUID) (int64, error)
+	Create(cc *domain_model.LessonCompletion) (int, error)
+	CountForUser(userId uuid.UUID) (int, error)
 	GetAllCompletedLessonsInAllCourses(userId uuid.UUID) ([]domain_model.LessonCompletion, error)
 	GetLessonCompletionsOfCourseAndUser(userId, courseId uuid.UUID) ([]domain_model.LessonCompletion, error)
 }

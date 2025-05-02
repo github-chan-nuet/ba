@@ -36,17 +36,17 @@ func (c *LessonCompletionRepositoryImpl) GetAllCompletedLessonsInAllCourses(user
 	return lessonCompletions, nil
 }
 
-func (c *LessonCompletionRepositoryImpl) CountForUser(userId uuid.UUID) (int64, error) {
+func (c *LessonCompletionRepositoryImpl) CountForUser(userId uuid.UUID) (int, error) {
 	var count int64
 	result := db.Model(&domain_model.LessonCompletion{}).Where("user_fk = ?", userId).Count(&count)
 	if result.Error != nil {
 		slog.Error("Could not count lesson completions", "err", result.Error)
 		return 0, result.Error
 	}
-	return count, nil
+	return int(count), nil // cast int64 down to int as int provides enough space
 }
 
-func (c *LessonCompletionRepositoryImpl) Create(cc *domain_model.LessonCompletion) (int64, error) {
+func (c *LessonCompletionRepositoryImpl) Create(cc *domain_model.LessonCompletion) (int, error) {
 	result := db.Create(cc)
 	if result.Error != nil {
 		var e *pgconn.PgError
@@ -58,5 +58,5 @@ func (c *LessonCompletionRepositoryImpl) Create(cc *domain_model.LessonCompletio
 		slog.Error("Could not create lesson completion", "err", result.Error)
 		return 0, result.Error
 	}
-	return result.RowsAffected, nil
+	return int(result.RowsAffected), nil
 }
