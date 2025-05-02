@@ -40,7 +40,7 @@ func (s *ExperienceServiceImpl) GetEntireExperience(userId uuid.UUID) (*domain_m
 	if err != nil {
 		return nil, err
 	}
-	totExp := int(numLessons * domain_model.LessonCompletionGain)
+	totExp := numLessons * domain_model.LessonCompletionGain
 	level := s.calcLevel(totExp)
 	userExp := domain_model.UserExperience{TotalExperience: totExp, Level: level}
 	return &userExp, nil
