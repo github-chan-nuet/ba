@@ -33,14 +33,12 @@ func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWrite
 	userId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte(err.Error()))
 		return
 	}
 
 	isNew, err := c.LessonCompletionService.Create(courseId, lesson.LessonId, userId)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
 		return
 	}
 	if !isNew {
@@ -50,7 +48,6 @@ func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWrite
 	expGain, err := c.ExperienceService.GetExperienceGain(userId, domain_model.LessonCompletionGain)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
 		return
 	}
 	expGainResp := api.ExperienceGain{
@@ -95,7 +92,6 @@ func (c *LessonCompletionController) GetLessonCompletionsOfCourseAndUser(w http.
 	userId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte(err.Error()))
 		return
 	}
 	lcs, err := c.LessonCompletionRepository.GetLessonCompletionsOfCourseAndUser(userId, courseId)

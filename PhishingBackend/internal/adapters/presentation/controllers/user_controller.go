@@ -25,7 +25,6 @@ func (c *UserController) LoginAndReturnJwtToken(w http.ResponseWriter, r *http.R
 	jwtToken, err := c.Authenticator.Authenticate(auth.Email, auth.Password)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -57,7 +56,6 @@ func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 	authUserId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte(err.Error()))
 		return
 	}
 	if userId != authUserId {
@@ -67,13 +65,11 @@ func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 	user, err := c.UserService.Get(userId)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
 		return
 	}
 	exp, err := c.ExperienceService.GetEntireExperience(userId)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(err.Error()))
 		return
 	}
 	userResp := api.User{
@@ -104,7 +100,6 @@ func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	authUserId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte(err.Error()))
 		return
 	}
 	if userId != authUserId {
