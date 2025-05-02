@@ -18,7 +18,7 @@ type UserRepositoryImpl struct {
 }
 
 func (u *UserRepositoryImpl) UpdateUser(user *domain_model.User) error {
-	result := db.Save(user)
+	result := db.Model(user).Updates(*user)
 	if result.Error != nil {
 		slog.Error("Could not update user", "err", result.Error)
 	}
