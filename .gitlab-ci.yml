@@ -50,6 +50,8 @@ publish:
       alias: docker
   before_script:
     - echo "${CI_REGISTRY_PASSWORD}" | docker login -u ${CI_REGISTRY_USER} --password-stdin ${CI_REGISTRY}
+    - echo CI_REGISTRY_IMAGE=${CI_REGISTRY_IMAGE} >> ./.docker/.env
+    - echo CI_COMMIT_SHA=${CI_COMMIT_SHA} >> ./.docker/.env
   script:
     - docker compose -f .docker/compose.yaml build
     - docker compose -f .docker/compose.yaml push
@@ -64,5 +66,5 @@ deploy:
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$CD_PRIVATE_KEY")
     - mkdir -p ~/.ssh
-    - scp -o StrictHostKeyChecking=no ./.docker/compose.yaml "$CD_USERNAME"@"$CD_HOST":/home/$CD_USERNAME/securaware/.docker
-    - ssh -o StrictHostKeyChecking=no "$CD_USERNAME"@"$CD_HOST" "docker compose -f /home/$CD_USERNAME/securaware/.docker/compose.yaml up -d"
+    - scp -o StrictHostKeyChecking=no ./.docker/compose.yaml ./.docker/compose.prod.yaml ./.docker/.env "$CD_USERNAME"@"$CD_HOST":/home/$CD_USERNAME/securaware/.docker
+    - ssh -o StrictHostKeyChecking=no "$CD_USERNAME"@"$CD_HOST" "docker compose -f /home/$CD_USERNAME/securaware/.docker/compose.yaml -f /home/$CD_USERNAME/securaware/.docker/compose.prod.yaml up -d"
