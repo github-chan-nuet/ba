@@ -31,6 +31,10 @@ services:
       - frontend___backend
       - backend___db
 
+# https://stackoverflow.com/a/45606440/12828371
+volumes:
+  phishingMailStorage:
+
 # https://docs.docker.com/compose/how-tos/networking/
 networks:
   backend___db:
