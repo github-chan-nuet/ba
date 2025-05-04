@@ -1,5 +1,9 @@
 http:
   routers:
+    dashboard:
+      rule: "PathPrefix(`/traefik`)"
+      service: api@internal
+
     phishingBackend:
       rule: "Path(`/api`) || PathPrefix(`/api/`)"
       service: phishingBackend
