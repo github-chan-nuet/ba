@@ -38,7 +38,7 @@ func TestUserCanBeUpdated(t *testing.T) {
 	assert.Equal(t, *reqBody.Firstname, dbUser.Firstname)
 	assert.Equal(t, *reqBody.Lastname, dbUser.Lastname)
 	assert.Equal(t, *reqBody.Email, dbUser.Email)
-	expectedPw, _ := services.HashPassword(*reqBody.Password)
+	expectedPw := services.HashPassword(*reqBody.Password)
 	assert.Equal(t, expectedPw, dbUser.Password)
 }
 

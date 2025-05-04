@@ -54,7 +54,7 @@ func (u *UserRepositoryImpl) CreateUser(user *domain_model.User) error {
 		var e *pgconn.PgError
 		if errors.As(result.Error, &e) {
 			if e.Code == "23505" && e.ConstraintName == uniqueEmailConstraint {
-				return repositories.EmailAlreadyUsed
+				return repositories.ErrEmailAlreadyUsed
 			}
 		}
 		slog.Error("Could not create user", "err", result.Error)

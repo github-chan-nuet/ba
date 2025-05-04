@@ -6,7 +6,7 @@ import (
 	"phishing_backend/internal/domain_model"
 )
 
-var EmailAlreadyUsed = errors.New("email is already used")
+var ErrEmailAlreadyUsed = errors.New("email is already used")
 
 type UserRepository interface {
 	GetByEmailAndPassword(username string, password []byte) (*domain_model.User, error)

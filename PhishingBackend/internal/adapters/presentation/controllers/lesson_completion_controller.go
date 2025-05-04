@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"phishing_backend/internal/adapters/presentation/api"
+	"phishing_backend/internal/adapters/presentation/error_handling"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"phishing_backend/internal/domain_services/services"
@@ -32,13 +33,13 @@ func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWrite
 	}
 	userId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 
 	isNew, err := c.LessonCompletionService.Create(courseId, lesson.LessonId, userId)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	if !isNew {
@@ -47,7 +48,7 @@ func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWrite
 	}
 	expGain, err := c.ExperienceService.GetExperienceGain(userId, domain_model.LessonCompletionGain)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	expGainResp := api.ExperienceGain{
@@ -66,14 +67,13 @@ func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWrite
 func (c *LessonCompletionController) GetAllLessonCompletionsOfUser(w http.ResponseWriter, r *http.Request) {
 	userId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
-		w.Write([]byte(err.Error()))
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 
 	completions, err := c.LessonCompletionRepository.GetAllCompletedLessonsInAllCourses(userId)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	ccs := toApiCourseCompletions(completions)
@@ -91,12 +91,12 @@ func (c *LessonCompletionController) GetLessonCompletionsOfCourseAndUser(w http.
 	}
 	userId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	lcs, err := c.LessonCompletionRepository.GetLessonCompletionsOfCourseAndUser(userId, courseId)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	lessonIds := aggregateLessonIds(lcs)

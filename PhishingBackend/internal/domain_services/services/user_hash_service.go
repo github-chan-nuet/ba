@@ -13,14 +13,14 @@ var (
 	pbkdf2Iter = os.Getenv("PHBA_PBKDF2_ITER")
 )
 
-func HashPassword(password string) ([]byte, error) {
+func HashPassword(password string) []byte {
 	// https://de.wikipedia.org/wiki/PBKDF2
 	hashedPassword, err := pbkdf2.Key(sha256.New, password, []byte(pbkdf2Salt), mustAtoi(pbkdf2Iter), 32)
 	if err != nil {
 		slog.Error("Could not hash password", "err", err)
-		return nil, err
+		panic("Could not hash password:" + err.Error())
 	}
-	return hashedPassword, nil
+	return hashedPassword
 }
 
 func mustAtoi(s string) int {
