@@ -1,4 +1,21 @@
 services:
+  phishing_mail_storage:
+    image: postgres:14
+    restart: unless-stopped
+    volumes:
+      - phishingMailStorage:/var/lib/postgresql/data
+      - ./create-extension.sql:/docker-entrytpoint-initdb.d/create-extension.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    networks:
+      - backend___db
+
+
   phishing_backend:
     build:
       context: ../PhishingBackend
@@ -7,9 +24,9 @@ services:
     env_file: .env
     ports:
       - "8080:8080"
-#    depends_on:
-#      phishing_mail_storage:
-#        condition: service_healthy
+    depends_on:
+      phishing_mail_storage:
+        condition: service_healthy
     networks:
       - frontend___backend
       - backend___db

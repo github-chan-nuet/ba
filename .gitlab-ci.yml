@@ -69,5 +69,5 @@ deploy:
     - eval $(ssh-agent -s)
     - ssh-add <(echo "$CD_PRIVATE_KEY")
     - mkdir -p ~/.ssh
-    - scp -o StrictHostKeyChecking=no ./.docker/compose.yaml ./.docker/compose.prod.yaml ./.docker/.env "$CD_USERNAME"@"$CD_HOST":/home/$CD_USERNAME/securaware/.docker
+    - scp -o StrictHostKeyChecking=no ./.docker/compose.yaml ./.docker/compose.prod.yaml ./.docker/.env ./.docker/create-extension.sql "$CD_USERNAME"@"$CD_HOST":/home/$CD_USERNAME/securaware/.docker
     - ssh -o StrictHostKeyChecking=no "$CD_USERNAME"@"$CD_HOST" "docker compose -f /home/$CD_USERNAME/securaware/.docker/compose.yaml -f /home/$CD_USERNAME/securaware/.docker/compose.prod.yaml up -d"
