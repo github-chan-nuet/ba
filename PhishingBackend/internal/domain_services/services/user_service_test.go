@@ -39,7 +39,7 @@ func TestUpdateUpdatesUser(t *testing.T) {
 	assert.Equal(t, *patch.Firstname, capture.Firstname)
 	assert.Equal(t, *patch.Lastname, capture.Lastname)
 	assert.Equal(t, userId, capture.ID)
-	wantPw, _ := HashPassword(*patch.Password)
+	wantPw := HashPassword(*patch.Password)
 	assert.Equal(t, wantPw, capture.Password)
 }
 
@@ -84,7 +84,7 @@ func TestCreateCreatesUser(t *testing.T) {
 	assert.Equal(t, post.Email, capture.Email)
 	assert.Equal(t, post.Firstname, capture.Firstname)
 	assert.Equal(t, post.Lastname, capture.Lastname)
-	wantPw, _ := HashPassword(post.Password)
+	wantPw := HashPassword(post.Password)
 	assert.Equal(t, wantPw, capture.Password)
 }
 

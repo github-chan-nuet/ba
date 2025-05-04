@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"github.com/google/uuid"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
@@ -27,9 +28,12 @@ func (c *LessonCompletionServiceImpl) Create(courseId, lessonId, userId uuid.UUI
 		UserFk:   userId,
 		Time:     time.Now().UTC(),
 	}
-	count, err := c.Repo.Create(&lc)
+	_, err := c.Repo.Create(&lc)
+	if errors.Is(err, repositories.LessonAlreadyCompleted) {
+		return false, nil
+	}
 	if err != nil {
 		return false, err
 	}
-	return count != 0, nil
+	return true, nil
 }

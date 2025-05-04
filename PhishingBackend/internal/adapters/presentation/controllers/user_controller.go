@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"phishing_backend/internal/adapters/presentation/api"
+	"phishing_backend/internal/adapters/presentation/error_handling"
 	"phishing_backend/internal/adapters/presentation/mappers"
 	"phishing_backend/internal/domain_services/services"
 )
@@ -24,7 +25,7 @@ func (c *UserController) LoginAndReturnJwtToken(w http.ResponseWriter, r *http.R
 	}
 	jwtToken, err := c.Authenticator.Authenticate(auth.Email, auth.Password)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)
@@ -40,7 +41,7 @@ func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	err = c.UserService.Create(mappers.ToUserPostDto(user))
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	w.WriteHeader(http.StatusCreated)
@@ -55,21 +56,21 @@ func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 	}
 	authUserId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	if userId != authUserId {
-		w.WriteHeader(http.StatusForbidden)
+		error_handling.WriteErrorDetailResponse(w, error_handling.ErrUnauthorized)
 		return
 	}
 	user, err := c.UserService.Get(userId)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	exp, err := c.ExperienceService.GetEntireExperience(userId)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	userResp := api.User{
@@ -99,16 +100,16 @@ func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 	authUserId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
 	if err != nil {
-		w.WriteHeader(http.StatusUnauthorized)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	if userId != authUserId {
-		w.WriteHeader(http.StatusForbidden)
+		error_handling.WriteErrorDetailResponse(w, error_handling.ErrUnauthorized)
 		return
 	}
 	err = c.UserService.Update(userId, mappers.ToUserPatchDto(user))
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

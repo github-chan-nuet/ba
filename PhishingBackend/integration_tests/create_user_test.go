@@ -36,6 +36,6 @@ func TestNewUserCanBeCreated(t *testing.T) {
 	assert.Equal(t, reqBody.Email, user.Email)
 	assert.Equal(t, reqBody.Firstname, user.Firstname)
 	assert.Equal(t, reqBody.Lastname, user.Lastname)
-	expectedPw, _ := services.HashPassword(reqBody.Password)
+	expectedPw := services.HashPassword(reqBody.Password)
 	assert.Equal(t, expectedPw, user.Password)
 }

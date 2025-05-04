@@ -32,10 +32,7 @@ func (s *UserServiceImpl) Update(userId uuid.UUID, dto *domain_model.UserPatchDt
 		user.Email = *dto.Email
 	}
 	if dto.Password != nil {
-		hashedPw, err := HashPassword(*dto.Password)
-		if err != nil {
-			return err
-		}
+		hashedPw := HashPassword(*dto.Password)
 		user.Password = hashedPw
 	}
 	return s.UserRepository.UpdateUser(user)
@@ -46,10 +43,7 @@ func (s *UserServiceImpl) Get(userId uuid.UUID) (*domain_model.User, error) {
 }
 
 func (s *UserServiceImpl) Create(dto *domain_model.UserPostDto) error {
-	hashedPw, err := HashPassword(dto.Password)
-	if err != nil {
-		return err
-	}
+	hashedPw := HashPassword(dto.Password)
 	user := &domain_model.User{
 		ID:        uuid.New(),
 		Firstname: dto.Firstname,
@@ -57,6 +51,5 @@ func (s *UserServiceImpl) Create(dto *domain_model.UserPostDto) error {
 		Password:  hashedPw,
 		Email:     dto.Email,
 	}
-	err = s.UserRepository.CreateUser(user)
-	return err
+	return s.UserRepository.CreateUser(user)
 }

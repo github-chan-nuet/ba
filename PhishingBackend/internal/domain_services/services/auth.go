@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"fmt"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"log/slog"
@@ -14,8 +13,13 @@ import (
 )
 
 var (
-	jwtKey               = os.Getenv("PHBA_JWT_KEY")
-	_      Authenticator = (*AuthenticatorImpl)(nil)
+	_                             Authenticator = (*AuthenticatorImpl)(nil)
+	jwtKey                                      = os.Getenv("PHBA_JWT_KEY")
+	ErrNoAuthToken                              = errors.New("no JWT token present")
+	ErrInvalidAuthHeader                        = errors.New("authorization header format must be: Bearer <token>")
+	ErrInvalidTokenSignMethod                   = errors.New("unexpected signing method for JWT token. Expected HS256")
+	ErrInvalidToken                             = errors.New("invalid JWT token")
+	ErrInvalidTokenClaimStructure               = errors.New("invalid JWT token, claims could not be cast")
 )
 
 const (
@@ -37,36 +41,35 @@ type AuthenticatorImpl struct {
 
 func (a *AuthenticatorImpl) GetUser(authHeader string) (uuid.UUID, error) {
 	if authHeader == "" {
-		return uuid.Nil, errors.New("no token present")
+		return uuid.Nil, ErrNoAuthToken
 	}
 	parts := strings.Split(authHeader, " ")
 	if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
-		return uuid.Nil, fmt.Errorf("authorization header format must be: Bearer <token>")
+		return uuid.Nil, ErrInvalidAuthHeader
 	}
 	claimsString := parts[1]
 	// this code also verifies that the token is not expired
 	token, err := jwt.Parse(claimsString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+			return nil, ErrInvalidTokenSignMethod
 		}
 		return []byte(jwtKey), nil
 	})
 	if err != nil {
-		return uuid.Nil, err
+		slog.Error("invalid JWT token", "err", err)
+		return uuid.Nil, ErrInvalidToken
 	}
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return uuid.Nil, errors.New("invalid token")
+		slog.Error("invalid JWT token, claims could not be casted", "err", err)
+		return uuid.Nil, ErrInvalidTokenClaimStructure
 	}
 	userId := claims[jwtUserIdKey]
 	return uuid.MustParse(userId.(string)), nil
 }
 
 func (a *AuthenticatorImpl) Authenticate(email, password string) (string, error) {
-	hashedPassword, err := HashPassword(password)
-	if err != nil {
-		return "", err
-	}
+	hashedPassword := HashPassword(password)
 	user, err := a.UserRepository.GetByEmailAndPassword(email, hashedPassword)
 	if err != nil {
 		return "", err
