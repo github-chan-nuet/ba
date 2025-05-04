@@ -1,7 +1,7 @@
 http:
   routers:
     dashboard:
-      rule: "PathPrefix(`/traefik`)"
+      rule: "Host(`traefik.securaware.ch`)"
       service: api@internal
 
     phishingBackend:
