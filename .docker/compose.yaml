@@ -44,6 +44,21 @@ services:
     networks:
       - frontend___backend
 
+  phishing_proxy:
+    build:
+      context: ../PhishingProxy
+      dockerfile: .docker/Dockerfile
+    image: ${CI_REGISTRY_IMAGE}/phishing-proxy:${CI_COMMIT_SHA}
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+      - "443:443/udp"
+    depends_on:
+      - phishing_backend
+      - phishing_educator
+
 # https://stackoverflow.com/a/45606440/12828371
 volumes:
   phishingMailStorage:

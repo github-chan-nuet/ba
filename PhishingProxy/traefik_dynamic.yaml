@@ -1,0 +1,26 @@
+http:
+  routers:
+    phishingBackend:
+      rule: "Path(`/api`) || PathPrefix(`/api/`)"
+      service: phishingBackend
+      entrypoints:
+        - "websecure"
+      priority: 10
+
+    phishingEducator:
+      rule: "Host(`securaware.ch`)"
+      service: phishingEducator
+      entrypoints:
+        - "websecure"
+      priority: 1
+  
+  services:
+    phishingBackend:
+      loadBalancer:
+        servers:
+          - url: "http://phishing_backend:8080"
+
+    phishingEducator:
+      loadBalancer:
+        servers:
+          - url: "http://phishing_educator:3000"
