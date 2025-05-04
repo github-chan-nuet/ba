@@ -80,9 +80,8 @@ func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 		Level:           &exp.Level,
 		TotalExperience: &exp.TotalExperience,
 	}
-	userJson, _ := json.Marshal(&userResp)
 	w.WriteHeader(http.StatusOK)
-	w.Write(userJson)
+	_ = json.NewEncoder(w).Encode(userResp)
 }
 
 func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {

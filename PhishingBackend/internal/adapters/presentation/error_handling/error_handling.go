@@ -21,8 +21,7 @@ func WriteErrorDetailResponse(w http.ResponseWriter, err error) {
 func writeResponse(w http.ResponseWriter, prob *api.ProblemDetail) {
 	slog.Error("writing error response", "type", prob.Type, "status", prob.Status, "title", prob.Title,
 		"detail", prob.Detail, "instance", prob.Instance)
-	probJson, _ := json.Marshal(&prob)
 	w.WriteHeader(prob.Status)
 	w.Header().Set("Content-Type", "application/problem+json")
-	w.Write(probJson)
+	_ = json.NewEncoder(w).Encode(prob)
 }
