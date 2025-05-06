@@ -6,11 +6,48 @@ import (
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 	"phishing_backend/internal/domain_model"
+	"phishing_backend/internal/domain_model/validation"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"testing"
 )
 
 // ----- Update -----
+func TestUpdateReturnsValidationErrors(t *testing.T) {
+	// given
+	sut := UserServiceImpl{}
+	tests := []struct {
+		name string
+		user domain_model.UserPatchDto
+		want validation.ValidationError
+	}{
+		{
+			name: "invalid email",
+			user: domain_model.UserPatchDto{Email: ptr("a")},
+			want: validation.ValidationError{Errors: []validation.FieldError{{
+				Field:  "#/email",
+				Reason: validation.InvalidEmail,
+			}}},
+		},
+		{
+			name: "no value updated at all",
+			user: domain_model.UserPatchDto{},
+			want: validation.ValidationError{Errors: []validation.FieldError{{
+				Field:  "#/",
+				Reason: validation.NoFieldSet,
+			}}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// when
+			err := sut.Update(uuid.New(), &tt.user)
+
+			// then
+			assert.Equal(t, &tt.want, err)
+		})
+	}
+}
+
 func TestUpdateUpdatesUser(t *testing.T) {
 	// given
 	pbkdf2Iter = "1"
@@ -51,13 +88,63 @@ func TestUpdateReturnsErrorOfRepository(t *testing.T) {
 	sut := UserServiceImpl{UserRepository: m}
 
 	// when
-	err := sut.Update(uuid.New(), &domain_model.UserPatchDto{})
+	err := sut.Update(uuid.New(), &domain_model.UserPatchDto{Firstname: ptr("f")})
 
 	// then
 	assert.Error(t, wantErr, err)
 }
 
 // ----- Create -----
+func TestCreateReturnsValidationErrors(t *testing.T) {
+	// given
+	sut := UserServiceImpl{}
+	tests := []struct {
+		name string
+		user domain_model.UserPostDto
+		want validation.ValidationError
+	}{
+		{
+			name: "invalid email",
+			user: domain_model.UserPostDto{
+				Email:     "a",
+				Firstname: "b",
+				Lastname:  "c",
+				Password:  "d",
+			},
+			want: validation.ValidationError{Errors: []validation.FieldError{{
+				Field:  "#/email",
+				Reason: validation.InvalidEmail,
+			}}},
+		},
+		{
+			name: "missing fields",
+			user: domain_model.UserPostDto{},
+			want: validation.ValidationError{Errors: []validation.FieldError{{
+				Field:  "#/firstname",
+				Reason: validation.Mandatory,
+			}, {
+				Field:  "#/lastname",
+				Reason: validation.Mandatory,
+			}, {
+				Field:  "#/email",
+				Reason: validation.Mandatory,
+			}, {
+				Field:  "#/password",
+				Reason: validation.Mandatory,
+			}}},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			// when
+			err := sut.Create(&tt.user)
+
+			// then
+			assert.Equal(t, &tt.want, err)
+		})
+	}
+}
+
 func TestCreateCreatesUser(t *testing.T) {
 	// given
 	pbkdf2Iter = "1"
@@ -69,7 +156,7 @@ func TestCreateCreatesUser(t *testing.T) {
 	})
 	sut := UserServiceImpl{UserRepository: m}
 	post := domain_model.UserPostDto{
-		Email:     "a",
+		Email:     "a@a",
 		Firstname: "b",
 		Lastname:  "c",
 		Password:  "d",
