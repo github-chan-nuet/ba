@@ -39,7 +39,7 @@ func TestCreateCreatesNoNewLessonWasCompleted(t *testing.T) {
 	// given
 	m := repositories.NewMockLessonCompletionRepository(gomock.NewController(t))
 	sut := LessonCompletionServiceImpl{Repo: m}
-	m.EXPECT().Create(gomock.Any()).Return(0, nil)
+	m.EXPECT().Create(gomock.Any()).Return(0, repositories.LessonAlreadyCompleted)
 	courseId, lessonId, userId := uuid.New(), uuid.New(), uuid.New()
 
 	// when
