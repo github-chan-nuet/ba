@@ -4,8 +4,8 @@ http:
       rule: "Host(`traefik.securaware.ch`) && (Path(`/dashboard`) || PathPrefix(`/dashboard/`))"
       service: api@internal
       entrypoints:
-        - "web"
-        - "websecure"
+        - web
+        - websecure
       middlewares:
         - traefik-auth
 
@@ -13,14 +13,16 @@ http:
       rule: "Path(`/api`) || PathPrefix(`/api/`)"
       service: phishingBackend
       entrypoints:
-        - "websecure"
+        - web
+        - websecure
       priority: 10
 
     phishingEducator:
       rule: "Host(`securaware.ch`)"
       service: phishingEducator
       entrypoints:
-        - "websecure"
+        - web
+        - websecure
       priority: 1
   
   services:
