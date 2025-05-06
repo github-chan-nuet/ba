@@ -19,6 +19,10 @@ type UserServiceImpl struct {
 }
 
 func (s *UserServiceImpl) Update(userId uuid.UUID, dto *domain_model.UserPatchDto) error {
+	err := dto.Validate()
+	if err != nil {
+		return err
+	}
 	user := &domain_model.User{
 		ID: userId,
 	}
@@ -43,6 +47,10 @@ func (s *UserServiceImpl) Get(userId uuid.UUID) (*domain_model.User, error) {
 }
 
 func (s *UserServiceImpl) Create(dto *domain_model.UserPostDto) error {
+	err := dto.Validate()
+	if err != nil {
+		return err
+	}
 	hashedPw := HashPassword(dto.Password)
 	user := &domain_model.User{
 		ID:        uuid.New(),

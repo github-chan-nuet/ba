@@ -52,15 +52,11 @@ func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWrite
 		return
 	}
 	expGainResp := api.ExperienceGain{
-		NewExperienceGained: int64(expGain.NewExperienceGained),
-		TotalExperience:     int64(expGain.TotalExperience),
+		NewExperienceGained: expGain.NewExperienceGained,
+		TotalExperience:     expGain.TotalExperience,
+		NewLevel:            expGain.NewLevel,
 	}
-	if expGain.NewLevel != nil {
-		newLvl := int64(*expGain.NewLevel)
-		expGainResp.NewLevel = &newLvl
-	}
-	w.WriteHeader(http.StatusCreated)
-	_ = json.NewEncoder(w).Encode(expGainResp)
+	writeJsonResponse(w, http.StatusCreated, expGainResp)
 }
 
 func (c *LessonCompletionController) GetAllLessonCompletionsOfUser(w http.ResponseWriter, r *http.Request) {
@@ -76,8 +72,7 @@ func (c *LessonCompletionController) GetAllLessonCompletionsOfUser(w http.Respon
 		return
 	}
 	ccs := toApiCourseCompletions(completions)
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(ccs)
+	writeJsonResponse(w, http.StatusOK, ccs)
 }
 
 func (c *LessonCompletionController) GetLessonCompletionsOfCourseAndUser(w http.ResponseWriter, r *http.Request) {
@@ -98,8 +93,7 @@ func (c *LessonCompletionController) GetLessonCompletionsOfCourseAndUser(w http.
 		return
 	}
 	lessonIds := aggregateLessonIds(lcs)
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(lessonIds)
+	writeJsonResponse(w, http.StatusOK, lessonIds)
 }
 
 func toApiCourseCompletions(completions []domain_model.LessonCompletion) []api.CourseCompletion {

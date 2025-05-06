@@ -29,6 +29,8 @@ func (c *UserController) LoginAndReturnJwtToken(w http.ResponseWriter, r *http.R
 		return
 	}
 	w.WriteHeader(http.StatusOK)
+	// https://www.rfc-editor.org/rfc/rfc7519.html#section-10.3.1
+	w.Header().Set("Content-Type", "application/jwt")
 	w.Write([]byte(jwtToken))
 }
 
@@ -80,8 +82,7 @@ func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 		Level:           &exp.Level,
 		TotalExperience: &exp.TotalExperience,
 	}
-	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(userResp)
+	writeJsonResponse(w, http.StatusOK, userResp)
 }
 
 func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {

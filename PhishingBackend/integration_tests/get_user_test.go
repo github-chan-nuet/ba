@@ -54,6 +54,6 @@ func TestLevelAndExperienceCanBeRetrieved(t *testing.T) {
 	var gotUser api.User
 	err = json.NewDecoder(resp.Body).Decode(&gotUser)
 	assert.NoError(t, err)
-	assert.Equal(t, *expGain.NewLevel, int64(*gotUser.Level))
-	assert.Equal(t, expGain.TotalExperience, int64(*gotUser.TotalExperience))
+	assert.Equal(t, *expGain.NewLevel, *gotUser.Level)
+	assert.Equal(t, expGain.TotalExperience, *gotUser.TotalExperience)
 }

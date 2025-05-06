@@ -33,15 +33,13 @@ func TestLessonCanBeCompleted(t *testing.T) {
 	var expGain api.ExperienceGain
 	err = json.NewDecoder(resp.Body).Decode(&expGain)
 	assert.NoError(t, err)
-	assert.Equal(t, int64(domain_model.LessonCompletionGain), expGain.NewExperienceGained)
-	assert.Equal(t, int64(domain_model.LessonCompletionGain), expGain.TotalExperience)
+	assert.Equal(t, domain_model.LessonCompletionGain, expGain.NewExperienceGained)
+	assert.Equal(t, domain_model.LessonCompletionGain, expGain.TotalExperience)
 	assert.NotNil(t, expGain.NewLevel)
-	assert.Equal(t, int64(2), *expGain.NewLevel)
+	assert.Equal(t, 2, *expGain.NewLevel)
 }
 
 func TestTheSameLessonCantBeCompletedTwice(t *testing.T) {
-	t.SkipNow() // todo enable this test once the same lesson can't be inserted twice
-
 	// given
 	user := createUser(t)
 	jwtToken := getJwtTokenForUser(t, user)

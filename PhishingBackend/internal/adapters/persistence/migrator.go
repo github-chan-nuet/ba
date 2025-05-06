@@ -13,11 +13,12 @@ var postgresSchemaFS embed.FS
 
 func migrateDatabaseSchema() error {
 	config := newDbConfig()
-	conn, err := pgx.Connect(context.TODO(), config.getPostgresConnString())
+	ctx := context.Background()
+	conn, err := pgx.Connect(ctx, config.getPostgresConnString())
 	if err != nil {
 		return err
 	}
-	m, err := migrate.NewMigrator(context.TODO(), conn, "schema_version")
+	m, err := migrate.NewMigrator(ctx, conn, "schema_version")
 	if err != nil {
 		return err
 	}
@@ -29,5 +30,5 @@ func migrateDatabaseSchema() error {
 	if err := m.LoadMigrations(schema); err != nil {
 		return err
 	}
-	return m.Migrate(context.TODO())
+	return m.Migrate(ctx)
 }

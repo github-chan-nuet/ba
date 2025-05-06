@@ -11,18 +11,18 @@ var (
 	ErrUnauthorized = errors.New("unauthorized")
 	invalidJwtToken = api.ProblemDetail{
 		Type:   createUrn("invalid-jwt-token"),
-		Title:  "Your JWT token is invalid",
+		Title:  "Dein JWT-Token ist ungültig",
 		Status: 400,
 	}
 	problemMap = map[error]api.ProblemDetail{
 		repositories.ErrEmailAlreadyUsed: {
 			Type:   createUrn("email-already-used"),
-			Title:  "Email is already used and may not be used twice",
+			Title:  "Diese Email wird bereits verwendet",
 			Status: 422,
 		},
 		ErrUnauthorized: {
 			Type:   createUrn("unauthorized"),
-			Title:  "You are not authorized to perform this operation",
+			Title:  "Du bist nicht berechtigt, diese Operation auszuführen",
 			Status: 403,
 		},
 		services.ErrNoAuthToken: {
@@ -36,9 +36,9 @@ var (
 		services.ErrInvalidToken:               invalidJwtToken,
 		services.ErrInvalidTokenClaimStructure: invalidJwtToken,
 	}
-	stdError = api.ProblemDetail{
+	stdProb = api.ProblemDetail{
 		Type:   createUrn("generic-error"),
-		Title:  "An internal server error has occurred",
+		Title:  "Oooops, etwas lief schief",
 		Status: 500,
 	}
 )
