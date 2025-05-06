@@ -1,11 +1,11 @@
 # Structure
-Guidelines:
 - .docker: docker related configurations
 - cmd: executable application(s) (see [Official Guidelines](https://go.dev/doc/modules/layout) and [Unofficial best practices](https://github.com/golang-standards/project-layout))
 - internal: source code that can only be referenced within this project. This folder follows the onion architecture
 - integration_tests: folder in which integration tests including the setup is stored
 
 # Starting the Phishing Backend
+REQUIRES A RUNNING DB INSTANCE
 ## with docker (recommended)
 ```bash
 docker build -f ./.docker/Dockerfile -t phishingbackend .
@@ -41,4 +41,9 @@ See [Google go-licenses GitHub project](https://github.com/google/go-licenses)
 ```bash
 go install github.com/google/go-licenses@latest
 go-licenses report ./... > report.csv
+```
+
+# Get number of lines
+```powershell
+(Get-ChildItem -Recurse -File | Get-Content | Measure-Object -Line).Lines
 ```

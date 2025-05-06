@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"phishing_backend/internal/adapters/presentation/api"
 )
 
 var (
@@ -22,7 +24,7 @@ func getError(level int) error {
 }
 
 func main() {
-	b()
+	c()
 }
 
 func a() {
@@ -60,4 +62,12 @@ func b() {
 		fmt.Println("is errB")
 	}
 	fmt.Println(errCombined.Error())
+}
+
+func c() {
+	var user api.UserPostModel
+	jsonData := `{ "a": "a", "b": 1 }`
+	err := json.Unmarshal([]byte(jsonData), &user)
+	fmt.Println(user)
+	fmt.Println(err)
 }

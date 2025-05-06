@@ -9,13 +9,18 @@ info:
 servers:
   - url: "/api"
 tags:
-  # example
-  - name: pet
-    description: Everything about your Pets
+  - name: User
+    description: User and authentication related
+  - name: Completion
+    description: Keeps track of the users progress regarding the online courses
+  - name: Exam
+    description: Related to completing exams
 paths:
   "/users":
     post:
       summary: todo
+      tags:
+        - User
       operationId: createUser
       requestBody:
         content:
@@ -33,6 +38,8 @@ paths:
   "/users/login":
     post:
       summary: Authenticates and authorizes the user and returns a JWT token if the authentication was successful.
+      tags:
+        - User
       operationId: loginAndReturnJwtToken
       requestBody:
         content:
@@ -44,7 +51,7 @@ paths:
         '200':
           description: JWT token
           content:
-            text/plain:
+            application/jwt:
               schema:
                 type: string
         '400':
@@ -57,14 +64,11 @@ paths:
       security:
         - bearerAuth: [ ]
       summary: todo
+      tags:
+        - User
       operationId: getUser
       parameters:
-        - in: path
-          name: userId
-          schema:
-            type: string
-            format: uuid
-          required: true
+        - $ref: "#/components/parameters/userId"
       responses:
         '200':
           description: todo
@@ -85,14 +89,11 @@ paths:
       security:
         - bearerAuth: [ ]
       summary: todo
+      tags:
+        - User
       operationId: updateUser
       parameters:
-        - in: path
-          name: userId
-          schema:
-            type: string
-            format: uuid
-          required: true
+        - $ref: "#/components/parameters/userId"
       requestBody:
         content:
           application/json:
@@ -115,6 +116,8 @@ paths:
       security:
         - bearerAuth: [ ]
       summary: TODO
+      tags:
+        - Completion
       description: TODO
       operationId: getAllLessonCompletionsOfUser
       responses:
@@ -140,16 +143,12 @@ paths:
       security:
         - bearerAuth: [ ]
       summary: TODO
+      tags:
+        - Completion
       description: TODO
       operationId: getLessonCompletionsOfCourseAndUser
       parameters:
-        - in: path
-          name: courseId
-          schema:
-            type: string
-            format: uuid
-          required: true
-          description: Id of the course
+        - $ref: "#/components/parameters/courseId"
       responses:
         '200':
           description: Completed lessons of user in specific course
@@ -173,15 +172,12 @@ paths:
       security:
         - bearerAuth: [ ]
       summary: TODO
+      tags:
+        - Completion
       description: TODO
       operationId: createLessonCompletion
-      parameters:
-        - in: path
-          name: courseId
-          schema:
-            type: integer
-          required: true
-          description: Id of the course
+      parameters: 
+        - $ref: "#/components/parameters/courseId"
       requestBody:
         content:
           application/json:
@@ -211,14 +207,11 @@ paths:
       security:
         - bearerAuth: [ ]
       summary: TODO
+      tags:
+        - Exam
       description: getExam
       parameters:
-        - in: path
-          name: examId
-          schema:
-            type: string
-            format: uuid
-          required: true
+        - $ref: "#/components/parameters/examId"
       responses:
         '200':
           description: todo
@@ -240,15 +233,12 @@ paths:
       security:
         - bearerAuth: [ ]
       summary: TODO
+      tags:
+        - Exam
       operationId: completeExam
       description: TODO
       parameters:
-        - in: path
-          name: examId
-          schema:
-            type: string
-            format: uuid
-          required: true
+        - $ref: "#/components/parameters/examId"
       requestBody:
         content:
           application/json:
@@ -285,6 +275,34 @@ components:
           schema:
             $ref: "#/components/schemas/ProblemDetail"
 
+  parameters:
+    courseId:
+      name: courseId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: Id of the course
+      
+    examId:
+      in: path
+      name: examId
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: Id of the exam
+      
+    userId:
+      in: path
+      name: userId
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: Id of the user
+
   schemas:
     Lesson:
       required:
@@ -303,13 +321,13 @@ components:
       properties:
         newExperienceGained:
           type: integer
-          format: int64
+          format: int
         totalExperience:
           type: integer
-          format: int64
+          format: int
         newLevel:
           type: integer
-          format: int64
+          format: int
 
     UserAuthentication:
       required:
@@ -446,8 +464,22 @@ components:
           type: string
           description: A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
           maxLength: 1024
-    #        errors:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Error"
       required:
         - type
         - status
         - title
+
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+        pointer:
+          type: string
+      required:
+        - detail
+        - pointer
