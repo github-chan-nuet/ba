@@ -34,7 +34,7 @@ http:
     phishingEducator:
       loadBalancer:
         servers:
-          - url: "http://phishing_educator:3000"
+          - url: "http://phishing_educator:80"
 
   middlewares:
     traefik-auth:

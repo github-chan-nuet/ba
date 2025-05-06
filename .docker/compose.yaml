@@ -22,8 +22,6 @@ services:
       dockerfile: .docker/Dockerfile
     image: ${CI_REGISTRY_IMAGE}/phishing-backend:${CI_COMMIT_SHA}
     env_file: .env
-    ports:
-      - "8080:8080"
     depends_on:
       phishing_mail_storage:
         condition: service_healthy
@@ -37,8 +35,6 @@ services:
       dockerfile: .docker/Dockerfile
     image: ${CI_REGISTRY_IMAGE}/phishing-educator:${CI_COMMIT_SHA}
     env_file: .env
-    ports:
-      - "3000:3000"
     depends_on:
       - phishing_backend
     networks:
