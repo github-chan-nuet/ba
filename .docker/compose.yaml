@@ -58,6 +58,8 @@ services:
     depends_on:
       - phishing_backend
       - phishing_educator
+    networks:
+      - frontend___backend
 
 # https://stackoverflow.com/a/45606440/12828371
 volumes:
