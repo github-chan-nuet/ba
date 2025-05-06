@@ -1,6 +1,3 @@
-experimental:
-  http3: false
-
 entryPoints:
   web:
     address: ":80"
@@ -11,8 +8,6 @@ entryPoints:
     #      scheme: https
   websecure:
     address: ":443"
-    http3:
-      advertisedPort: "443"
 
 providers:
   file:
