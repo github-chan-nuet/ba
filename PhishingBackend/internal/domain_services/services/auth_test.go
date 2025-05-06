@@ -61,7 +61,7 @@ func TestReturnsErrorWhenHeaderIsEmpty(t *testing.T) {
 
 	// then
 	assert.Equal(t, uuid.Nil, token)
-	assert.EqualError(t, err, "no token present")
+	assert.EqualError(t, err, "no JWT token present")
 }
 
 func TestReturnsErrorWhenHeaderIsInvalid(t *testing.T) {
@@ -126,7 +126,7 @@ func TestReturnsErrorWhenTokenIsExpired(t *testing.T) {
 
 	// then
 	assert.Equal(t, uuid.Nil, token)
-	assert.EqualError(t, err, "token has invalid claims: token is expired")
+	assert.EqualError(t, err, "invalid JWT token")
 }
 
 func createMockToken(key string) string {

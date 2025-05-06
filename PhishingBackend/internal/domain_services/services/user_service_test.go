@@ -24,7 +24,7 @@ func TestUpdateUpdatesUser(t *testing.T) {
 	sut := UserServiceImpl{UserRepository: m}
 	userId := uuid.New()
 	patch := domain_model.UserPatchDto{
-		Email:     ptr("a"),
+		Email:     ptr("a@a"),
 		Firstname: ptr("b"),
 		Lastname:  ptr("c"),
 		Password:  ptr("d"),
