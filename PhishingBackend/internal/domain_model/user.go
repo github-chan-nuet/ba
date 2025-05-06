@@ -2,6 +2,7 @@ package domain_model
 
 import (
 	"github.com/google/uuid"
+	"net/mail"
 	"phishing_backend/internal/domain_model/validation"
 )
 
@@ -21,9 +22,15 @@ type UserPatchDto struct {
 }
 
 func (u *UserPatchDto) Validate() error {
+	vErr := validation.NewValidationError()
 	if u.Email == nil && u.Firstname == nil && u.Lastname == nil && u.Password == nil {
-		vErr := validation.NewValidationError()
 		vErr.Add("#/", validation.NoFieldSet)
+		return vErr
+	}
+	if u.Email != nil && !isValidEmail(*u.Email) {
+		vErr.Add("#/email", validation.InvalidEmail)
+	}
+	if vErr.HasErr() {
 		return vErr
 	}
 	return nil
@@ -46,6 +53,8 @@ func (u *UserPostDto) Validate() error {
 	}
 	if u.Email == "" {
 		vErr.Add("#/email", validation.Mandatory)
+	} else if !isValidEmail(u.Email) {
+		vErr.Add("#/email", validation.InvalidEmail)
 	}
 	if u.Password == "" {
 		vErr.Add("#/password", validation.Mandatory)
@@ -54,4 +63,9 @@ func (u *UserPostDto) Validate() error {
 		return vErr
 	}
 	return nil
+}
+
+func isValidEmail(email string) bool {
+	addr, err := mail.ParseAddress(email)
+	return err == nil && addr.Address == email
 }
