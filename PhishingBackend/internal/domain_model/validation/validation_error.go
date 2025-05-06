@@ -48,6 +48,7 @@ func (f *FieldError) Error() string {
 type Reason string
 
 const (
-	Mandatory  Reason = "must be set"
-	NoFieldSet Reason = "no field at all was set but at least one must be"
+	Mandatory    Reason = "must be set"
+	NoFieldSet   Reason = "no field at all was set but at least one must be"
+	InvalidEmail Reason = "must be a valid email address"
 )
