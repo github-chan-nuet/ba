@@ -14,7 +14,7 @@ providers:
     filename: "/etc/traefik/traefik_dynamic.yaml"
 
 api:
-  insecure: true
+  dashboard: true
 
 log:
   level: DEBUG
