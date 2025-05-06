@@ -77,3 +77,7 @@ func createSpecificLessonCompletion(t *testing.T, jwtToken string, courseId, les
 	}
 	return &expGain
 }
+
+func createErrorDetailUrn(identifier string) string {
+	return "urn:securaware:error:" + identifier
+}

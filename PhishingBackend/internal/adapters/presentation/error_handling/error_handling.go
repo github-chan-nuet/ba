@@ -10,7 +10,7 @@ import (
 )
 
 func WriteErrorDetailResponse(w http.ResponseWriter, err error) {
-	slog.Error("writing error response", "err", err)
+	slog.Error("error handler received error", "err", err)
 	var vErr *validation.ValidationError
 	if errors.As(err, &vErr) {
 		prob := toProblemDetail(vErr)

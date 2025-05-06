@@ -20,7 +20,7 @@ func (v *ValidationError) Len() int {
 }
 
 func (v *ValidationError) HasErr() bool {
-	return len(v.Errors) == 0
+	return len(v.Errors) != 0
 }
 
 func (v *ValidationError) Add(field string, reason Reason) {
