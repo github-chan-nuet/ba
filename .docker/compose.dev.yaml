@@ -28,7 +28,7 @@ services:
       - frontend___backend
 
   phishing_mail_storage:
-    image: postgres:latest
+    image: postgres:17
     restart: unless-stopped
     environment:
       POSTGRES_USER: testuser

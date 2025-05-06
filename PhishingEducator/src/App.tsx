@@ -12,7 +12,7 @@ import GlobalToaster from "./toaster/GlobalToaster.tsx";
 import ProtectedRoute from "./auth/ProtectedRoute.tsx";
 
 client.setConfig({
-  baseUrl: "http://localhost:8080/api"
+  baseUrl: import.meta.env.VITE_API_BASE_URL
 })
 
 const router = createBrowserRouter([

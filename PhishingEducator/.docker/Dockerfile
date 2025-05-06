@@ -7,6 +7,7 @@ RUN npm install
 
 # Copy the entire project
 COPY . .
+COPY .docker/phishing_educator.env .env
 
 # Build the React app
 RUN npm run build
