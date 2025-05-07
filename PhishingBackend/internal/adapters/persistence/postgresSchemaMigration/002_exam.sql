@@ -25,9 +25,9 @@ CREATE TABLE exam_question_answers
 
 CREATE TABLE exam_completions
 (
-    id       uuid NOT NULL,
-    exam_fk  uuid NOT NULL,
-    user_fk  uuid NOT NULL,
+    id              uuid NOT NULL,
+    exam_fk         uuid NOT NULL,
+    user_fk         uuid NOT NULL,
     completion_time date NOT NULL,
     CONSTRAINT exam_completions_pkey PRIMARY KEY (id),
     CONSTRAINT fk_exam_completions_exam FOREIGN KEY (exam_fk) REFERENCES public.exams (id),
@@ -36,10 +36,12 @@ CREATE TABLE exam_completions
 
 CREATE TABLE exam_completion_answer
 (
-    id        uuid NOT NULL,
-    exam_fk   uuid NOT NULL,
-    answer_fk uuid NOT NULL,
+    id                 uuid NOT NULL,
+    exam_completion_fk uuid NOT NULL,
+    answer_fk          uuid NOT NULL,
+    question_fk        uuid NOT NULL,
     CONSTRAINT exam_completion_answer_pkey PRIMARY KEY (id),
-    CONSTRAINT fk_exam_completion_answer_exam FOREIGN KEY (exam_fk) REFERENCES public.exams (id),
-    CONSTRAINT fk_exam_completion_answer_answer FOREIGN KEY (answer_fk) REFERENCES public.exam_question_answers (id)
+    CONSTRAINT fk_exam_completion_answer_exam_completion FOREIGN KEY (exam_completion_fk) REFERENCES public.exam_completions (id),
+    CONSTRAINT fk_exam_completion_answer_answer FOREIGN KEY (answer_fk) REFERENCES public.exam_question_answers (id),
+    CONSTRAINT fk_exam_completion_answer_exam_question FOREIGN KEY (question_fk) REFERENCES public.exam_questions (id)
 );

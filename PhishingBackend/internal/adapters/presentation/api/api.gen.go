@@ -91,8 +91,8 @@ type QuestionType string
 
 // QuestionCompletion defines model for QuestionCompletion.
 type QuestionCompletion struct {
-	Answers    *[]openapi_types.UUID `json:"answers,omitempty"`
-	QuestionId *openapi_types.UUID   `json:"questionId,omitempty"`
+	Answers    []openapi_types.UUID `json:"answers"`
+	QuestionId openapi_types.UUID   `json:"questionId"`
 }
 
 // User defines model for User.

@@ -22,3 +22,14 @@ func ToUserPostDto(post api.UserPostModel) *domain_model.UserPostDto {
 		Password:  post.Password,
 	}
 }
+
+func ToQuestionCompletionDto(qs []api.QuestionCompletion) *[]domain_model.QuestionCompletionDto {
+	dtos := make([]domain_model.QuestionCompletionDto, 0, len(qs))
+	for _, q := range qs {
+		dtos = append(dtos, domain_model.QuestionCompletionDto{
+			Answers:    q.Answers,
+			QuestionId: q.QuestionId,
+		})
+	}
+	return &dtos
+}
