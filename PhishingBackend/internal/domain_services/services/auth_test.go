@@ -3,14 +3,15 @@ package services
 import (
 	"errors"
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
-	"github.com/google/uuid"
-	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"testing"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 // ----- createJwtToken -----
@@ -61,7 +62,7 @@ func TestReturnsErrorWhenHeaderIsEmpty(t *testing.T) {
 
 	// then
 	assert.Equal(t, uuid.Nil, token)
-	assert.EqualError(t, err, "no token present")
+	assert.EqualError(t, err, "no JWT token present")
 }
 
 func TestReturnsErrorWhenHeaderIsInvalid(t *testing.T) {
@@ -126,7 +127,7 @@ func TestReturnsErrorWhenTokenIsExpired(t *testing.T) {
 
 	// then
 	assert.Equal(t, uuid.Nil, token)
-	assert.EqualError(t, err, "token has invalid claims: token is expired")
+	assert.EqualError(t, err, "invalid JWT token")
 }
 
 func createMockToken(key string) string {
