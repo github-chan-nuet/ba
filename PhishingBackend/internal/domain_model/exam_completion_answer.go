@@ -1,6 +1,8 @@
 package domain_model
 
-import "github.com/google/uuid"
+import (
+	"github.com/google/uuid"
+)
 
 type ExamCompletionAnswer struct {
 	ID       uuid.UUID `gorm:"type:uuid;primary_key;"`
@@ -8,4 +10,9 @@ type ExamCompletionAnswer struct {
 	Exam     *Exam `gorm:"foreignKey:ExamFk"`
 	AnswerFk uuid.UUID
 	Answer   *ExamQuestionAnswer `gorm:"foreignKey:AnswerFk"`
+}
+
+type QuestionCompletionDto struct {
+	Answers    []uuid.UUID
+	QuestionId uuid.UUID
 }

@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"encoding/json"
 	"github.com/google/uuid"
 	"net/http"
 	"phishing_backend/internal/adapters/presentation/api"
 	"phishing_backend/internal/adapters/presentation/error_handling"
+	"phishing_backend/internal/adapters/presentation/mappers"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"phishing_backend/internal/domain_services/services"
@@ -32,6 +34,24 @@ func (e *ExamController) GetExam(w http.ResponseWriter, r *http.Request) {
 }
 
 func (e *ExamController) CompleteExam(w http.ResponseWriter, r *http.Request) {
+	examIdStr := r.PathValue("examId")
+	examId, err := uuid.Parse(examIdStr)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	authUserId, err := e.Authenticator.GetUser(r.Header.Get("Authorization"))
+	if err != nil {
+		error_handling.WriteErrorDetailResponse(w, err)
+		return
+	}
+	var answers []api.QuestionCompletion
+	err := json.NewDecoder(r.Body).Decode(&answers)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	mappers.ToQuestionCompletionDto(answers)
 
 }
 
