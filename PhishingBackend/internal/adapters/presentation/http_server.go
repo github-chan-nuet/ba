@@ -43,16 +43,23 @@ func NewServeMux() *http.ServeMux {
 		ExperienceService:          &expService,
 		LessonCompletionRepository: &lessonCompletionRepository,
 	}
+	examController := controllers.ExamController{
+		Authenticator:  &authenticator,
+		ExamRepository: &persistence.ExamRepositoryImpl{},
+	}
 
 	sMux := http.NewServeMux()
+	// health
 	sMux.HandleFunc("GET /api/health", withCORS(controllers.GetHealth))
 
+	// lesson completions
 	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", withCORS(handleOptions))
 	sMux.HandleFunc("POST /api/courses/{courseId}/completions", withCORS(lessonCompletionController.CreateLessonCompletion))
 
 	sMux.HandleFunc("GET /api/courses/completions", withCORS(lessonCompletionController.GetAllLessonCompletionsOfUser))
 	sMux.HandleFunc("GET /api/courses/{courseId}/completions", withCORS(lessonCompletionController.GetLessonCompletionsOfCourseAndUser))
 
+	// users
 	sMux.HandleFunc("OPTIONS /api/users", withCORS(handleOptions))
 	sMux.HandleFunc("POST /api/users", withCORS(userController.CreateUser))
 
@@ -61,6 +68,11 @@ func NewServeMux() *http.ServeMux {
 
 	sMux.HandleFunc("GET /api/users/{userId}", withCORS(userController.GetUser))
 	sMux.HandleFunc("PATCH /api/users/{userId}", withCORS(userController.UpdateUser))
+
+	// exams
+	sMux.HandleFunc("GET /api/exams/{examId}", withCORS(examController.GetExam))
+	sMux.HandleFunc("POST /api/exams/{examId}/completions", withCORS(examController.CompleteExam))
+	sMux.HandleFunc("OPTIONS /api/exams/{examId}/completions", withCORS(handleOptions))
 	return sMux
 }
 
@@ -73,7 +85,7 @@ func withCORS(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func handleOptions(w http.ResponseWriter, r *http.Request) {
+func handleOptions(w http.ResponseWriter, _ *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Max-Age", "86400")
 	w.WriteHeader(http.StatusOK)

@@ -7,5 +7,5 @@ type ExamQuestion struct {
 	ExamFk   uuid.UUID
 	Exam     *Exam `gorm:"foreignKey:ExamFk"`
 	Question string
-	Answers  []ExamQuestionAnswer
+	Answers  []ExamQuestionAnswer `gorm:"foreignKey:QuestionFk"`
 }
