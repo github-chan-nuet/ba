@@ -19,8 +19,8 @@ const (
 
 // Answer defines model for Answer.
 type Answer struct {
-	Answer *string `json:"answer,omitempty"`
-	Id     *int    `json:"id,omitempty"`
+	Answer string             `json:"answer"`
+	Id     openapi_types.UUID `json:"id"`
 }
 
 // CourseCompletion defines model for CourseCompletion.
@@ -36,7 +36,10 @@ type Error struct {
 }
 
 // Exam defines model for Exam.
-type Exam = []Question
+type Exam struct {
+	Id        openapi_types.UUID `json:"id"`
+	Questions []Question         `json:"questions"`
+}
 
 // ExamCompletion defines model for ExamCompletion.
 type ExamCompletion = []QuestionCompletion
@@ -77,10 +80,10 @@ type ProblemDetail struct {
 
 // Question defines model for Question.
 type Question struct {
-	Answers  *[]Answer     `json:"answers,omitempty"`
-	Id       *int          `json:"id,omitempty"`
-	Question *string       `json:"question,omitempty"`
-	Type     *QuestionType `json:"type,omitempty"`
+	Answers  []Answer           `json:"answers"`
+	Id       openapi_types.UUID `json:"id"`
+	Question string             `json:"question"`
+	Type     QuestionType       `json:"type"`
 }
 
 // QuestionType defines model for Question.Type.
@@ -88,8 +91,8 @@ type QuestionType string
 
 // QuestionCompletion defines model for QuestionCompletion.
 type QuestionCompletion struct {
-	Answers    *[]int `json:"answers,omitempty"`
-	QuestionId *int   `json:"questionId,omitempty"`
+	Answers    *[]openapi_types.UUID `json:"answers,omitempty"`
+	QuestionId *openapi_types.UUID   `json:"questionId,omitempty"`
 }
 
 // User defines model for User.

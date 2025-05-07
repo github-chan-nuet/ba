@@ -204,8 +204,6 @@ paths:
 
   "/exams/{examId}":
     get:
-      security:
-        - bearerAuth: [ ]
       summary: TODO
       tags:
         - Exam
@@ -377,15 +375,25 @@ components:
             - email
 
     Exam:
-      type: array
-      items:
-        $ref: "#/components/schemas/Question"
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Question"
+      required:
+        - id
+        - questions
 
     Question:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         question:
           type: string
         type:
@@ -395,14 +403,23 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Answer"
+      required:
+        - id
+        - question
+        - type
+        - answers
 
     Answer:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         answer:
           type: string
+      required:
+        - id
+        - answer
 
     ExamCompletion:
       type: array
@@ -413,11 +430,13 @@ components:
       type: object
       properties:
         questionId:
-          type: integer
+          type: string
+          format: uuid
         answers:
           type: array
           items:
-            type: integer
+            type: string
+            format: uuid
 
     ExamValidation:
       type: object
