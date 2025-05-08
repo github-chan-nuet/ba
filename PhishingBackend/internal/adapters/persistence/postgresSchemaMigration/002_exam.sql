@@ -25,10 +25,10 @@ CREATE TABLE exam_question_answers
 
 CREATE TABLE exam_completions
 (
-    id              uuid NOT NULL,
-    exam_fk         uuid NOT NULL,
-    user_fk         uuid NOT NULL,
-    completion_time date NOT NULL,
+    id           uuid NOT NULL,
+    exam_fk      uuid NOT NULL,
+    user_fk      uuid NOT NULL,
+    completed_at date NOT NULL,
     CONSTRAINT exam_completions_pkey PRIMARY KEY (id),
     CONSTRAINT fk_exam_completions_exam FOREIGN KEY (exam_fk) REFERENCES public.exams (id),
     CONSTRAINT fk_exam_completions_user FOREIGN KEY (user_fk) REFERENCES public.users (id)
