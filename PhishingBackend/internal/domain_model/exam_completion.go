@@ -6,11 +6,11 @@ import (
 )
 
 type ExamCompletion struct {
-	ID             uuid.UUID `gorm:"type:uuid;primary_key;"`
-	UserFk         uuid.UUID
-	User           *User `gorm:"foreignKey:UserFk"`
-	ExamFk         uuid.UUID
-	Exam           *Exam     `gorm:"foreignKey:ExamFk"`
-	CompletionTime time.Time `gorm:"type:date"`
-	Answers        []ExamCompletionAnswer
+	ID          uuid.UUID `gorm:"type:uuid;primary_key;"`
+	UserFk      uuid.UUID
+	User        *User `gorm:"foreignKey:UserFk"`
+	ExamFk      uuid.UUID
+	Exam        *Exam     `gorm:"foreignKey:ExamFk"`
+	CompletedAt time.Time `gorm:"type:date"`
+	Answers     []ExamCompletionAnswer
 }
