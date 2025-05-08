@@ -32,15 +32,26 @@ func (e *ExamCompletionServiceImpl) calculateScore(exam *Exam, answers *[]Questi
 	return 0
 }
 
-func (e *ExamCompletionServiceImpl) mapToUserQuestionResponse(exam *Exam, answers *[]QuestionCompletionDto) *[]userQuestionResponse {
-	responses := make([]userQuestionResponse, 0, len(exam.Questions))
+func (e *ExamCompletionServiceImpl) mapToUserQuestionResponse(exam *Exam, qComps *[]QuestionCompletionDto) *[]userQuestionResponse {
+	qIdMap := make(map[uuid.UUID]userQuestionResponse, len(exam.Questions))
 	for _, question := range exam.Questions {
-
+		qIdMap[question.ID] = userQuestionResponse{question: question}
 	}
+	for _, qComp := range *qComps {
+		_, ok := qIdMap[qComp.QuestionId]
+		if !ok {
+
+		}
+		q := qIdMap[qComp.QuestionId]
+		q.userAnswers = qComp.Answers
+		qIdMap[qComp.QuestionId] = q
+	}
+	responses := make([]userQuestionResponse, 0, len(exam.Questions))
+
 	return &responses
 }
 
 type userQuestionResponse struct {
-	question    *ExamQuestion
+	question    ExamQuestion
 	userAnswers []uuid.UUID
 }
