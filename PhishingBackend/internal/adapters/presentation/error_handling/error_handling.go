@@ -18,6 +18,13 @@ func WriteErrorDetailResponse(w http.ResponseWriter, err error) {
 		return
 	}
 
+	var pErr *PathVariableError
+	if errors.As(err, &pErr) {
+		prob := pErr.toProblemDetail()
+		writeResponse(w, prob)
+		return
+	}
+
 	for errKey, prob := range problemMap {
 		if errors.Is(err, errKey) {
 			writeResponse(w, &prob)

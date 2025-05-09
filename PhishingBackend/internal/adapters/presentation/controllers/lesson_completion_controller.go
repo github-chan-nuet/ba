@@ -20,16 +20,15 @@ type LessonCompletionController struct {
 }
 
 func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWriter, r *http.Request) {
-	courseIdStr := r.PathValue("courseId")
-	courseId, err := uuid.Parse(courseIdStr)
+	courseId, err := getPathVariable(r, "courseId")
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	var lesson api.Lesson
 	err = json.NewDecoder(r.Body).Decode(&lesson)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		error_handling.WriteErrorDetailResponse(w, error_handling.ErrInvalidBody)
 		return
 	}
 	userId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
@@ -72,10 +71,9 @@ func (c *LessonCompletionController) GetAllLessonCompletionsOfUser(w http.Respon
 }
 
 func (c *LessonCompletionController) GetLessonCompletionsOfCourseAndUser(w http.ResponseWriter, r *http.Request) {
-	courseIdStr := r.PathValue("courseId")
-	courseId, err := uuid.Parse(courseIdStr)
+	courseId, err := getPathVariable(r, "courseId")
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	userId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
