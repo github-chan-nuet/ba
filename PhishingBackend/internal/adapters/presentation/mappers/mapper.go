@@ -23,13 +23,21 @@ func ToUserPostDto(post api.UserPostModel) *domain_model.UserPostDto {
 	}
 }
 
-func ToQuestionCompletionDto(qs []api.QuestionCompletion) *[]domain_model.QuestionCompletionDto {
-	dtos := make([]domain_model.QuestionCompletionDto, 0, len(qs))
-	for _, q := range qs {
+func ToQuestionCompletionDto(qs *[]api.QuestionCompletion) *[]domain_model.QuestionCompletionDto {
+	dtos := make([]domain_model.QuestionCompletionDto, 0, len(*qs))
+	for _, q := range *qs {
 		dtos = append(dtos, domain_model.QuestionCompletionDto{
 			Answers:    q.Answers,
 			QuestionId: q.QuestionId,
 		})
 	}
 	return &dtos
+}
+
+func ToApiExpGain(e *domain_model.ExperienceGain) *api.ExperienceGain {
+	return &api.ExperienceGain{
+		NewExperienceGained: e.NewExperienceGained,
+		NewLevel:            e.NewLevel,
+		TotalExperience:     e.TotalExperience,
+	}
 }

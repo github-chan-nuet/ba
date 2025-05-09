@@ -6,12 +6,10 @@ import (
 
 type ExamCompletionAnswer struct {
 	ID         uuid.UUID `gorm:"type:uuid;primary_key;"`
-	ExamFk     uuid.UUID
-	Exam       *Exam `gorm:"foreignKey:ExamFk"`
+	ExamCompFk uuid.UUID
+	ExamComp   *ExamCompletion `gorm:"foreignKey:ExamCompFk"`
 	AnswerFk   uuid.UUID
 	Answer     *ExamQuestionAnswer `gorm:"foreignKey:AnswerFk"`
-	QuestionFk uuid.UUID
-	Question   *ExamQuestion `gorm:"foreignKey:QuestionFk"`
 }
 
 type QuestionCompletionDto struct {
