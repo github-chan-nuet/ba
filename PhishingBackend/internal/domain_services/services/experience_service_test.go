@@ -85,7 +85,7 @@ func TestGetExperienceGainReturnsNewLevelWhenUserLeveledUp(t *testing.T) {
 	// given - a user which just completed 1 lesson
 	m := repositories.NewMockLessonCompletionRepository(gomock.NewController(t))
 	m.EXPECT().CountForUser(gomock.Any()).Return(1, nil)
-	sut := ExperienceServiceImpl{LessonCompRepo: m}
+	sut := ExperienceServiceImpl{LessonCompRepo: m, ExamCompRepo: &MockExamCompRepo{}}
 
 	// when
 	exp, err := sut.GetExperienceGainOfLessonCompletion(uuid.New())
