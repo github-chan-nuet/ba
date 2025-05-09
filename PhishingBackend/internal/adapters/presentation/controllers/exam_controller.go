@@ -61,6 +61,15 @@ func (e *ExamController) CompleteExam(w http.ResponseWriter, r *http.Request) {
 	writeJsonResponse(w, http.StatusOK, mappers.ToApiExpGain(expGain))
 }
 
+func (e *ExamController) GetExamIds(w http.ResponseWriter, _ *http.Request) {
+	examIds, err := e.ExamRepository.GetExamIds()
+	if err != nil {
+		error_handling.WriteErrorDetailResponse(w, err)
+		return
+	}
+	writeJsonResponse(w, http.StatusOK, &examIds)
+}
+
 func (e *ExamController) mapToExam(exam *domain_model.Exam, examId uuid.UUID) *api.Exam {
 	dtoExam := api.Exam{Id: examId}
 	dtoQuestions := make([]api.Question, 0, len(exam.Questions))

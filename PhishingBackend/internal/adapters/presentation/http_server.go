@@ -86,6 +86,7 @@ func NewServeMux() *http.ServeMux {
 	sMux.HandleFunc("GET /api/exams/{examId}", withCORS(examController.GetExam))
 	sMux.HandleFunc("POST /api/exams/{examId}/completions", withCORS(examController.CompleteExam))
 	sMux.HandleFunc("OPTIONS /api/exams/{examId}/completions", withCORS(handleOptions))
+	sMux.HandleFunc("GET /api/exams", withCORS(examController.GetExamIds))
 	return sMux
 }
 

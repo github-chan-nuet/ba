@@ -7,4 +7,5 @@ import (
 
 type ExamRepository interface {
 	Get(examId uuid.UUID) (*domain_model.Exam, error)
+	GetExamIds() ([]uuid.UUID, error)
 }
