@@ -11,7 +11,8 @@ var _ ExperienceService = (*ExperienceServiceImpl)(nil)
 
 type ExperienceService interface {
 	GetEntireExperience(userId uuid.UUID) (*domain_model.UserExperience, error)
-	GetExperienceGain(userId uuid.UUID, gain int) (*domain_model.ExperienceGain, error)
+	GetExperienceGainOfLessonCompletion(userId uuid.UUID) (*domain_model.ExperienceGain, error)
+	GetExperienceGainOfExamCompletion(userId uuid.UUID, score int) (*domain_model.ExperienceGain, error)
 	calcLevel(totalExperience int) int
 }
 
@@ -19,7 +20,16 @@ type ExperienceServiceImpl struct {
 	Repo repositories.LessonCompletionRepository
 }
 
-func (s *ExperienceServiceImpl) GetExperienceGain(userId uuid.UUID, gain int) (*domain_model.ExperienceGain, error) {
+func (s *ExperienceServiceImpl) GetExperienceGainOfExamCompletion(userId uuid.UUID, score int) (*domain_model.ExperienceGain, error) {
+	gain := int(math.Round(float64(score) / 100 * float64(domain_model.ExamCompletionGain)))
+	return s.getExperienceGain(userId, gain)
+}
+
+func (s *ExperienceServiceImpl) GetExperienceGainOfLessonCompletion(userId uuid.UUID) (*domain_model.ExperienceGain, error) {
+	return s.getExperienceGain(userId, domain_model.LessonCompletionGain)
+}
+
+func (s *ExperienceServiceImpl) getExperienceGain(userId uuid.UUID, gain int) (*domain_model.ExperienceGain, error) {
 	exp, err := s.GetEntireExperience(userId)
 	if err != nil {
 		return nil, err

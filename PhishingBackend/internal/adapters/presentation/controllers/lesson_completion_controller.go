@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"phishing_backend/internal/adapters/presentation/api"
 	"phishing_backend/internal/adapters/presentation/error_handling"
+	"phishing_backend/internal/adapters/presentation/mappers"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"phishing_backend/internal/domain_services/services"
@@ -46,17 +47,12 @@ func (c *LessonCompletionController) CreateLessonCompletion(w http.ResponseWrite
 		w.WriteHeader(http.StatusNoContent)
 		return
 	}
-	expGain, err := c.ExperienceService.GetExperienceGain(userId, domain_model.LessonCompletionGain)
+	expGain, err := c.ExperienceService.GetExperienceGainOfLessonCompletion(userId)
 	if err != nil {
 		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
-	expGainResp := api.ExperienceGain{
-		NewExperienceGained: expGain.NewExperienceGained,
-		TotalExperience:     expGain.TotalExperience,
-		NewLevel:            expGain.NewLevel,
-	}
-	writeJsonResponse(w, http.StatusCreated, expGainResp)
+	writeJsonResponse(w, http.StatusCreated, mappers.ToApiExpGain(expGain))
 }
 
 func (c *LessonCompletionController) GetAllLessonCompletionsOfUser(w http.ResponseWriter, r *http.Request) {

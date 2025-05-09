@@ -72,7 +72,7 @@ func TestExperienceCalculationReturnsErrorFromRepository(t *testing.T) {
 	assert.Nil(t, exp)
 }
 
-// ----- GetExperienceGain -----
+// ----- GetExperienceGainOfLessonCompletion -----
 func TestGetExperienceGainReturnsNewLevelWhenUserLeveledUp(t *testing.T) {
 	// given - a user which just completed 1 lesson
 	m := repositories.NewMockLessonCompletionRepository(gomock.NewController(t))
@@ -81,7 +81,7 @@ func TestGetExperienceGainReturnsNewLevelWhenUserLeveledUp(t *testing.T) {
 	gain := domain_model.LessonCompletionGain
 
 	// when
-	exp, err := sut.GetExperienceGain(uuid.New(), gain)
+	exp, err := sut.GetExperienceGainOfLessonCompletion(uuid.New(), gain)
 
 	// then
 	assert.NoError(t, err)
@@ -99,7 +99,7 @@ func TestGetExperienceGainReturnsErrorFromRepository(t *testing.T) {
 	gain := domain_model.LessonCompletionGain
 
 	// when
-	exp, err := sut.GetExperienceGain(uuid.New(), gain)
+	exp, err := sut.GetExperienceGainOfLessonCompletion(uuid.New(), gain)
 
 	// then
 	assert.Equal(t, givenErr, err)

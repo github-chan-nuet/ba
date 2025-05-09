@@ -13,8 +13,9 @@ import (
 )
 
 type ExamController struct {
-	Authenticator  services.Authenticator
-	ExamRepository repositories.ExamRepository
+	Authenticator         services.Authenticator
+	ExamRepository        repositories.ExamRepository
+	ExamCompletionService services.ExamCompletionService
 }
 
 func (e *ExamController) GetExam(w http.ResponseWriter, r *http.Request) {
@@ -46,13 +47,18 @@ func (e *ExamController) CompleteExam(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var answers []api.QuestionCompletion
-	err := json.NewDecoder(r.Body).Decode(&answers)
+	err = json.NewDecoder(r.Body).Decode(&answers)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	mappers.ToQuestionCompletionDto(answers)
 
+	expGain, err := e.ExamCompletionService.CompleteExam(authUserId, examId, mappers.ToQuestionCompletionDto(&answers))
+	if err != nil {
+		error_handling.WriteErrorDetailResponse(w, err)
+		return
+	}
+	writeJsonResponse(w, http.StatusOK, mappers.ToApiExpGain(expGain))
 }
 
 func (e *ExamController) mapToExam(exam *domain_model.Exam, examId uuid.UUID) *api.Exam {

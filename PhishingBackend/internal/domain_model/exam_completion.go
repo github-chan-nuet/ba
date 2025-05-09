@@ -13,4 +13,5 @@ type ExamCompletion struct {
 	Exam        *Exam     `gorm:"foreignKey:ExamFk"`
 	CompletedAt time.Time `gorm:"type:date"`
 	Answers     []ExamCompletionAnswer
+	Score       int
 }
