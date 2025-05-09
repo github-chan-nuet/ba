@@ -10,8 +10,8 @@ type ExamCompletion struct {
 	UserFk      uuid.UUID
 	User        *User `gorm:"foreignKey:UserFk"`
 	ExamFk      uuid.UUID
-	Exam        *Exam     `gorm:"foreignKey:ExamFk"`
-	CompletedAt time.Time `gorm:"type:date"`
-	Answers     []ExamCompletionAnswer
+	Exam        *Exam                  `gorm:"foreignKey:ExamFk"`
+	CompletedAt time.Time              `gorm:"type:date"`
+	Answers     []ExamCompletionAnswer `gorm:"foreignKey:ExamCompFk"`
 	Score       int
 }

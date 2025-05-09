@@ -25,11 +25,11 @@ CREATE TABLE exam_question_answers
 
 CREATE TABLE exam_completions
 (
-    id           uuid NOT NULL,
-    exam_fk      uuid NOT NULL,
-    user_fk      uuid NOT NULL,
-    completed_at date NOT NULL,
-    score        int  NOT NULL,
+    id           uuid    NOT NULL,
+    exam_fk      uuid    NOT NULL,
+    user_fk      uuid    NOT NULL,
+    completed_at date    NOT NULL,
+    score        integer NOT NULL,
     CONSTRAINT exam_completions_pkey PRIMARY KEY (id),
     CONSTRAINT fk_exam_completions_exam FOREIGN KEY (exam_fk) REFERENCES public.exams (id),
     CONSTRAINT fk_exam_completions_user FOREIGN KEY (user_fk) REFERENCES public.users (id),
@@ -37,12 +37,12 @@ CREATE TABLE exam_completions
     CONSTRAINT unique_exam_completion_per_usr UNIQUE (exam_fk, user_fk)
 );
 
-CREATE TABLE exam_completion_answer
+CREATE TABLE exam_completion_answers
 (
     id                 uuid NOT NULL,
-    exam_completion_fk uuid NOT NULL,
+    exam_comp_fk uuid NOT NULL,
     answer_fk          uuid NOT NULL,
-    CONSTRAINT exam_completion_answer_pkey PRIMARY KEY (id),
-    CONSTRAINT fk_exam_completion_answer_exam_completion FOREIGN KEY (exam_completion_fk) REFERENCES public.exam_completions (id),
-    CONSTRAINT fk_exam_completion_answer_answer FOREIGN KEY (answer_fk) REFERENCES public.exam_question_answers (id)
+    CONSTRAINT exam_completion_answers_pkey PRIMARY KEY (id),
+--     CONSTRAINT fk_exam_completion_answers_exam_completion FOREIGN KEY (exam_comp_fk) REFERENCES public.exam_completions (id),
+    CONSTRAINT fk_exam_completion_answers_answer FOREIGN KEY (answer_fk) REFERENCES public.exam_question_answers (id)
 );

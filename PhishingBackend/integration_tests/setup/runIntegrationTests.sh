@@ -1,4 +1,7 @@
 #!/bin/bash
+echo "delete docker database volume..."
+docker volume rm setup_it_db
+
 echo "starting docker database container..."
 docker compose -f ./compose.integration.yaml up -d
 
@@ -10,3 +13,6 @@ set +a
 
 echo "starting integration tests..."
 go test -tags integration ./../... -v
+
+echo "stopping docker database container"
+docker compose -f ./compose.integration.yaml down

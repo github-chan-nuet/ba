@@ -19,15 +19,27 @@ func SetupHttpServer() {
 }
 
 func NewServeMux() *http.ServeMux {
+	// repositories
 	userRepository := persistence.UserRepositoryImpl{}
 	lessonCompletionRepository := persistence.LessonCompletionRepositoryImpl{}
-	expService := services.ExperienceServiceImpl{
-		Repo: &lessonCompletionRepository,
-	}
+	examRepo := persistence.ExamRepositoryImpl{}
+	examCompRepo := persistence.ExamCompletionRepositoryImpl{}
 
+	// services
+	expService := services.ExperienceServiceImpl{
+		LessonCompRepo: &lessonCompletionRepository,
+		ExamCompRepo:   &examCompRepo,
+	}
+	examCompService := services.ExamCompletionServiceImpl{
+		ExamRepo:          &examRepo,
+		ExamCompRepo:      &examCompRepo,
+		ExperienceService: &expService,
+	}
 	authenticator := services.AuthenticatorImpl{
 		UserRepository: &userRepository,
 	}
+
+	// controllers
 	userController := controllers.UserController{
 		Authenticator: &authenticator,
 		UserService: &services.UserServiceImpl{
@@ -44,8 +56,9 @@ func NewServeMux() *http.ServeMux {
 		LessonCompletionRepository: &lessonCompletionRepository,
 	}
 	examController := controllers.ExamController{
-		Authenticator:  &authenticator,
-		ExamRepository: &persistence.ExamRepositoryImpl{},
+		Authenticator:         &authenticator,
+		ExamRepository:        &examRepo,
+		ExamCompletionService: &examCompService,
 	}
 
 	sMux := http.NewServeMux()
