@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"github.com/google/uuid"
 	"net/http"
 	"phishing_backend/internal/adapters/presentation/api"
 	"phishing_backend/internal/adapters/presentation/error_handling"
@@ -20,7 +19,7 @@ func (c *UserController) LoginAndReturnJwtToken(w http.ResponseWriter, r *http.R
 	var auth api.UserAuthentication
 	err := json.NewDecoder(r.Body).Decode(&auth)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		error_handling.WriteErrorDetailResponse(w, error_handling.ErrInvalidBody)
 		return
 	}
 	jwtToken, err := c.Authenticator.Authenticate(auth.Email, auth.Password)
@@ -38,7 +37,7 @@ func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user api.UserPostModel
 	err := json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		error_handling.WriteErrorDetailResponse(w, error_handling.ErrInvalidBody)
 		return
 	}
 	err = c.UserService.Create(mappers.ToUserPostDto(user))
@@ -50,10 +49,9 @@ func (c *UserController) CreateUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
-	userIdStr := r.PathValue("userId")
-	userId, err := uuid.Parse(userIdStr)
+	userId, err := getPathVariable(r, "userId")
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	authUserId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))
@@ -86,16 +84,15 @@ func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *UserController) UpdateUser(w http.ResponseWriter, r *http.Request) {
-	userIdStr := r.PathValue("userId")
-	userId, err := uuid.Parse(userIdStr)
+	userId, err := getPathVariable(r, "userId")
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	var user api.UserPatchModel
 	err = json.NewDecoder(r.Body).Decode(&user)
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		error_handling.WriteErrorDetailResponse(w, error_handling.ErrInvalidBody)
 		return
 	}
 	authUserId, err := c.Authenticator.GetUser(r.Header.Get("Authorization"))

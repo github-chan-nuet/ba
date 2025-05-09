@@ -19,10 +19,9 @@ type ExamController struct {
 }
 
 func (e *ExamController) GetExam(w http.ResponseWriter, r *http.Request) {
-	examIdStr := r.PathValue("examId")
-	examId, err := uuid.Parse(examIdStr)
+	examId, err := getPathVariable(r, "examId")
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	exam, err := e.ExamRepository.Get(examId)
@@ -35,10 +34,9 @@ func (e *ExamController) GetExam(w http.ResponseWriter, r *http.Request) {
 }
 
 func (e *ExamController) CompleteExam(w http.ResponseWriter, r *http.Request) {
-	examIdStr := r.PathValue("examId")
-	examId, err := uuid.Parse(examIdStr)
+	examId, err := getPathVariable(r, "examId")
 	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
+		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
 	authUserId, err := e.Authenticator.GetUser(r.Header.Get("Authorization"))

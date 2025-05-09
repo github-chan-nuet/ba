@@ -9,6 +9,7 @@ import (
 
 var (
 	ErrUnauthorized = errors.New("unauthorized")
+	ErrInvalidBody  = errors.New("invalid HTTP request body")
 	invalidJwtToken = api.ProblemDetail{
 		Type:   createUrn("invalid-jwt-token"),
 		Title:  "Dein JWT-Token ist ungültig",
@@ -35,6 +36,11 @@ var (
 		services.ErrInvalidTokenSignMethod:     invalidJwtToken,
 		services.ErrInvalidToken:               invalidJwtToken,
 		services.ErrInvalidTokenClaimStructure: invalidJwtToken,
+		ErrInvalidBody: {
+			Type:   createUrn("invalid-http-request-body"),
+			Title:  "Deine Anfrage ist invalide",
+			Status: 422,
+		},
 	}
 	stdProb = api.ProblemDetail{
 		Type:   createUrn("generic-error"),
