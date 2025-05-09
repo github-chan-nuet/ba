@@ -11,11 +11,19 @@ import (
 	"testing"
 )
 
+type MockExamCompRepo struct {
+	repositories.ExamCompletionRepository
+}
+
+func (m *MockExamCompRepo) GetScores(userId uuid.UUID) ([]int, error) {
+	return []int{}, nil
+}
+
 // ----- GetEntireExperience -----
 func TestExperienceCalculationIsCorrect(t *testing.T) {
 	// given
 	m := repositories.NewMockLessonCompletionRepository(gomock.NewController(t))
-	sut := ExperienceServiceImpl{LessonCompRepo: m}
+	sut := ExperienceServiceImpl{LessonCompRepo: m, ExamCompRepo: &MockExamCompRepo{}}
 
 	tests := []struct {
 		name          string
