@@ -19,7 +19,7 @@ func TestMain(m *testing.M) {
 	//defer stopTestDB()
 	ts = httptest.NewServer(presentation.NewServeMux())
 	defer ts.Close()
-	getDb().Exec("TRUNCATE TABLE users CASCADE")
+	//getDb().Exec("TRUNCATE TABLE users CASCADE")
 
 	// Run the tests
 	m.Run()

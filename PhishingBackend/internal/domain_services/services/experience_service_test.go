@@ -15,7 +15,7 @@ import (
 func TestExperienceCalculationIsCorrect(t *testing.T) {
 	// given
 	m := repositories.NewMockLessonCompletionRepository(gomock.NewController(t))
-	sut := ExperienceServiceImpl{Repo: m}
+	sut := ExperienceServiceImpl{LessonCompRepo: m}
 
 	tests := []struct {
 		name          string
@@ -62,7 +62,7 @@ func TestExperienceCalculationReturnsErrorFromRepository(t *testing.T) {
 	m := repositories.NewMockLessonCompletionRepository(gomock.NewController(t))
 	givenErr := errors.New("some error")
 	m.EXPECT().CountForUser(gomock.Any()).Return(0, givenErr)
-	sut := ExperienceServiceImpl{Repo: m}
+	sut := ExperienceServiceImpl{LessonCompRepo: m}
 
 	// when
 	exp, err := sut.GetEntireExperience(uuid.New())
@@ -77,16 +77,16 @@ func TestGetExperienceGainReturnsNewLevelWhenUserLeveledUp(t *testing.T) {
 	// given - a user which just completed 1 lesson
 	m := repositories.NewMockLessonCompletionRepository(gomock.NewController(t))
 	m.EXPECT().CountForUser(gomock.Any()).Return(1, nil)
-	sut := ExperienceServiceImpl{Repo: m}
-	gain := domain_model.LessonCompletionGain
+	sut := ExperienceServiceImpl{LessonCompRepo: m}
 
 	// when
-	exp, err := sut.GetExperienceGainOfLessonCompletion(uuid.New(), gain)
+	exp, err := sut.GetExperienceGainOfLessonCompletion(uuid.New())
 
 	// then
+	wantGain := domain_model.LessonCompletionGain
 	assert.NoError(t, err)
-	assert.Equal(t, gain, exp.NewExperienceGained)
-	assert.Equal(t, gain, exp.TotalExperience)
+	assert.Equal(t, wantGain, exp.NewExperienceGained)
+	assert.Equal(t, wantGain, exp.TotalExperience)
 	assert.Equal(t, 2, *exp.NewLevel)
 }
 
@@ -95,11 +95,10 @@ func TestGetExperienceGainReturnsErrorFromRepository(t *testing.T) {
 	m := repositories.NewMockLessonCompletionRepository(gomock.NewController(t))
 	givenErr := errors.New("some error")
 	m.EXPECT().CountForUser(gomock.Any()).Return(0, givenErr)
-	sut := ExperienceServiceImpl{Repo: m}
-	gain := domain_model.LessonCompletionGain
+	sut := ExperienceServiceImpl{LessonCompRepo: m}
 
 	// when
-	exp, err := sut.GetExperienceGainOfLessonCompletion(uuid.New(), gain)
+	exp, err := sut.GetExperienceGainOfLessonCompletion(uuid.New())
 
 	// then
 	assert.Equal(t, givenErr, err)
