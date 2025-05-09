@@ -38,7 +38,7 @@ var (
 	}
 	stdProb = api.ProblemDetail{
 		Type:   createUrn("generic-error"),
-		Title:  "Oooops, etwas lief schief",
+		Title:  "Uuuuupps, etwas lief schief",
 		Status: 500,
 	}
 )

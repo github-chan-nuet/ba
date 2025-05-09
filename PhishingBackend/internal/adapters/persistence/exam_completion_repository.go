@@ -38,7 +38,7 @@ func (r *ExamCompletionRepositoryImpl) GetScores(userId uuid.UUID) ([]int, error
 }
 
 func (r *ExamCompletionRepositoryImpl) Save(exComp *domain_model.ExamCompletion) error {
-	result := db.Save(exComp)
+	result := db.Create(exComp)
 	if result.Error != nil {
 		var e *pgconn.PgError
 		if errors.As(result.Error, &e) {
