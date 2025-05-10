@@ -78,7 +78,7 @@ func (e *ExamCompletionServiceImpl) calculateScore(exam *Exam, answers *[]Questi
 }
 
 // calculateScoreOfQuestion calculates the score in the range [0, 1]
-// todo maybe adjust range to 0 U [0.5, 1]
+// todo maybe adjust range to {0} U [0.5, 1]
 func (e *ExamCompletionServiceImpl) calculateScoreOfQuestion(a *userAndActualAnswer) float64 {
 	reductionPerWrongA := 1 / float64(a.totalAnswers)
 	wrong := a.getNumberOfWrongOrMissingAnswers()

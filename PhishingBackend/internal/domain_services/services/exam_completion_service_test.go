@@ -64,11 +64,51 @@ func TestShouldCalculateCorrectScore(t *testing.T) {
 			}}
 
 			// when
-			score := sut.calculateScore(&exam, &answers)
+			score, _ := sut.calculateScore(&exam, &answers)
 
 			// then
 			assert.Equal(t, tt.wantScore, score)
 		})
 	}
+}
 
+func TestShouldReturnErrorWhenQuestionDoesNotExist(t *testing.T) {
+	// given
+	sut := ExamCompletionServiceImpl{}
+	qs := []domain_model.ExamQuestion{
+		{
+			ID:       uuid.MustParse("00000000-0000-0000-0001-000000000000"),
+			Question: "2 + 2 = ?",
+			Answers: []domain_model.ExamQuestionAnswer{
+				{
+					ID:        uuid.MustParse("00000000-0000-0000-0001-000000000001"),
+					Answer:    "3",
+					IsCorrect: false,
+				},
+				{
+					ID:        uuid.MustParse("00000000-0000-0000-0001-000000000002"),
+					Answer:    "4",
+					IsCorrect: true,
+				},
+			},
+		},
+	}
+	exam := domain_model.Exam{Questions: qs}
+
+	answers := []domain_model.QuestionCompletionDto{
+		{
+			Answers:    []uuid.UUID{uuid.MustParse("00000000-0000-0000-0001-000000000001")},
+			QuestionId: uuid.MustParse("00000000-0000-0000-0001-000000000000"),
+		},
+		{
+			Answers:    []uuid.UUID{uuid.MustParse("00000000-0000-0000-0001-000000000001")},
+			QuestionId: uuid.MustParse("00000000-0000-0000-1111-000000000000"),
+		},
+	}
+
+	// when
+	_, err := sut.calculateScore(&exam, &answers)
+
+	// then
+	assert.EqualError(t, err, ErrQuestionNotExisting.Error())
 }
