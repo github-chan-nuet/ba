@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"github.com/google/uuid"
 	"math"
 	. "phishing_backend/internal/domain_model"
@@ -8,7 +9,10 @@ import (
 	"time"
 )
 
-var _ ExamCompletionService = (*ExamCompletionServiceImpl)(nil)
+var (
+	_                      ExamCompletionService = (*ExamCompletionServiceImpl)(nil)
+	ErrQuestionNotExisting                       = errors.New("question does not exist")
+)
 
 type ExamCompletionService interface {
 	CompleteExam(userId, examId uuid.UUID, answers *[]QuestionCompletionDto) (*ExperienceGain, error)
@@ -25,7 +29,10 @@ func (e *ExamCompletionServiceImpl) CompleteExam(userId, examId uuid.UUID, answe
 	if err != nil {
 		return nil, err
 	}
-	score := e.calculateScore(exam, answers)
+	score, err := e.calculateScore(exam, answers)
+	if err != nil {
+		return nil, err
+	}
 	exComp := e.createExamCompletion(userId, examId, answers, score)
 	err = e.ExamCompRepo.Save(exComp)
 	if err != nil {
@@ -56,15 +63,18 @@ func (e *ExamCompletionServiceImpl) createExamCompletion(userId, examId uuid.UUI
 }
 
 // calculateScore calculates the score in the range [0, 100]
-func (e *ExamCompletionServiceImpl) calculateScore(exam *Exam, answers *[]QuestionCompletionDto) int {
+func (e *ExamCompletionServiceImpl) calculateScore(exam *Exam, answers *[]QuestionCompletionDto) (int, error) {
 	score := float64(0)
 	scorePerQ := 100 / float64(len(exam.Questions))
-	resps := e.createUserAndActualAnswer(exam, answers)
+	resps, err := e.createUserAndActualAnswer(exam, answers)
+	if err != nil {
+		return 0, err
+	}
 	for _, resp := range *resps {
 		singleScore := e.calculateScoreOfQuestion(&resp)
 		score += singleScore * scorePerQ
 	}
-	return int(math.Round(score))
+	return int(math.Round(score)), nil
 }
 
 // calculateScoreOfQuestion calculates the score in the range [0, 1]
@@ -76,7 +86,7 @@ func (e *ExamCompletionServiceImpl) calculateScoreOfQuestion(a *userAndActualAns
 	return score
 }
 
-func (e *ExamCompletionServiceImpl) createUserAndActualAnswer(exam *Exam, qComps *[]QuestionCompletionDto) *[]userAndActualAnswer {
+func (e *ExamCompletionServiceImpl) createUserAndActualAnswer(exam *Exam, qComps *[]QuestionCompletionDto) (*[]userAndActualAnswer, error) {
 	qIdMap := make(map[uuid.UUID]userAndActualAnswer, len(exam.Questions))
 	// fill correct answers and total answers
 	for _, question := range exam.Questions {
@@ -95,7 +105,7 @@ func (e *ExamCompletionServiceImpl) createUserAndActualAnswer(exam *Exam, qComps
 	for _, qComp := range *qComps {
 		_, ok := qIdMap[qComp.QuestionId]
 		if !ok {
-			// todo return error, question does not exist
+			return nil, ErrQuestionNotExisting
 		}
 		q := qIdMap[qComp.QuestionId]
 		q.userAnswers = toMap(&qComp.Answers)
@@ -105,7 +115,7 @@ func (e *ExamCompletionServiceImpl) createUserAndActualAnswer(exam *Exam, qComps
 	for _, resp := range qIdMap {
 		responses = append(responses, resp)
 	}
-	return &responses
+	return &responses, nil
 }
 
 func toMap[V comparable](array *[]V) map[V]struct{} {
