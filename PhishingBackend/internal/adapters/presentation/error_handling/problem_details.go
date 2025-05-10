@@ -4,7 +4,7 @@ import (
 	"errors"
 	"phishing_backend/internal/adapters/presentation/api"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
-	"phishing_backend/internal/domain_services/services"
+	. "phishing_backend/internal/domain_services/services"
 )
 
 var (
@@ -14,6 +14,11 @@ var (
 		Type:   createUrn("invalid-jwt-token"),
 		Title:  "Dein JWT-Token ist ungültig",
 		Status: 400,
+	}
+	stdProb = api.ProblemDetail{
+		Type:   createUrn("generic-error"),
+		Title:  "Uuuuupps, etwas lief schief",
+		Status: 500,
 	}
 	problemMap = map[error]api.ProblemDetail{
 		repositories.ErrEmailAlreadyUsed: {
@@ -26,26 +31,26 @@ var (
 			Title:  "Du bist nicht berechtigt, diese Operation auszuführen",
 			Status: 403,
 		},
-		services.ErrNoAuthToken: {
+		ErrNoAuthToken: {
 			Type:   createUrn("not-authenticated"),
 			Title:  "You are not authenticated",
 			Status: 401,
 			Detail: ptr("No Authorization header is present, please login"),
 		},
-		services.ErrInvalidAuthHeader:          invalidJwtToken,
-		services.ErrInvalidTokenSignMethod:     invalidJwtToken,
-		services.ErrInvalidToken:               invalidJwtToken,
-		services.ErrInvalidTokenClaimStructure: invalidJwtToken,
+		ErrInvalidAuthHeader:          invalidJwtToken,
+		ErrInvalidTokenSignMethod:     invalidJwtToken,
+		ErrInvalidToken:               invalidJwtToken,
+		ErrInvalidTokenClaimStructure: invalidJwtToken,
 		ErrInvalidBody: {
 			Type:   createUrn("invalid-http-request-body"),
 			Title:  "Deine Anfrage ist invalide",
 			Status: 422,
 		},
-	}
-	stdProb = api.ProblemDetail{
-		Type:   createUrn("generic-error"),
-		Title:  "Uuuuupps, etwas lief schief",
-		Status: 500,
+		ErrQuestionNotExisting: {
+			Type:   createUrn("question-does-not-exist"),
+			Title:  "Die Testfrage existiert nicht",
+			Status: 422,
+		},
 	}
 )
 
