@@ -11,4 +11,5 @@ var ErrExamAlreadyCompleted = errors.New("exam was already completed")
 type ExamCompletionRepository interface {
 	Save(exComp *domain_model.ExamCompletion) error
 	GetScores(userId uuid.UUID) ([]int, error)
+	GetCompletedExam(userId, examId uuid.UUID) (*domain_model.ExamCompletion, error)
 }

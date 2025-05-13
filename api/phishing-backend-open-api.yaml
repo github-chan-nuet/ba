@@ -277,6 +277,32 @@ paths:
         '500':
           $ref: "#/components/responses/ProblemDetail"
 
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: TODO
+      tags:
+        - Exam
+      operationId: getCompletedExam
+      description: TODO
+      parameters:
+        - $ref: "#/components/parameters/examId"
+      responses:
+        '200':
+          description: todo
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CompletedExam"
+        '400':
+          $ref: "#/components/responses/ProblemDetail"
+        '401':
+          $ref: "#/components/responses/ProblemDetail"
+        '403':
+          $ref: "#/components/responses/ProblemDetail"
+        '500':
+          $ref: "#/components/responses/ProblemDetail"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -406,6 +432,36 @@ components:
       required:
         - id
         - questions
+
+    CompletedExam:
+      properties:
+        id:
+          type: string
+          format: uuid
+        completedAt:
+          type: string
+          format: date
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/CompletedQuestion"
+      required:
+        - id
+        - questions
+        - completedAt
+
+    CompletedQuestion:
+      allOf:
+        - $ref: "#/components/schemas/Question"
+        - type: object
+          properties:
+            userAnswers:
+              type: array
+              items:
+                type: string
+                format: uuid
+          required:
+            - userAnswers
 
     Question:
       type: object

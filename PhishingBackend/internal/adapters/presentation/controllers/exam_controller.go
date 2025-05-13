@@ -68,6 +68,27 @@ func (e *ExamController) GetExamIds(w http.ResponseWriter, _ *http.Request) {
 	writeJsonResponse(w, http.StatusOK, &examIds)
 }
 
+func (e *ExamController) GetCompletedExam(w http.ResponseWriter, r *http.Request) {
+	examId, err := getPathVariable(r, "examId")
+	if err != nil {
+		error_handling.WriteErrorDetailResponse(w, err)
+		return
+	}
+	authUserId, err := e.Authenticator.GetUser(r.Header.Get("Authorization"))
+	if err != nil {
+		error_handling.WriteErrorDetailResponse(w, err)
+		return
+	}
+
+	expGain, err := e.ExamCompletionService.CompleteExam(authUserId, examId, mappers.ToQuestionCompletionDto(&answers))
+	if err != nil {
+		error_handling.WriteErrorDetailResponse(w, err)
+		return
+	}
+	writeJsonResponse(w, http.StatusOK, mappers.ToApiExpGain(expGain))
+
+}
+
 func (e *ExamController) mapToExam(exam *domain_model.Exam, examId uuid.UUID) *api.Exam {
 	dtoExam := api.Exam{Id: examId}
 	dtoQuestions := make([]api.Question, 0, len(exam.Questions))
@@ -91,9 +112,9 @@ func (e *ExamController) mapToExam(exam *domain_model.Exam, examId uuid.UUID) *a
 			Question: question.Question,
 		}
 		if numCorrectAnswers == 1 {
-			dtoQuestion.Type = api.SingleChoice
+			dtoQuestion.Type = api.QuestionTypeSingleChoice
 		} else {
-			dtoQuestion.Type = api.MultipleChoice
+			dtoQuestion.Type = api.QuestionTypeMultipleChoice
 		}
 		dtoQuestions = append(dtoQuestions, dtoQuestion)
 	}

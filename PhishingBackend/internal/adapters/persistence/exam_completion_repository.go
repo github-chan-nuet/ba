@@ -16,6 +16,20 @@ const uniqueExamCompletion = "unique_exam_completion_per_usr"
 type ExamCompletionRepositoryImpl struct {
 }
 
+func (r *ExamCompletionRepositoryImpl) GetCompletedExam(userId, examId uuid.UUID) (*domain_model.ExamCompletion, error) {
+	var examComp domain_model.ExamCompletion
+	result := db.Model(&domain_model.ExamCompletion{}).
+		Preload("Exam.Questions.Answers").
+		Preload("Answers").
+		Where("user_fk = ? AND exam_fk = ?", userId, examId).
+		Find(&examComp)
+	if result.Error != nil {
+		slog.Error("Could not get exam completion by user and exam id", "err", result.Error)
+		return nil, result.Error
+	}
+	return &examComp, nil
+}
+
 type ExamScore struct {
 	Score int
 }
