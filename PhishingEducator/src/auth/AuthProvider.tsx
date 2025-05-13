@@ -2,15 +2,26 @@ import AuthContext from "./AuthContext";
 import { loginAndReturnJwtToken } from "../api";
 import useLocalStorage from "./useLocalStorage";
 import { Outlet, useNavigate } from "react-router";
+import { useToaster } from "../toaster/useToaster";
+import { Toast, ToastTitle } from "@fluentui/react-components";
 
 const AuthProvider = () => {
+  const { dispatchToast } = useToaster();
   const navigate = useNavigate();
   const [token, setToken] = useLocalStorage('login-token', null);
 
   const handleLogin = async (email: string, password: string) => {
-    const result = await loginAndReturnJwtToken({ body: { email, password } });
-    setToken(result.data);
-    navigate("/dashboard");
+    const { data, error } = await loginAndReturnJwtToken({ body: { email, password } });
+    if (!error) {
+      setToken(data);
+      navigate("/dashboard");
+    } else if (error.title) {
+      dispatchToast(
+        <Toast>
+          <ToastTitle>{error.title}</ToastTitle>
+        </Toast>
+      );
+    }
   }
 
   const handleLogout = () => {

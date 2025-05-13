@@ -16,16 +16,18 @@ const RegisterForm = () => {
 
   const handleRegister = async (event: FormEvent) => {
     event.preventDefault();
-    try {
-      await createUser({ body: formData });
-      onLogin(formData.email, formData.password);
-    } catch (e) {
-      dispatchToast(<Toast>
-        <ToastTitle>Aktion fehlgeschlagen!</ToastTitle>
-      </Toast>);
-      console.error(e);
+    const { error } = await createUser({ body: formData });
+    if (error) {
+      if (error.title) {
+        dispatchToast(
+          <Toast>
+            <ToastTitle>{error.title}</ToastTitle>
+          </Toast>
+        )
+      }
+      return;
     }
-    return;
+    onLogin(formData.email, formData.password);
   }
 
   return (

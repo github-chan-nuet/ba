@@ -19,7 +19,7 @@ const LoginForm = ({
 
   const handleLogin = (event: FormEvent) => {
     event.preventDefault();
-    return onLogin(formData.email, formData.password);
+    onLogin(formData.email, formData.password);
   }
   
   return (
