@@ -1,57 +1,70 @@
 import { Subtitle2Stronger, Card, CardHeader, ProgressBar, CardFooter, Button, Body1 } from '@fluentui/react-components';
+import { ArrowRight20Regular, Rocket20Regular } from '@fluentui/react-icons';
+import { Link } from 'react-router';
+import { courseData, CourseDef } from '../../data/courses';
+import useAuth from '../../auth/useAuth';
+import { CourseCompletion, getAllLessonCompletionsOfUser } from '../../api';
+import { useEffect, useState } from 'react';
 
 function Courses() {
+  const { token } = useAuth();
+  const [completions, setCompletions] = useState<CourseCompletion[]>([]);
+
+  useEffect(() => {
+    const fetchCompletions = async () => {
+      try {
+        const result = await getAllLessonCompletionsOfUser({
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        if (result.response.status === 200 && result.data) {
+          setCompletions(() => result.data);
+        }
+      } catch (e) {
+        console.error('Failed to fetch completions', e);
+      }
+    };
+    fetchCompletions();
+  }, [token]);
+
   return (
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
       gap: 16
     }}>
-      <CourseCard
-        title="Common Ground"
-        description="Dieser Kurs bietet einen kompakten Einstieg in das Thema Phishing. Du erfährst, was Phishing ist, wie verbreitet es ist, welche Schäden entstehen können und warum es für Securaware relevant ist."
-        completedPercentage={0.25}
-      />
-      <CourseCard
-        title="Angriffsvektoren"
-        description="Lerne, über welche Wege Phishing-Angriffe verbreitet werden - von E-Mail über SMS bis hin zu Telefonanrufen. Dieser Kurs zeigt dir die typischen Einfallstore für Angreifer."
-        completedPercentage={0}
-      />
-      <CourseCard
-        title="Sensitive Informationen"
-        description="Erfahre, welche persönlichen Daten besonders schützenswert sind und warum Phishing-Angriffe genau auf sie abzielen."
-        completedPercentage={0}
-      />
-      <CourseCard
-        title="URL-Spoofing"
-        description="In diesem Kurs lernst du, wie manipulierte Links dich in die Falle locken - inklusive Techniken wie URL-Verkürzung oder homographische Angriffe."
-        completedPercentage={0}
-      />
-      <CourseCard
-        title="Indizien"
-        description="Lerne, woran du Phishing-Versuche erkennst: von verdächtigen Absendern und Anhängen bis hin zu sprachlichen Auffälligkeiten und untypischem Kontext."
-        completedPercentage={0}
-      />
-      <CourseCard
-        title="Tools gegen Phishing"
-        description="Entdecke hilfreiche Tools und Techniken zur Abwehr von Phishing - wie Multi-Faktor-Authentifizierung, Browser-Erweiterungen und Domain-Checker."
-        completedPercentage={0}
-      />
+      { courseData.map((course, idx) => (
+        <CourseCard
+          key={idx}
+          course={course}
+          completedLessonIds={completions.find(c => c.courseId === course.id)?.completedLessons ?? []}
+        />
+      )) }
     </div>
   )
 }
 
 type CourseCardProps = {
-  title: string,
-  description: string,
-  completedPercentage: number
+  course: CourseDef;
+  completedLessonIds: string[];
 };
 
 function CourseCard({
-  title,
-  description,
-  completedPercentage
+  course,
+  completedLessonIds,
 }: CourseCardProps) {
+  const nonCompletedLessons = course.lessons.filter(lesson => !completedLessonIds.includes(lesson.id));
+  const firstNonCompletedLesson = nonCompletedLessons.at(0);
+  const completedPercentage = ((course.lessons.length - nonCompletedLessons.length) / course.lessons.length) || 0;
+
+  let path: string;
+  if (firstNonCompletedLesson) {
+    path = `/dashboard/courses/${course.handle}/${firstNonCompletedLesson.handle}`;
+  } else {
+    path = `/dashboard/courses/${course.handle}/${course.lessons.length > 0 ? course.lessons[0].handle : ''}`;
+  }
+
   return (
     <Card size="large">
       <CardHeader
@@ -59,17 +72,33 @@ function CourseCard({
           flexGrow: 1,
           gridAutoRows: 'min-content auto'
         }}
-        header={<Subtitle2Stronger>{title}</Subtitle2Stronger>}
-        description={<Body1>{description}</Body1>}
+        header={<Subtitle2Stronger>{course.label}</Subtitle2Stronger>}
+        description={<Body1>{course.description}</Body1>}
       />
       <div className="card-revert-padding">
         <ProgressBar value={completedPercentage}  />
       </div>
       <CardFooter
         action={
-          completedPercentage > 0 ?
-          <Button appearance="primary">Fortfahren</Button> :
-          <Button appearance="primary">Starten</Button>
+          <Link to={path}>
+            <Button appearance="primary">
+              { completedPercentage <= 0 ? (
+                <>
+                  Starten <Rocket20Regular style={{ marginLeft: 8 }} />
+                </>
+              ) : completedPercentage >= 1 ? (
+                <>
+                  Neu starten <Rocket20Regular style={{ marginLeft: 8 }} />
+                </>
+              ) : 
+              (
+                <>
+                  Fortfahren <ArrowRight20Regular style={{ marginLeft: 8 }} />
+                </>
+              )
+            }
+            </Button>
+          </Link>
         }
       >
       </CardFooter>

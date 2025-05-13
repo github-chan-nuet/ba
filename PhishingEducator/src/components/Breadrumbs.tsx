@@ -1,4 +1,5 @@
 import { Breadcrumb, BreadcrumbButton, BreadcrumbItem, BreadcrumbDivider } from "@fluentui/react-components";
+import React from "react";
 import { useMatches } from "react-router";
 
 function Breadcrumbs() {
@@ -14,12 +15,12 @@ function Breadcrumbs() {
 
           breadcrumbs++;
           return (
-            <>
+            <React.Fragment key={breadcrumbs}>
               { breadcrumbs > 1 ? <BreadcrumbDivider /> : '' }
               <BreadcrumbItem>
                 <BreadcrumbButton href={match.pathname}>{match.handle as string}</BreadcrumbButton>
               </BreadcrumbItem>
-            </>
+            </React.Fragment>
           )
         })
       }

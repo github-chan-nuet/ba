@@ -15,6 +15,7 @@ function NavBar() {
           label="Securaware"
           iconBaseName="Home"
           href="/dashboard"
+          matchOnSubPages={false}
         />
         <NavBarItem
           label="Phishing-Simulation"
@@ -50,10 +51,11 @@ type IconBaseName = Regular24Keys extends `${infer Base}24Regular` ? Base : neve
 type NavBarItemProps = {
   href: string,
   label: string,
-  iconBaseName: IconBaseName
+  iconBaseName: IconBaseName,
+  matchOnSubPages?: boolean
 }
 
-function NavBarItem({ href, label, iconBaseName }: NavBarItemProps) {
+function NavBarItem({ href, label, iconBaseName, matchOnSubPages = true }: NavBarItemProps) {
   const iconKey = `${iconBaseName}24Regular` as Regular24Keys;
   const iconKeyActive = `${iconBaseName}24Filled` as Filled24Keys;
   const IconComponent = FluentIcons[iconKey];
@@ -62,7 +64,7 @@ function NavBarItem({ href, label, iconBaseName }: NavBarItemProps) {
   return (
     <NavLink
       to={href}
-      end
+      end={!matchOnSubPages}
       className={NavBarStyles.NavBar__item}
     >
       {({ isActive }) => (
