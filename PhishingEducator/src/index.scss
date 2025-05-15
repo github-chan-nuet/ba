@@ -24,6 +24,8 @@ a {
 
   &__header {
     margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
   }
 
   &__content {
