@@ -12,6 +12,10 @@ export default defineConfig({
     })
   ],
 
+  optimizeDeps: {
+    include: ["@fluentui/react-components", "@fluentui/react-icons", "@hey-api/client-fetch"]
+  },
+
   // Required for Fluent UI icons in SSR
   ssr: {
     noExternal: ['@fluentui/react-icons'],
