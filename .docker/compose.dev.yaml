@@ -18,7 +18,7 @@ services:
       context: ../PhishingEducator
       dockerfile: .docker/dev.Dockerfile
     volumes:
-      - "../PhishingEducator/src:/app/src"
+      - "../PhishingEducator/app:/app/app"
       - "../PhishingEducator/public:/app/public"
     ports:
       - "3000:5173"

@@ -1,0 +1,64 @@
+import { Button, Field, Input, Toast, ToastTitle } from "@fluentui/react-components";
+import { createUser } from "../api";
+import useAuth from "../utils/auth/useAuth";
+import { useToaster } from "../utils/toaster/useToaster";
+import { useState, type ChangeEvent, type FormEvent } from "react";
+
+export default function RegisterForm() {
+  const { dispatchToast } = useToaster();
+  const { onLogin } = useAuth();
+  const [formData, setFormData] = useState({ firstname: "", lastname: "", email: "", password: "" });
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  }
+
+  const handleRegister = async (event: FormEvent) => {
+    event.preventDefault();
+    const { error } = await createUser({ body: formData });
+    if (error) {
+      if (error.title) {
+        dispatchToast(
+          <Toast>
+            <ToastTitle>{error.title}</ToastTitle>
+          </Toast>
+        )
+      }
+      return;
+    }
+    onLogin(formData.email, formData.password);
+  }
+
+  return (
+    <form
+      onSubmit={handleRegister}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16
+      }}
+    >
+      <Field label="Vorname">
+        <Input name="firstname" type="text" onChange={handleChange} />
+      </Field>
+      <Field label="Nachname">
+        <Input name="lastname" type="text" onChange={handleChange} />
+      </Field>
+      <Field label="E-Mail">
+        <Input name="email" type="email" onChange={handleChange} />
+      </Field>
+      <Field label="Passwort">
+        <Input name="password" type="password" onChange={handleChange} />
+      </Field>
+      <div
+        style={{
+          display: 'flex',
+          gap: 16
+        }}
+      >
+        <Button type="submit" appearance="primary">Registrieren</Button>
+      </div>
+    </form>
+  )
+}
