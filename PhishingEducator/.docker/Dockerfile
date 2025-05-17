@@ -1,4 +1,4 @@
-FROM node:22-apline AS build
+FROM node:22-alpine AS build
 WORKDIR /app
 
 # Copy package.json and package-lock.json and install dependencies
