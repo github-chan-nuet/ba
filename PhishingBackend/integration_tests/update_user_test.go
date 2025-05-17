@@ -7,8 +7,8 @@ import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"net/http"
-	"phishing_backend/internal/application/services"
-	"phishing_backend/internal/infrastructure/presentation/api"
+	"phishing_backend/internal/adapters/presentation/api"
+	"phishing_backend/internal/domain_services/services"
 	"testing"
 )
 
@@ -38,7 +38,7 @@ func TestUserCanBeUpdated(t *testing.T) {
 	assert.Equal(t, *reqBody.Firstname, dbUser.Firstname)
 	assert.Equal(t, *reqBody.Lastname, dbUser.Lastname)
 	assert.Equal(t, *reqBody.Email, dbUser.Email)
-	expectedPw, _ := services.HashPassword(*reqBody.Password)
+	expectedPw := services.HashPassword(*reqBody.Password)
 	assert.Equal(t, expectedPw, dbUser.Password)
 }
 

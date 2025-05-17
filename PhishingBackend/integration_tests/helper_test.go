@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
-	"phishing_backend/internal/infrastructure/presentation/api"
+	"phishing_backend/internal/adapters/presentation/api"
 	"strings"
 	"testing"
 )
@@ -60,9 +60,13 @@ func getUserId(jwtToken string) uuid.UUID {
 }
 
 func createLessonCompletion(t *testing.T, jwtToken string) *api.ExperienceGain {
-	reqBody := api.Lesson{LessonId: uuid.New()}
+	return createSpecificLessonCompletion(t, jwtToken, uuid.New(), uuid.New())
+}
+
+func createSpecificLessonCompletion(t *testing.T, jwtToken string, courseId, lessonId uuid.UUID) *api.ExperienceGain {
+	reqBody := api.Lesson{LessonId: lessonId}
 	marshal, _ := json.Marshal(reqBody)
-	req, _ := http.NewRequest(http.MethodPost, ts.URL+"/api/courses/"+uuid.NewString()+"/completions", bytes.NewReader(marshal))
+	req, _ := http.NewRequest(http.MethodPost, ts.URL+"/api/courses/"+courseId.String()+"/completions", bytes.NewReader(marshal))
 	req.Header.Set("Authorization", "Bearer "+jwtToken)
 	resp, err := http.DefaultClient.Do(req)
 	assert.NoError(t, err)
@@ -72,4 +76,8 @@ func createLessonCompletion(t *testing.T, jwtToken string) *api.ExperienceGain {
 		t.Fatal("failed to decode response:", err)
 	}
 	return &expGain
+}
+
+func createErrorDetailUrn(identifier string) string {
+	return "urn:securaware:error:" + identifier
 }

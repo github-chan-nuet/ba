@@ -1,0 +1,13 @@
+.Container {
+  max-width: 350px;
+  width: 100%;
+  padding: .5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+
+.Step {
+  display: flex;
+  gap: .5rem;
+}

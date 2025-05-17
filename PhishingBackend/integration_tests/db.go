@@ -4,20 +4,27 @@ package integration_tests
 
 import (
 	"fmt"
+	"github.com/stretchr/testify/require"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"log/slog"
 	"os"
-	"phishing_backend/internal/domain"
+	"phishing_backend/internal/domain_model"
+	"testing"
 )
 
 var gormDb *gorm.DB
 
-func getUser(email string) *domain.User {
-	user := &domain.User{}
+func getUser(email string) *domain_model.User {
+	user := &domain_model.User{}
 	getDb().Where("email = ?", email).First(user)
 	return user
+}
+
+func createExam(t *testing.T, exam *domain_model.Exam) {
+	result := getDb().Create(exam)
+	require.Nil(t, result.Error)
 }
 
 func getDb() *gorm.DB {
@@ -36,8 +43,7 @@ type dbConfig struct {
 }
 
 func (d *dbConfig) getConnectionString() string {
-	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		d.host, d.port, d.user, d.password, d.dbname)
+	return fmt.Sprintf("postgres://%s:%s@%s:%s/%s", d.user, d.password, d.host, d.port, d.dbname)
 }
 
 func newDbConfig() *dbConfig {
@@ -53,7 +59,7 @@ func newDbConfig() *dbConfig {
 func initGormAndDatabaseConnection() *gorm.DB {
 	config := newDbConfig()
 	connString := config.getConnectionString()
-	slog.Info("Trying to connect to DB", "connectionString", connString)
+	slog.Info("Trying to connect to DB")
 	db, err := gorm.Open(postgres.Open(connString), &gorm.Config{
 		PrepareStmt: true,
 		Logger:      logger.Discard, // https://stackoverflow.com/a/55892341

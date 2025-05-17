@@ -1,6 +1,6 @@
 stages:
   - build
-#  - test
+  - test
   - publish
   - deploy
 
@@ -10,9 +10,6 @@ build-phishingbackend:
   script:
     - cd PhishingBackend
     - go build -o /app/phishingBackend cmd/main.go
-  artifacts:
-    paths:
-      - ./app/phishingBackend
 
 build-phishingeducator:
   stage: build
@@ -21,23 +18,43 @@ build-phishingeducator:
     - cd PhishingEducator
     - npm ci
     - npm run build
-  artifacts:
-    paths:
-      - ./dist
 
 # https://gitlab.com/gitlab-org/gitlab/-/merge_requests/66787/diffs
-# test:
-#   stage: test
-#   image: golang:1.24.1
-#   script:
-#     - cd PhishingBackend
-#     - go run gotest.tools/gotestsum@latest --junitfile testResults.xml
-#   artifacts:
-#     when: always
-#     paths:
-#       - PhishingBackend/testResults.xml
-#     reports:
-#       junit: PhishingBackend/testResults.xml
+unit-test-phishingbackend:
+  stage: test
+  image: golang:1.24.1
+  script:
+    - cd PhishingBackend
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./... | grep -vE '/integration_tests')
+  artifacts:
+    when: always
+    paths:
+      - PhishingBackend/testResults.xml
+    reports:
+      junit: PhishingBackend/testResults.xml
+
+integration-test-phishingbackend:
+  stage: test
+  image: golang:1.24.1
+  variables:
+    POSTGRES_USER: testuser
+    POSTGRES_PASSWORD: test
+    POSTGRES_DB: testdb
+  services:
+    - postgres:latest
+  script:
+    - cd PhishingBackend/integration_tests
+    - set -a
+    - source setup/integrationTests.env
+    - PHBA_DB_HOST=postgres
+    - set +a
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list -tags integration ./...) -- -tags integration
+  artifacts:
+    when: always
+    paths:
+      - PhishingBackend/integration_tests/testResults.xml
+    reports:
+      junit: PhishingBackend/integration_tests/testResults.xml
 
 # TODO: Add tests for frontend
 
