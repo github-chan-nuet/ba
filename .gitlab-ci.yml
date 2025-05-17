@@ -10,9 +10,6 @@ build-phishingbackend:
   script:
     - cd PhishingBackend
     - go build -o /app/phishingBackend cmd/main.go
-  artifacts:
-    paths:
-      - ./app/phishingBackend
 
 build-phishingeducator:
   stage: build
@@ -21,9 +18,6 @@ build-phishingeducator:
     - cd PhishingEducator
     - npm ci
     - npm run build
-  artifacts:
-    paths:
-      - ./dist
 
 # https://gitlab.com/gitlab-org/gitlab/-/merge_requests/66787/diffs
 unit-test-phishingbackend:
