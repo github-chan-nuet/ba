@@ -3,9 +3,11 @@
 ## Structure
 - ./docker: application virtualization (docker) related configurations
 - api: HTTP API specification that the backend exposes in [OpenAPI format](https://swagger.io/specification/) 
-- PhishingBackend: golang source code of the Phishing Backend
+- PhishingBackend: source code of the Phishing Backend
+- PhishingEducator: source code of the Phishing Educator frontend
 
-## Docker compose
+## Development
+### Docker compose
 ```bash
 # force rebuilding the images
 docker compose -f ./.docker/compose.dev.yaml up --build

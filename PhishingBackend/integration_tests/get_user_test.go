@@ -6,7 +6,7 @@ import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"net/http"
-	"phishing_backend/internal/infrastructure/presentation/api"
+	"phishing_backend/internal/adapters/presentation/api"
 	"testing"
 )
 
@@ -50,10 +50,10 @@ func TestLevelAndExperienceCanBeRetrieved(t *testing.T) {
 
 	// then
 	assert.NoError(t, err)
-	assert.Equal(t, resp.StatusCode, http.StatusOK)
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
 	var gotUser api.User
 	err = json.NewDecoder(resp.Body).Decode(&gotUser)
 	assert.NoError(t, err)
-	assert.Equal(t, *expGain.NewLevel, int64(*gotUser.Level))
-	assert.Equal(t, expGain.TotalExperience, int64(*gotUser.TotalExperience))
+	assert.Equal(t, *expGain.NewLevel, *gotUser.Level)
+	assert.Equal(t, expGain.TotalExperience, *gotUser.TotalExperience)
 }

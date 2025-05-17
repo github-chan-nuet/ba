@@ -9,13 +9,18 @@ info:
 servers:
   - url: "/api"
 tags:
-  # tests
-  - name: pet
-    description: Everything about your Pets
+  - name: User
+    description: User and authentication related
+  - name: Completion
+    description: Keeps track of the users progress regarding the online courses
+  - name: Exam
+    description: Related to completing exams
 paths:
   "/users":
     post:
       summary: todo
+      tags:
+        - User
       operationId: createUser
       requestBody:
         content:
@@ -24,15 +29,17 @@ paths:
               "$ref": "#/components/schemas/UserPostModel"
       responses:
         '201':
-          description: User was created
+          $ref: "#/components/responses/ProblemDetail"
         '400':
-          description: Bad request
+          $ref: "#/components/responses/ProblemDetail"
         '500':
-          description: Internal Server Error
+          $ref: "#/components/responses/ProblemDetail"
 
   "/users/login":
     post:
       summary: Authenticates and authorizes the user and returns a JWT token if the authentication was successful.
+      tags:
+        - User
       operationId: loginAndReturnJwtToken
       requestBody:
         content:
@@ -44,28 +51,24 @@ paths:
         '200':
           description: JWT token
           content:
-            text/plain:
+            application/jwt:
               schema:
                 type: string
         '400':
-          description: Authentication claims are invalid
+          $ref: "#/components/responses/ProblemDetail"
         '500':
-          description: Internal Server Error
+          $ref: "#/components/responses/ProblemDetail"
 
   "/users/{userId}":
     get:
       security:
         - bearerAuth: [ ]
       summary: todo
+      tags:
+        - User
       operationId: getUser
       parameters:
-        - in: path
-          name: userId
-          schema:
-            type: string
-            format: uuid
-          required: true
-          description: Id of the course
+        - $ref: "#/components/parameters/userId"
       responses:
         '200':
           description: todo
@@ -74,29 +77,23 @@ paths:
               schema:
                 "$ref": "#/components/schemas/User"
         '400':
-          description: Bad request
+          $ref: "#/components/responses/ProblemDetail"
         '401':
-          description: Unauthorized
+          $ref: "#/components/responses/ProblemDetail"
         '403':
-          description: Forbidden
-        '404':
-          description: User not found
+          $ref: "#/components/responses/ProblemDetail"
         '500':
-          description: Internal Server Error
+          $ref: "#/components/responses/ProblemDetail"
 
     patch:
       security:
         - bearerAuth: [ ]
       summary: todo
+      tags:
+        - User
       operationId: updateUser
       parameters:
-        - in: path
-          name: userId
-          schema:
-            type: string
-            format: uuid
-          required: true
-          description: Id of the course
+        - $ref: "#/components/parameters/userId"
       requestBody:
         content:
           application/json:
@@ -106,30 +103,81 @@ paths:
         '200':
           description: User was updated
         '400':
-          description: Bad request
+          $ref: "#/components/responses/ProblemDetail"
         '401':
-          description: Unauthorized
+          $ref: "#/components/responses/ProblemDetail"
         '403':
-          description: Forbidden
-        '404':
-          description: User not found
+          $ref: "#/components/responses/ProblemDetail"
         '500':
-          description: Internal Server Error
+          $ref: "#/components/responses/ProblemDetail"
+
+  "/courses/completions":
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: TODO
+      tags:
+        - Completion
+      description: TODO
+      operationId: getAllLessonCompletionsOfUser
+      responses:
+        '200':
+          description: Completed lessons of user
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/CourseCompletion"
+        '400':
+          $ref: "#/components/responses/ProblemDetail"
+        '401':
+          $ref: "#/components/responses/ProblemDetail"
+        '403':
+          $ref: "#/components/responses/ProblemDetail"
+        '500':
+          $ref: "#/components/responses/ProblemDetail"
 
   "/courses/{courseId}/completions":
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: TODO
+      tags:
+        - Completion
+      description: TODO
+      operationId: getLessonCompletionsOfCourseAndUser
+      parameters:
+        - $ref: "#/components/parameters/courseId"
+      responses:
+        '200':
+          description: Completed lessons of user in specific course
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+        '400':
+          $ref: "#/components/responses/ProblemDetail"
+        '401':
+          $ref: "#/components/responses/ProblemDetail"
+        '403':
+          $ref: "#/components/responses/ProblemDetail"
+        '500':
+          $ref: "#/components/responses/ProblemDetail"
+
     post:
       security:
         - bearerAuth: [ ]
       summary: TODO
+      tags:
+        - Completion
       description: TODO
       operationId: createLessonCompletion
-      parameters:
-        - in: path
-          name: courseId
-          schema:
-            type: integer
-          required: true
-          description: Id of the course
+      parameters: 
+        - $ref: "#/components/parameters/courseId"
       requestBody:
         content:
           application/json:
@@ -146,27 +194,41 @@ paths:
         '204':
           description: Lesson completion already exists
         '400':
-          description: Bad request
+          $ref: "#/components/responses/ProblemDetail"
         '401':
-          description: Unauthorized
-        '404':
-          description: Lesson not found
+          $ref: "#/components/responses/ProblemDetail"
+        '403':
+          $ref: "#/components/responses/ProblemDetail"
         '500':
-          description: Internal Server Error
+          $ref: "#/components/responses/ProblemDetail"
+
+  "/exams":
+    get:
+      summary: TODO
+      tags:
+        - Exam
+      description: getExamIds
+      responses:
+        '200':
+          description: todo
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+        '500':
+          $ref: "#/components/responses/ProblemDetail"
 
   "/exams/{examId}":
     get:
-      security:
-        - bearerAuth: [ ]
       summary: TODO
+      tags:
+        - Exam
       description: getExam
       parameters:
-        - in: path
-          name: examId
-          schema:
-            type: string
-            format: uuid
-          required: true
+        - $ref: "#/components/parameters/examId"
       responses:
         '200':
           description: todo
@@ -174,27 +236,26 @@ paths:
             application/json:
               schema:
                 "$ref": "#/components/schemas/Exam"
+        '400':
+          $ref: "#/components/responses/ProblemDetail"
         '401':
-          description: Unauthorized
-        '404':
-          description: Exam not found
+          $ref: "#/components/responses/ProblemDetail"
+        '403':
+          $ref: "#/components/responses/ProblemDetail"
         '500':
-          description: Internal Server Error
+          $ref: "#/components/responses/ProblemDetail"
 
   "/exams/{examId}/completions":
     post:
       security:
         - bearerAuth: [ ]
       summary: TODO
+      tags:
+        - Exam
       operationId: completeExam
       description: TODO
       parameters:
-        - in: path
-          name: examId
-          schema:
-            type: string
-            format: uuid
-          required: true
+        - $ref: "#/components/parameters/examId"
       requestBody:
         content:
           application/json:
@@ -206,13 +267,15 @@ paths:
           content:
             application/json:
               schema:
-                "$ref": "#/components/schemas/ExamValidation"
+                "$ref": "#/components/schemas/ExperienceGain"
+        '400':
+          $ref: "#/components/responses/ProblemDetail"
         '401':
-          description: Unauthorized
-        '404':
-          description: Exam not found
+          $ref: "#/components/responses/ProblemDetail"
+        '403':
+          $ref: "#/components/responses/ProblemDetail"
         '500':
-          description: Internal Server Error
+          $ref: "#/components/responses/ProblemDetail"
 
 components:
   securitySchemes:
@@ -220,6 +283,42 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
+  responses:
+    ProblemDetail:
+      description: An RFC 9457 problem object
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetail"
+
+  parameters:
+    courseId:
+      name: courseId
+      in: path
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: Id of the course
+      
+    examId:
+      in: path
+      name: examId
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: Id of the exam
+      
+    userId:
+      in: path
+      name: userId
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: Id of the user
 
   schemas:
     Lesson:
@@ -239,13 +338,13 @@ components:
       properties:
         newExperienceGained:
           type: integer
-          format: int64
+          format: int
         totalExperience:
           type: integer
-          format: int64
+          format: int
         newLevel:
           type: integer
-          format: int64
+          format: int
 
     UserAuthentication:
       required:
@@ -295,32 +394,51 @@ components:
             - email
 
     Exam:
-      type: array
-      items:
-        $ref: "#/components/schemas/Question"
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Question"
+      required:
+        - id
+        - questions
 
     Question:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         question:
           type: string
         type:
           type: string
-          enum: [single_choice, multiple_choice]
+          enum: [ single_choice, multiple_choice ]
         answers:
           type: array
           items:
             $ref: "#/components/schemas/Answer"
+      required:
+        - id
+        - question
+        - type
+        - answers
 
     Answer:
       type: object
       properties:
         id:
-          type: integer
+          type: string
+          format: uuid
         answer:
           type: string
+      required:
+        - id
+        - answer
 
     ExamCompletion:
       type: array
@@ -331,11 +449,75 @@ components:
       type: object
       properties:
         questionId:
-          type: integer
+          type: string
+          format: uuid
         answers:
           type: array
           items:
-            type: integer
+            type: string
+            format: uuid
+      required:
+        - questionId
+        - answers
 
-    ExamValidation:
+    CourseCompletion:
       type: object
+      properties:
+        courseId:
+          type: string
+          format: uuid
+        completedLessons:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+        - courseId
+        - completedLessons
+
+    ProblemDetail:
+      type: object
+      title: An RFC 9457 problem object
+      properties:
+        "type":
+          type: string
+          description: A URI reference that identifies the problem type
+          format: "uri"
+          maxLength: 1024
+        status:
+          type: integer
+          description: The HTTP status code generated by the origin server for this occurrence of the problem.
+          format: int
+          minimum: 100
+          maximum: 599
+        title:
+          type: string
+          description: A short, human-readable summary of the problem type. It should not change from occurrence to occurrence of the problem, except for purposes of localization.
+          maxLength: 1024
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem.
+          maxLength: 4096
+        instance:
+          type: string
+          description: A URI reference that identifies the specific occurrence of the problem. It may or may not yield further information if dereferenced.
+          maxLength: 1024
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Error"
+      required:
+        - type
+        - status
+        - title
+
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+        pointer:
+          type: string
+      required:
+        - detail
+        - pointer

@@ -1,9 +1,9 @@
-FROM node:22-alpine AS build
+FROM node:22-apline AS build
 WORKDIR /app
 
 # Copy package.json and package-lock.json and install dependencies
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
 
 # Copy the entire project
 COPY . .
@@ -14,7 +14,7 @@ RUN npm run build
 
 # Use Nginx for serving the static files
 FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/build/client /usr/share/nginx/html
 
 # Expose the port the app runs on
 EXPOSE 80
