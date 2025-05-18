@@ -31,9 +31,10 @@ export default function CourseLesson({ loaderData }: Route.ComponentProps) {
     throw new Response("Not Found", { status: 404 });
   }
 
-  const { token } = useAuth();
+  const { token, onExperienceGain } = useAuth();
   const navigate = useNavigate();
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
+
   useEffect(() => {
     const fetchCompletions = async () => {
       try {
@@ -75,6 +76,7 @@ export default function CourseLesson({ loaderData }: Route.ComponentProps) {
         });
         if (resp.data) {
           setCompletedLessons(lessonIds => [...lessonIds, currentLesson.id]);
+          onExperienceGain(resp.data.newExperienceGained, resp.data.newLevel);
         }
       } catch (e) {
         console.error('Failed to create completion', e);

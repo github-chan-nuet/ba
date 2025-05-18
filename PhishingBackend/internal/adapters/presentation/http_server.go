@@ -80,6 +80,7 @@ func NewServeMux() *http.ServeMux {
 	sMux.HandleFunc("OPTIONS /api/users/login", withCORS(handleOptions))
 	sMux.HandleFunc("POST /api/users/login", withCORS(userController.LoginAndReturnJwtToken))
 
+	sMux.HandleFunc("OPTIONS /api/users/{userId}", withCORS(handleOptions))
 	sMux.HandleFunc("GET /api/users/{userId}", withCORS(userController.GetUser))
 	sMux.HandleFunc("PATCH /api/users/{userId}", withCORS(userController.UpdateUser))
 
