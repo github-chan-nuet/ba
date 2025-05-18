@@ -13,7 +13,8 @@ export default defineConfig({
   ],
 
   optimizeDeps: {
-    include: ["@fluentui/react-components", "@fluentui/react-icons", "@hey-api/client-fetch"]
+    exclude: ["@griffel/react"],
+    include: ["@fluentui/react-components", "@fluentui/react-icons", "@hey-api/client-fetch", "framer-motion"]
   },
 
   // Required for Fluent UI icons in SSR
