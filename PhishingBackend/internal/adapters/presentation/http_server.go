@@ -94,8 +94,14 @@ func NewServeMux() *http.ServeMux {
 
 func withCORS(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// TODO: Allow requests from any origin for now but tighten this is prod
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+		env := os.Getenv("APP_ENV")
+
+		switch env {
+		case "development":
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+		default:
+			w.Header().Set("Access-Control-Allow-Origin", "http://securaware.ch")
+		}
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		next(w, r)
 	}
