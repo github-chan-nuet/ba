@@ -84,7 +84,7 @@ func TestExamCanBeGet(t *testing.T) {
 		Answers:  mapToApiAnswer(exam.Questions[0].Answers),
 		Id:       exam.Questions[0].ID,
 		Question: exam.Questions[0].Question,
-		Type:     api.SingleChoice,
+		Type:     api.QuestionTypeSingleChoice,
 	}
 	assert.Equal(t, wantQ2, qWith2Answer)
 
@@ -92,18 +92,18 @@ func TestExamCanBeGet(t *testing.T) {
 		Answers:  mapToApiAnswer(exam.Questions[1].Answers),
 		Id:       exam.Questions[1].ID,
 		Question: exam.Questions[1].Question,
-		Type:     api.MultipleChoice,
+		Type:     api.QuestionTypeMultipleChoice,
 	}
 	assert.Equal(t, wantQ3, qWith3Answer)
 }
 
 func mapToApiAnswer(answers []domain_model.ExamQuestionAnswer) []api.Answer {
-	dtoAnswers := make([]api.Answer, 0, len(answers))
-	for _, a := range answers {
-		dtoAnswers = append(dtoAnswers, api.Answer{
+	dtoAnswers := make([]api.Answer, len(answers))
+	for i, a := range answers {
+		dtoAnswers[i] = api.Answer{
 			Answer: a.Answer,
 			Id:     a.ID,
-		})
+		}
 	}
 	return dtoAnswers
 }

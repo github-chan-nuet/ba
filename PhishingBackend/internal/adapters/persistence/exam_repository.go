@@ -19,9 +19,9 @@ func (e *ExamRepositoryImpl) GetExamIds() ([]uuid.UUID, error) {
 		slog.Error("Could not get exam ids", "err", result.Error)
 		return nil, result.Error
 	}
-	examIds := make([]uuid.UUID, 0, len(exams))
-	for _, exam := range exams {
-		examIds = append(examIds, exam.ID)
+	examIds := make([]uuid.UUID, len(exams))
+	for i, exam := range exams {
+		examIds[i] = exam.ID
 	}
 	return examIds, nil
 }

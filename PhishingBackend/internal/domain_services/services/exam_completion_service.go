@@ -16,17 +16,12 @@ var (
 
 type ExamCompletionService interface {
 	CompleteExam(userId, examId uuid.UUID, answers *[]QuestionCompletionDto) (*ExperienceGain, error)
-	GetCompletedExam(userId, examId uuid.UUID) (*ExamCompletion, error)
 }
 
 type ExamCompletionServiceImpl struct {
 	ExamRepo          repositories.ExamRepository
 	ExamCompRepo      repositories.ExamCompletionRepository
 	ExperienceService ExperienceService
-}
-
-func (e *ExamCompletionServiceImpl) GetCompletedExam(userId, examId uuid.UUID) (*ExamCompletion, error) {
-	return e.ExamCompRepo.GetCompletedExam(userId, examId)
 }
 
 func (e *ExamCompletionServiceImpl) CompleteExam(userId, examId uuid.UUID, answers *[]QuestionCompletionDto) (*ExperienceGain, error) {
@@ -116,7 +111,7 @@ func (e *ExamCompletionServiceImpl) createUserAndActualAnswer(exam *Exam, qComps
 		q.userAnswers = toMap(&qComp.Answers)
 		qIdMap[qComp.QuestionId] = q
 	}
-	responses := make([]userAndActualAnswer, 0, len(exam.Questions))
+	responses := make([]userAndActualAnswer, len(exam.Questions))
 	for _, resp := range qIdMap {
 		responses = append(responses, resp)
 	}

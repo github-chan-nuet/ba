@@ -100,20 +100,22 @@ func toApiCourseCompletions(completions []domain_model.LessonCompletion) []api.C
 		courseToLessons[c.CourseId] = append(lessons, c.LessonId)
 	}
 
-	ccs := make([]api.CourseCompletion, 0, len(courseToLessons))
+	ccs := make([]api.CourseCompletion, len(courseToLessons))
+	i := 0
 	for courseId, lessons := range courseToLessons {
-		ccs = append(ccs, api.CourseCompletion{
+		ccs[i] = api.CourseCompletion{
 			CourseId:         courseId,
 			CompletedLessons: lessons,
-		})
+		}
+		i += 1
 	}
 	return ccs
 }
 
 func aggregateLessonIds(lcs []domain_model.LessonCompletion) []uuid.UUID {
-	ids := make([]uuid.UUID, 0, len(lcs))
-	for _, lc := range lcs {
-		ids = append(ids, lc.LessonId)
+	ids := make([]uuid.UUID, len(lcs))
+	for i, lc := range lcs {
+		ids[i] = lc.LessonId
 	}
 	return ids
 }

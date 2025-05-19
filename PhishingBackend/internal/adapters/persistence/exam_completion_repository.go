@@ -44,9 +44,9 @@ func (r *ExamCompletionRepositoryImpl) GetScores(userId uuid.UUID) ([]int, error
 		slog.Error("Could not fetch scores in exam completion of users", "err", result.Error)
 		return nil, result.Error
 	}
-	var intScores = make([]int, 0, len(scores))
-	for _, score := range scores {
-		intScores = append(intScores, score.Score)
+	var intScores = make([]int, len(scores))
+	for i, score := range scores {
+		intScores[i] = score.Score
 	}
 	return intScores, nil
 }
