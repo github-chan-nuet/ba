@@ -20,7 +20,7 @@ func (r *ExamCompletionRepositoryImpl) GetCompletedExam(userId, examId uuid.UUID
 	var examComp domain_model.ExamCompletion
 	result := db.Model(&domain_model.ExamCompletion{}).
 		Preload("Exam.Questions.Answers").
-		Preload("Answers").
+		Preload("Answers.Answer.Question").
 		Where("user_fk = ? AND exam_fk = ?", userId, examId).
 		Find(&examComp)
 	if result.Error != nil {

@@ -435,9 +435,6 @@ components:
 
     CompletedExam:
       properties:
-        id:
-          type: string
-          format: uuid
         completedAt:
           type: string
           format: date
@@ -446,22 +443,49 @@ components:
           items:
             $ref: "#/components/schemas/CompletedQuestion"
       required:
-        - id
         - questions
         - completedAt
 
     CompletedQuestion:
-      allOf:
-        - $ref: "#/components/schemas/Question"
-        - type: object
-          properties:
-            userAnswers:
-              type: array
-              items:
-                type: string
-                format: uuid
-          required:
-            - userAnswers
+      properties:
+        id:
+          type: string
+          format: uuid
+        question:
+          type: string
+        type:
+          type: string
+          enum: [ single_choice, multiple_choice ]
+        answers:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnswerWithCorrection"
+        userAnswers:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+        - userAnswers
+        - id
+        - question
+        - type
+        - answers
+
+    AnswerWithCorrection:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        answer:
+          type: string
+        isCorrect:
+          type: boolean
+      required:
+        - id
+        - answer
+        - isCorrect
 
     Question:
       type: object

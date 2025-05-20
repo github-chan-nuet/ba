@@ -112,8 +112,10 @@ func (e *ExamCompletionServiceImpl) createUserAndActualAnswer(exam *Exam, qComps
 		qIdMap[qComp.QuestionId] = q
 	}
 	responses := make([]userAndActualAnswer, len(exam.Questions))
+	i := 0
 	for _, resp := range qIdMap {
-		responses = append(responses, resp)
+		responses[i] = resp
+		i++
 	}
 	return &responses, nil
 }

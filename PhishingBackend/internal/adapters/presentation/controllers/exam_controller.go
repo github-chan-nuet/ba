@@ -128,11 +128,11 @@ func (e *ExamController) mapToCompletedExam(exComp *domain_model.ExamCompletion)
 	qIdQuestion := make(map[uuid.UUID]api.CompletedQuestion)
 	// fill out user answers
 	for _, answer := range exComp.Answers {
-		qId := answer.Answer.Question.ID
+		qId := answer.Answer.QuestionFk
 		entry, ok := qIdQuestion[qId]
 		if !ok {
 			entry = api.CompletedQuestion{
-				Id:          answer.Answer.Question.ID,
+				Id:          qId,
 				Question:    answer.Answer.Question.Question,
 				UserAnswers: make([]uuid.UUID, 4),
 			}
@@ -143,11 +143,12 @@ func (e *ExamController) mapToCompletedExam(exComp *domain_model.ExamCompletion)
 	// fill out actual answers
 	for _, q := range exComp.Exam.Questions {
 		nCorrectAnswers := 0
-		answers := make([]api.Answer, len(q.Answers))
+		answers := make([]api.AnswerWithCorrection, len(q.Answers))
 		for i, answer := range q.Answers {
-			answers[i] = api.Answer{
-				Answer: answer.Answer,
-				Id:     answer.ID,
+			answers[i] = api.AnswerWithCorrection{
+				Answer:    answer.Answer,
+				Id:        answer.ID,
+				IsCorrect: answer.IsCorrect,
 			}
 			if answer.IsCorrect {
 				nCorrectAnswers++
@@ -171,7 +172,6 @@ func (e *ExamController) mapToCompletedExam(exComp *domain_model.ExamCompletion)
 	}
 	apiExamComp := api.CompletedExam{
 		CompletedAt: openapi_types.Date{Time: exComp.CompletedAt},
-		Id:          exComp.ID,
 		Questions:   qs,
 	}
 	return &apiExamComp

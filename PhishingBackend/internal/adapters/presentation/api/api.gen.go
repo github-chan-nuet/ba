@@ -29,20 +29,26 @@ type Answer struct {
 	Id     openapi_types.UUID `json:"id"`
 }
 
+// AnswerWithCorrection defines model for AnswerWithCorrection.
+type AnswerWithCorrection struct {
+	Answer    string             `json:"answer"`
+	Id        openapi_types.UUID `json:"id"`
+	IsCorrect bool               `json:"isCorrect"`
+}
+
 // CompletedExam defines model for CompletedExam.
 type CompletedExam struct {
 	CompletedAt openapi_types.Date  `json:"completedAt"`
-	Id          openapi_types.UUID  `json:"id"`
 	Questions   []CompletedQuestion `json:"questions"`
 }
 
 // CompletedQuestion defines model for CompletedQuestion.
 type CompletedQuestion struct {
-	Answers     []Answer              `json:"answers"`
-	Id          openapi_types.UUID    `json:"id"`
-	Question    string                `json:"question"`
-	Type        CompletedQuestionType `json:"type"`
-	UserAnswers []openapi_types.UUID  `json:"userAnswers"`
+	Answers     []AnswerWithCorrection `json:"answers"`
+	Id          openapi_types.UUID     `json:"id"`
+	Question    string                 `json:"question"`
+	Type        CompletedQuestionType  `json:"type"`
+	UserAnswers []openapi_types.UUID   `json:"userAnswers"`
 }
 
 // CompletedQuestionType defines model for CompletedQuestion.Type.
