@@ -1,0 +1,7 @@
+services:
+  phishing_mail_storage:
+    env_file: phishing_mail_storage.env
+  phishing_backend:
+    env_file:
+      - .env
+      - ../PhishingBackend/.docker/phishing_backend.env

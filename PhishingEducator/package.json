@@ -4,34 +4,42 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "dev": "react-router dev",
+    "build": "cross-env NODE_ENV=production react-router build",
+    "typecheck": "react-router typegen && tsc",
     "generate:api": "tsx ./scripts/apigen.ts"
   },
   "dependencies": {
     "@fluentui/react-components": "^9.61.6",
     "@fluentui/react-icons": "^2.0.294",
     "@hey-api/client-fetch": "^0.10.0",
+    "@react-router/node": "^7.6.0",
+    "framer-motion": "^12.12.1",
+    "isbot": "^5.1.17",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router": "^7.4.1",
+    "react-router": "^7.6.0",
     "sass": "^1.86.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@hey-api/openapi-ts": "^0.66.4",
+    "@react-router/dev": "^7.6.0",
+    "@types/node": "^22",
     "@types/react": "^18.3.20",
     "@types/react-dom": "^18.3.6",
-    "@vitejs/plugin-react": "^4.3.4",
+    "cross-env": "^7.0.3",
     "eslint": "^9.21.0",
     "eslint-plugin-react-hooks": "^5.1.0",
-    "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
     "tsx": "^4.19.3",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
-    "vite": "^6.2.5"
+    "vite": "^6.2.5",
+    "vite-plugin-cjs-interop": "^2.2.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }

@@ -67,8 +67,13 @@ func NewServeMux() *http.ServeMux {
 
 	// lesson completions
 	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", withCORS(handleOptions))
+	sMux.HandleFunc("GET /api/courses/{courseId}/completions", withCORS(lessonCompletionController.GetLessonCompletionsOfCourseAndUser))
 	sMux.HandleFunc("POST /api/courses/{courseId}/completions", withCORS(lessonCompletionController.CreateLessonCompletion))
 
+	sMux.HandleFunc("OPTIONS /api/courses/completions", withCORS(handleOptions))
+	sMux.HandleFunc("GET /api/courses/completions", withCORS(lessonCompletionController.GetAllLessonCompletionsOfUser))
+
+	// users
 	sMux.HandleFunc("GET /api/courses/completions", withCORS(lessonCompletionController.GetAllLessonCompletionsOfUser))
 	sMux.HandleFunc("GET /api/courses/{courseId}/completions", withCORS(lessonCompletionController.GetLessonCompletionsOfCourseAndUser))
 
@@ -79,6 +84,7 @@ func NewServeMux() *http.ServeMux {
 	sMux.HandleFunc("OPTIONS /api/users/login", withCORS(handleOptions))
 	sMux.HandleFunc("POST /api/users/login", withCORS(userController.LoginAndReturnJwtToken))
 
+	sMux.HandleFunc("OPTIONS /api/users/{userId}", withCORS(handleOptions))
 	sMux.HandleFunc("GET /api/users/{userId}", withCORS(userController.GetUser))
 	sMux.HandleFunc("PATCH /api/users/{userId}", withCORS(userController.UpdateUser))
 
@@ -92,8 +98,14 @@ func NewServeMux() *http.ServeMux {
 
 func withCORS(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// TODO: Allow requests from any origin for now but tighten this is prod
-		w.Header().Set("Access-Control-Allow-Origin", "*")
+		env := os.Getenv("APP_ENV")
+
+		switch env {
+		case "development":
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+		default:
+			w.Header().Set("Access-Control-Allow-Origin", "http://securaware.ch")
+		}
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		next(w, r)
 	}

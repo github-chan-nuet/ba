@@ -7,6 +7,7 @@ RUN npm install
 
 # Copy the entire project
 COPY . .
+COPY .docker/phishing_educator.dev.env .env
 
 # Expose the port the app runs on
 EXPOSE 5173

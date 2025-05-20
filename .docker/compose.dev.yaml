@@ -18,7 +18,7 @@ services:
       context: ../PhishingEducator
       dockerfile: .docker/dev.Dockerfile
     volumes:
-      - "../PhishingEducator/src:/app/src"
+      - "../PhishingEducator/app:/app/app"
       - "../PhishingEducator/public:/app/public"
     ports:
       - "3000:5173"
@@ -28,7 +28,7 @@ services:
       - frontend___backend
 
   phishing_mail_storage:
-    image: postgres:latest
+    image: postgres:17
     restart: unless-stopped
     environment:
       POSTGRES_USER: testuser

@@ -1,18 +1,65 @@
 services:
+  phishing_mail_storage:
+    image: postgres:17
+    restart: unless-stopped
+    volumes:
+      - phishingMailStorage:/var/lib/postgresql/data
+      - ./create-extension.sql:/docker-entrytpoint-initdb.d/create-extension.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    networks:
+      - backend___db
+
+
   phishing_backend:
     build:
       context: ../PhishingBackend
       dockerfile: .docker/Dockerfile
     image: ${CI_REGISTRY_IMAGE}/phishing-backend:${CI_COMMIT_SHA}
-    env_file: ../PhishingBackend/.docker/phishing_backend.env
-    ports:
-      - "8080:8080"
-#    depends_on:
-#      phishing_mail_storage:
-#        condition: service_healthy
+    env_file: .env
+    depends_on:
+      phishing_mail_storage:
+        condition: service_healthy
     networks:
       - frontend___backend
       - backend___db
+
+  phishing_educator:
+    build:
+      context: ../PhishingEducator
+      dockerfile: .docker/Dockerfile
+    image: ${CI_REGISTRY_IMAGE}/phishing-educator:${CI_COMMIT_SHA}
+    env_file: .env
+    depends_on:
+      - phishing_backend
+    networks:
+      - frontend___backend
+
+  phishing_proxy:
+    build:
+      context: ../PhishingProxy
+      dockerfile: .docker/Dockerfile
+    image: ${CI_REGISTRY_IMAGE}/phishing-proxy:${CI_COMMIT_SHA}
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+      - "443:443/udp"
+    depends_on:
+      - phishing_backend
+      - phishing_educator
+    networks:
+      - frontend___backend
+
+# https://stackoverflow.com/a/45606440/12828371
+volumes:
+  phishingMailStorage:
 
 # https://docs.docker.com/compose/how-tos/networking/
 networks:

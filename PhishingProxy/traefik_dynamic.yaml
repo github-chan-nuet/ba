@@ -1,0 +1,43 @@
+http:
+  routers:
+    dashboard:
+      rule: "Host(`traefik.securaware.ch`) && (Path(`/dashboard`) || PathPrefix(`/dashboard/`))"
+      service: api@internal
+      entrypoints:
+        - web
+        - websecure
+      middlewares:
+        - traefik-auth
+
+    phishingBackend:
+      rule: "Path(`/api`) || PathPrefix(`/api/`)"
+      service: phishingBackend
+      entrypoints:
+        - web
+        - websecure
+      priority: 10
+
+    phishingEducator:
+      rule: "Host(`securaware.ch`)"
+      service: phishingEducator
+      entrypoints:
+        - web
+        - websecure
+      priority: 1
+  
+  services:
+    phishingBackend:
+      loadBalancer:
+        servers:
+          - url: "http://phishing_backend:8080"
+
+    phishingEducator:
+      loadBalancer:
+        servers:
+          - url: "http://phishing_educator:80"
+
+  middlewares:
+    traefik-auth:
+      basicAuth:
+        users:
+          - "mib:$apr1$8Bm2OTIW$VNSGdjh2wfNmgMMbnKLw60"
