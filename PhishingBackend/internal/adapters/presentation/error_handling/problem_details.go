@@ -13,7 +13,7 @@ var (
 	invalidJwtToken = api.ProblemDetail{
 		Type:   createUrn("invalid-jwt-token"),
 		Title:  "Dein JWT-Token ist ungültig",
-		Status: 400,
+		Status: 401,
 	}
 	stdProb = api.ProblemDetail{
 		Type:   createUrn("generic-error"),

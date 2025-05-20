@@ -35,12 +35,12 @@ func WriteErrorDetailResponse(w http.ResponseWriter, err error) {
 }
 
 func toProblemDetail(vErr *validation.ValidationError) *api.ProblemDetail {
-	errs := make([]api.Error, 0, vErr.Len())
-	for _, err := range vErr.Errors {
-		errs = append(errs, api.Error{
+	errs := make([]api.Error, vErr.Len())
+	for i, err := range vErr.Errors {
+		errs[i] = api.Error{
 			Detail:  string(err.Reason),
 			Pointer: err.Field,
-		})
+		}
 	}
 
 	return &api.ProblemDetail{

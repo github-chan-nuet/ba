@@ -24,12 +24,12 @@ func ToUserPostDto(post api.UserPostModel) *domain_model.UserPostDto {
 }
 
 func ToQuestionCompletionDto(qs *[]api.QuestionCompletion) *[]domain_model.QuestionCompletionDto {
-	dtos := make([]domain_model.QuestionCompletionDto, 0, len(*qs))
-	for _, q := range *qs {
-		dtos = append(dtos, domain_model.QuestionCompletionDto{
+	dtos := make([]domain_model.QuestionCompletionDto, len(*qs))
+	for i, q := range *qs {
+		dtos[i] = domain_model.QuestionCompletionDto{
 			Answers:    q.Answers,
 			QuestionId: q.QuestionId,
-		})
+		}
 	}
 	return &dtos
 }

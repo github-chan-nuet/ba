@@ -11,10 +11,16 @@ const (
 	BearerAuthScopes = "bearerAuth.Scopes"
 )
 
+// Defines values for CompletedQuestionType.
+const (
+	CompletedQuestionTypeMultipleChoice CompletedQuestionType = "multiple_choice"
+	CompletedQuestionTypeSingleChoice   CompletedQuestionType = "single_choice"
+)
+
 // Defines values for QuestionType.
 const (
-	MultipleChoice QuestionType = "multiple_choice"
-	SingleChoice   QuestionType = "single_choice"
+	QuestionTypeMultipleChoice QuestionType = "multiple_choice"
+	QuestionTypeSingleChoice   QuestionType = "single_choice"
 )
 
 // Answer defines model for Answer.
@@ -22,6 +28,31 @@ type Answer struct {
 	Answer string             `json:"answer"`
 	Id     openapi_types.UUID `json:"id"`
 }
+
+// AnswerWithCorrection defines model for AnswerWithCorrection.
+type AnswerWithCorrection struct {
+	Answer    string             `json:"answer"`
+	Id        openapi_types.UUID `json:"id"`
+	IsCorrect bool               `json:"isCorrect"`
+}
+
+// CompletedExam defines model for CompletedExam.
+type CompletedExam struct {
+	CompletedAt openapi_types.Date  `json:"completedAt"`
+	Questions   []CompletedQuestion `json:"questions"`
+}
+
+// CompletedQuestion defines model for CompletedQuestion.
+type CompletedQuestion struct {
+	Answers     []AnswerWithCorrection `json:"answers"`
+	Id          openapi_types.UUID     `json:"id"`
+	Question    string                 `json:"question"`
+	Type        CompletedQuestionType  `json:"type"`
+	UserAnswers []openapi_types.UUID   `json:"userAnswers"`
+}
+
+// CompletedQuestionType defines model for CompletedQuestion.Type.
+type CompletedQuestionType string
 
 // CourseCompletion defines model for CourseCompletion.
 type CourseCompletion struct {
@@ -43,9 +74,6 @@ type Exam struct {
 
 // ExamCompletion defines model for ExamCompletion.
 type ExamCompletion = []QuestionCompletion
-
-// ExamValidation defines model for ExamValidation.
-type ExamValidation = map[string]interface{}
 
 // ExperienceGain defines model for ExperienceGain.
 type ExperienceGain struct {

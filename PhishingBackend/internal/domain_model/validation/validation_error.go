@@ -28,9 +28,9 @@ func (v *ValidationError) Add(field string, reason Reason) {
 }
 
 func (v *ValidationError) Error() string {
-	errors := make([]string, 0, len(v.Errors))
-	for _, err := range v.Errors {
-		errors = append(errors, err.Error())
+	errors := make([]string, len(v.Errors))
+	for i, err := range v.Errors {
+		errors[i] = err.Error()
 	}
 	fields := strings.Join(errors, ", ")
 	return "validation error occurred. Fields: " + fields

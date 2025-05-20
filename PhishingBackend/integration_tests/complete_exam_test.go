@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"math"
 	"net/http"
 	"phishing_backend/internal/adapters/presentation/api"
@@ -14,7 +15,7 @@ import (
 	"testing"
 )
 
-func Test(t *testing.T) {
+func TestCanCompleteExam(t *testing.T) {
 	// given
 	exam := &domain_model.Exam{
 		ID: uuid.New(),
@@ -90,6 +91,7 @@ func Test(t *testing.T) {
 	assert.NoError(t, err)
 	wantExp := int(0.17 * domain_model.ExamCompletionGain)
 	wantLvl := calcLevel(wantExp)
+	require.NotNil(t, gotExpGain.NewLevel)
 	assert.Equal(t, wantLvl, *gotExpGain.NewLevel)
 	assert.Equal(t, wantExp, gotExpGain.TotalExperience)
 	assert.Equal(t, wantExp, gotExpGain.NewExperienceGained)
