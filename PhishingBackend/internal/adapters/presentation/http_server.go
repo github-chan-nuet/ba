@@ -62,6 +62,7 @@ func NewServeMux() *http.ServeMux {
 	}
 
 	sMux := http.NewServeMux()
+
 	// health
 	sMux.HandleFunc("GET /api/health", withCORS(controllers.GetHealth))
 
@@ -92,14 +93,8 @@ func NewServeMux() *http.ServeMux {
 
 func withCORS(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		env := os.Getenv("APP_ENV")
-
-		switch env {
-		case "development":
-			w.Header().Set("Access-Control-Allow-Origin", "*")
-		default:
-			w.Header().Set("Access-Control-Allow-Origin", "http://securaware.ch")
-		}
+		cors := os.Getenv("PHBA_CORS")
+		w.Header().Set("Access-Control-Allow-Origin", cors)
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		next(w, r)
 	}
