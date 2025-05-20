@@ -40,7 +40,6 @@ func init() {
 		slog.Error("Database schema could not be migrated", "err", err)
 		panic(err)
 	}
-	//createTables()
 }
 
 func initGormAndDatabaseConnection() {
@@ -69,9 +68,3 @@ func initGormAndDatabaseConnection() {
 	}
 	slog.Info("Connection to db successful")
 }
-
-//func createTables() {
-//	if err := db.AutoMigrate(&domain.User{}, &domain.LessonCompletion{}); err != nil {
-//		slog.Error("Could not create table", "error", err)
-//	}
-//}
