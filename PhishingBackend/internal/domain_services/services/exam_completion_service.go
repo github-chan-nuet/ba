@@ -142,13 +142,13 @@ func (u *userAndActualAnswer) getNumberOfWrongOrMissingAnswers() int {
 	// B - A
 	for val := range u.correctAnswers {
 		if _, exists := u.userAnswers[val]; !exists {
-			wrong += 1
+			wrong++
 		}
 	}
 	// A - B
 	for val := range u.userAnswers {
 		if _, exists := u.correctAnswers[val]; !exists {
-			wrong += 1
+			wrong++
 		}
 	}
 	return wrong

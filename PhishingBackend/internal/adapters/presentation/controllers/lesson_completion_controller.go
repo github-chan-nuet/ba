@@ -107,7 +107,7 @@ func toApiCourseCompletions(completions []domain_model.LessonCompletion) []api.C
 			CourseId:         courseId,
 			CompletedLessons: lessons,
 		}
-		i += 1
+		i++
 	}
 	return ccs
 }

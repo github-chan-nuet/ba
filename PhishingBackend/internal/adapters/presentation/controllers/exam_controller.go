@@ -87,8 +87,7 @@ func (e *ExamController) GetCompletedExam(w http.ResponseWriter, r *http.Request
 		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
-	var apiExamComp api.CompletedExam
-
+	apiExamComp := e.mapToCompletedExam(examComp)
 	writeJsonResponse(w, http.StatusOK, &apiExamComp)
 }
 
@@ -126,17 +125,50 @@ func (e *ExamController) mapToExam(exam *domain_model.Exam, examId uuid.UUID) *a
 }
 
 func (e *ExamController) mapToCompletedExam(exComp *domain_model.ExamCompletion) *api.CompletedExam {
-	qs := make([]api.CompletedQuestion, 0, len(exComp.Answers))
+	qIdQuestion := make(map[uuid.UUID]api.CompletedQuestion)
+	// fill out user answers
 	for _, answer := range exComp.Answers {
-		cq := api.CompletedQuestion{
-			Answers:     nil,
-			Id:          answer.ID,
-			Question:    answer.Answer.Question.Question,
-			Type:        "",
-			UserAnswers: nil,
+		qId := answer.Answer.Question.ID
+		entry, ok := qIdQuestion[qId]
+		if !ok {
+			entry = api.CompletedQuestion{
+				Id:          answer.Answer.Question.ID,
+				Question:    answer.Answer.Question.Question,
+				UserAnswers: make([]uuid.UUID, 4),
+			}
 		}
+		entry.UserAnswers = append(qIdQuestion[qId].UserAnswers, answer.Answer.ID)
+		qIdQuestion[qId] = entry
 	}
-
+	// fill out actual answers
+	for _, q := range exComp.Exam.Questions {
+		nCorrectAnswers := 0
+		answers := make([]api.Answer, len(q.Answers))
+		for i, answer := range q.Answers {
+			answers[i] = api.Answer{
+				Answer: answer.Answer,
+				Id:     answer.ID,
+			}
+			if answer.IsCorrect {
+				nCorrectAnswers++
+			}
+		}
+		entry, _ := qIdQuestion[q.ID]
+		entry.Answers = answers
+		if nCorrectAnswers == 1 {
+			entry.Type = api.CompletedQuestionTypeSingleChoice
+		} else {
+			entry.Type = api.CompletedQuestionTypeMultipleChoice
+		}
+		qIdQuestion[q.ID] = entry
+	}
+	// map from map to array
+	qs := make([]api.CompletedQuestion, len(qIdQuestion))
+	i := 0
+	for _, q := range qIdQuestion {
+		qs[i] = q
+		i++
+	}
 	apiExamComp := api.CompletedExam{
 		CompletedAt: openapi_types.Date{Time: exComp.CompletedAt},
 		Id:          exComp.ID,
