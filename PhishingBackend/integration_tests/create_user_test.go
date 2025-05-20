@@ -11,9 +11,6 @@ import (
 	"phishing_backend/internal/adapters/presentation/api"
 	"phishing_backend/internal/domain_services/services"
 	"testing"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 func TestNewUserCanBeCreated(t *testing.T) {

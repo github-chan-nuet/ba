@@ -66,16 +66,10 @@ func NewServeMux() *http.ServeMux {
 	sMux.HandleFunc("GET /api/health", withCORS(controllers.GetHealth))
 
 	// lesson completions
-	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", withCORS(handleOptions))
 	sMux.HandleFunc("GET /api/courses/{courseId}/completions", withCORS(lessonCompletionController.GetLessonCompletionsOfCourseAndUser))
 	sMux.HandleFunc("POST /api/courses/{courseId}/completions", withCORS(lessonCompletionController.CreateLessonCompletion))
-
-	sMux.HandleFunc("OPTIONS /api/courses/completions", withCORS(handleOptions))
+	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", withCORS(handleOptions))
 	sMux.HandleFunc("GET /api/courses/completions", withCORS(lessonCompletionController.GetAllLessonCompletionsOfUser))
-
-	// users
-	sMux.HandleFunc("GET /api/courses/completions", withCORS(lessonCompletionController.GetAllLessonCompletionsOfUser))
-	sMux.HandleFunc("GET /api/courses/{courseId}/completions", withCORS(lessonCompletionController.GetLessonCompletionsOfCourseAndUser))
 
 	// users
 	sMux.HandleFunc("OPTIONS /api/users", withCORS(handleOptions))
