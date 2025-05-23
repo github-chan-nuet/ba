@@ -68,9 +68,11 @@ func NewServeMux() *http.ServeMux {
 	sMux.HandleFunc("GET /api/health", withCORS(controllers.GetHealth))
 
 	// lesson completions
+	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", withCORS(handleOptions))
 	sMux.HandleFunc("GET /api/courses/{courseId}/completions", withCORS(lessonCompletionController.GetLessonCompletionsOfCourseAndUser))
 	sMux.HandleFunc("POST /api/courses/{courseId}/completions", withCORS(lessonCompletionController.CreateLessonCompletion))
-	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", withCORS(handleOptions))
+
+	sMux.HandleFunc("OPTIONS /api/courses/completions", withCORS(handleOptions))
 	sMux.HandleFunc("GET /api/courses/completions", withCORS(lessonCompletionController.GetAllLessonCompletionsOfUser))
 
 	// users
@@ -85,10 +87,14 @@ func NewServeMux() *http.ServeMux {
 	sMux.HandleFunc("PATCH /api/users/{userId}", withCORS(userController.UpdateUser))
 
 	// exams
-	sMux.HandleFunc("GET /api/exams/{examId}", withCORS(examController.GetExam))
-	sMux.HandleFunc("POST /api/exams/{examId}/completions", withCORS(examController.CompleteExam))
-	sMux.HandleFunc("OPTIONS /api/exams/{examId}/completions", withCORS(handleOptions))
+	sMux.HandleFunc("OPTIONS /api/exams", withCORS(handleOptions))
 	sMux.HandleFunc("GET /api/exams", withCORS(examController.GetExamIds))
+
+	sMux.HandleFunc("OPTIONS /api/exams/{examId}", withCORS(handleOptions))
+	sMux.HandleFunc("GET /api/exams/{examId}", withCORS(examController.GetExam))
+
+	sMux.HandleFunc("OPTIONS /api/exams/{examId}/completions", withCORS(handleOptions))
+	sMux.HandleFunc("POST /api/exams/{examId}/completions", withCORS(examController.CompleteExam))
 	sMux.HandleFunc("GET /api/exams/{examId}/completions", withCORS(examController.GetCompletedExam))
 	return sMux
 }
