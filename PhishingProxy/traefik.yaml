@@ -14,8 +14,7 @@ certificatesResolvers:
     acme:
       email: mischa.binder@stafag.ch
       storage: acme.json
-      tlsChallenge:
-        entryPoint: websecure
+      tlsChallenge: {}
 
 providers:
   file:
