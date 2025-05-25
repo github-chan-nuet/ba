@@ -3,7 +3,7 @@ import type { User } from "../../api";
 
 export default createContext<{
   token: string,
-  user:(User & { totalXpForNextLevel: number } ) | null,
+  user: (User & { totalXpForNextLevel: number; id?: string|undefined } ) | null,
   onExperienceGain: (xpGain: number, newLevel: number|undefined) => void;
   onLogin: (email: string, password: string) => void;
   onLogout: () => void;
