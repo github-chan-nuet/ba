@@ -9,12 +9,17 @@ entryPoints:
   websecure:
     address: ":443"
 
+certificatesResolvers:
+  myresolver:
+    acme:
+      email: mischa.binder@stafag.ch
+      storage: acme.json
+      tlsChallenge:
+        entryPoint: websecure
+
 providers:
   file:
     filename: "/etc/traefik/traefik_dynamic.yaml"
-
-api:
-  dashboard: true
 
 log:
   level: DEBUG
