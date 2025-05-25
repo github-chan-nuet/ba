@@ -10,17 +10,26 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   const { dispatchToast } = useToaster();
   const navigate = useNavigate();
   const [token, setToken] = useLocalStorage('login-token', null);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<(User & { totalXpForNextLevel: number } ) | null>(null);
 
   const addExperienceGain = (xpGain: number, newLevel: number|undefined) => {
     setUser(prev => {
+      const level = newLevel ?? prev?.level ?? 0;
+
       return {
         ...prev,
         totalExperience: (prev?.totalExperience ?? 0) + xpGain,
-        level: newLevel ?? prev?.level
+        level,
+
+        // level is calculated by the formula: 1 + ln(x/200 + 1) / ln(1.5) = level
+        totalXpForNextLevel: calculateTotalXpForNextLevel(level)
       };
     });
   };
+
+  const calculateTotalXpForNextLevel = (currentLevel: number) => {
+    return 200 * ((1.5 ** currentLevel) - 1);
+  }
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -39,7 +48,9 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
             Authorization: `Bearer ${token}`
           }
         });
-        setUser(response.data || null);
+        if (response.data) {
+          setUser({ ...response.data, totalXpForNextLevel: calculateTotalXpForNextLevel(response.data.level ?? 0) });
+        }
       } catch (e) {
         console.error("Failed to load user profile", e);
         setUser(null);
