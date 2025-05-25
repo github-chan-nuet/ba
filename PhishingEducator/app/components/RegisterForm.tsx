@@ -39,16 +39,16 @@ export default function RegisterForm() {
         gap: 16
       }}
     >
-      <Field label="Vorname">
+      <Field label="Vorname" required>
         <Input name="firstname" type="text" onChange={handleChange} />
       </Field>
-      <Field label="Nachname">
+      <Field label="Nachname" required>
         <Input name="lastname" type="text" onChange={handleChange} />
       </Field>
-      <Field label="E-Mail">
+      <Field label="E-Mail" required>
         <Input name="email" type="email" onChange={handleChange} />
       </Field>
-      <Field label="Passwort">
+      <Field label="Passwort" required>
         <Input name="password" type="password" onChange={handleChange} />
       </Field>
       <div

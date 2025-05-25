@@ -32,10 +32,10 @@ export default function LoginForm({
           gap: 16
         }}
       >
-        <Field label="E-Mail">
+        <Field label="E-Mail" required>
           <Input name="email" type="email" onChange={handleChange} />
         </Field>
-        <Field label="Passwort">
+        <Field label="Passwort" required>
           <Input name="password" type="password" onChange={handleChange} />
         </Field>
         <div style={{
