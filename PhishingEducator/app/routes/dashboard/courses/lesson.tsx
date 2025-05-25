@@ -74,7 +74,7 @@ export default function CourseLesson({ loaderData }: Route.ComponentProps) {
             Authorization: `Bearer ${token}`
           }
         });
-        if (resp.data) {
+        if (resp.data && resp.response.status === 201) {
           setCompletedLessons(lessonIds => [...lessonIds, currentLesson.id]);
           onExperienceGain(resp.data.newExperienceGained, resp.data.newLevel);
         }
