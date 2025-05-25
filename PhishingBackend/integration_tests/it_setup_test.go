@@ -17,7 +17,7 @@ func TestMain(m *testing.M) {
 	//loadEnvVariables()
 	//startTestDB()
 	//defer stopTestDB()
-	ts = httptest.NewServer(presentation.NewServeMux())
+	ts = httptest.NewServer(presentation.NewSecurawareServeMux())
 	defer ts.Close()
 	//getDb().Exec("TRUNCATE TABLE users CASCADE")
 
