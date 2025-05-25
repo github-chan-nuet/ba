@@ -2,7 +2,7 @@ import { Button, Checkbox, Divider, Drawer, DrawerBody, DrawerHeader, DrawerHead
 import { Dismiss24Regular } from "@fluentui/react-icons";
 import useAuth from "../utils/auth/useAuth";
 import { updateUser } from "../api";
-import { useState, type FormEvent } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 
 type ProfileDrawerProps = {
   isOpen: boolean;
@@ -10,23 +10,48 @@ type ProfileDrawerProps = {
 };
 
 export default function ProfileDrawer({ isOpen, setIsOpen }: ProfileDrawerProps) {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showSpinner, setShowSpinner] = useState<boolean>(false);
+  const [formData, setFormData] = useState({
+    firstname: user?.firstname,
+    lastname: user?.lastname, 
+    email: user?.email,
+    password: ""
+  });
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  }
 
   const handleSave = async (event: FormEvent) => {
     event.preventDefault();
 
-    if (isLoading) return;
+    if (isLoading || !user?.id) return;
 
     setIsLoading(true);
+    const spinnerTimeout = setTimeout(() => {
+      setShowSpinner(true);
+    }, 500);
+
     const { error } = await updateUser({
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
       path: {
-        userId: ''
+        userId: user.id
+      },
+      body: {
+        firstname: formData.firstname
       }
     });
     if (error) {
       console.error("Failed to update user", error);
     } 
+
+    clearTimeout(spinnerTimeout);
+    setShowSpinner(false);
     setIsLoading(false);
   } 
 
@@ -61,13 +86,13 @@ export default function ProfileDrawer({ isOpen, setIsOpen }: ProfileDrawerProps)
           }}
         >
           <Field label="Vorname">
-            <Input name="firstname" type="text" value={user?.firstname} />
+            <Input name="firstname" type="text" value={formData.firstname} onChange={handleChange} />
           </Field>
           <Field label="Nachname">
-            <Input name="lastname" type="text" value={user?.lastname} />
+            <Input name="lastname" type="text" value={formData.lastname} onChange={handleChange} />
           </Field>
           <Field label="E-Mail">
-            <Input name="email" type="email" value={user?.email} disabled />
+            <Input name="email" type="email" value={formData.email} onChange={handleChange} />
           </Field>
           <Divider />
           <Checkbox name="phishing-simulation" type="checkbox" label="Ich möchte von der automatisieren Phishing Simulation profitieren." />
@@ -79,7 +104,7 @@ export default function ProfileDrawer({ isOpen, setIsOpen }: ProfileDrawerProps)
             }}
           >
             <Button type="submit" appearance="primary">
-              { isLoading ? (
+              { showSpinner ? (
                 <Spinner size="tiny" />
               ) : (
                 'Speichern'
