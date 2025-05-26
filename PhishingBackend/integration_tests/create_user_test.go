@@ -49,7 +49,7 @@ func TestNewUserCanBeCreatedWithParticipationInPhishingSimulation(t *testing.T) 
 		Password:                         "password",
 		Firstname:                        "John",
 		Lastname:                         "Doe",
-		ParticipatesInPhishingSimulation: &true,
+		ParticipatesInPhishingSimulation: BoolPtr(true),
 	}
 	marshal, _ := json.Marshal(reqBody)
 	req, _ := http.NewRequest(http.MethodPost, ts.URL+"/api/users", bytes.NewReader(marshal))
