@@ -1,9 +1,10 @@
 package services
 
 import (
-	"github.com/google/uuid"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
+
+	"github.com/google/uuid"
 )
 
 var _ UserService = (*UserServiceImpl)(nil)
@@ -39,6 +40,9 @@ func (s *UserServiceImpl) Update(userId uuid.UUID, dto *domain_model.UserPatchDt
 		hashedPw := HashPassword(*dto.Password)
 		user.Password = hashedPw
 	}
+	if dto.ParticipatesInPhishingSimulation != nil {
+		user.ParticipatesInPhishingSimulation = *dto.ParticipatesInPhishingSimulation
+	}
 	return s.UserRepository.UpdateUser(user)
 }
 
@@ -51,13 +55,20 @@ func (s *UserServiceImpl) Create(dto *domain_model.UserPostDto) error {
 	if err != nil {
 		return err
 	}
+
+	participatesInPhishingSimulation := false
+	if dto.ParticipatesInPhishingSimulation != nil {
+		participatesInPhishingSimulation = *dto.ParticipatesInPhishingSimulation
+	}
+
 	hashedPw := HashPassword(dto.Password)
 	user := &domain_model.User{
-		ID:        uuid.New(),
-		Firstname: dto.Firstname,
-		Lastname:  dto.Lastname,
-		Password:  hashedPw,
-		Email:     dto.Email,
+		ID:                               uuid.New(),
+		Firstname:                        dto.Firstname,
+		Lastname:                         dto.Lastname,
+		Password:                         hashedPw,
+		Email:                            dto.Email,
+		ParticipatesInPhishingSimulation: participatesInPhishingSimulation,
 	}
 	return s.UserRepository.CreateUser(user)
 }
