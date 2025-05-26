@@ -16,6 +16,9 @@ RUN npm run build
 FROM nginx:alpine
 COPY --from=build /app/build/client /usr/share/nginx/html
 
+# Copy custom Nginx config
+COPY .docker/nginx.conf /etc/nginx/conf.d/default.conf
+
 # Expose the port the app runs on
 EXPOSE 80
 

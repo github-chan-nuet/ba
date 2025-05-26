@@ -10,6 +10,7 @@ import (
 var (
 	ErrUnauthorized = errors.New("unauthorized")
 	ErrInvalidBody  = errors.New("invalid HTTP request body")
+	ErrPanic        = errors.New("panic occurred")
 	invalidJwtToken = api.ProblemDetail{
 		Type:   createUrn("invalid-jwt-token"),
 		Title:  "Dein JWT-Token ist ungültig",
@@ -51,6 +52,7 @@ var (
 			Title:  "Die Testfrage existiert nicht",
 			Status: 422,
 		},
+		ErrPanic: stdProb,
 	}
 )
 
