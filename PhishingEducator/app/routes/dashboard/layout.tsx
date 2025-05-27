@@ -9,12 +9,16 @@ export default function DashboardLayout() {
   return (
     <div className="Dashboard__container | container">
       <NavBar />
-      <div className="Dashboard__content">
+      <div className="Dashboard__main">
         <div className="Dashboard__header">
           <Breadcrumbs />
           <UserAvatar />
         </div>
-        <Outlet />
+        <div className="Dashboard__content">
+          <div className="Dashboard__innerContent">
+            <Outlet />
+          </div>
+        </div>
       </div>
     </div>
   )

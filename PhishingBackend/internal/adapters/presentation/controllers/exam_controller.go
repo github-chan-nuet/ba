@@ -2,8 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"github.com/google/uuid"
-	openapi_types "github.com/oapi-codegen/runtime/types"
 	"net/http"
 	"phishing_backend/internal/adapters/presentation/api"
 	"phishing_backend/internal/adapters/presentation/error_handling"
@@ -11,6 +9,9 @@ import (
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"phishing_backend/internal/domain_services/services"
+
+	"github.com/google/uuid"
+	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
 type ExamController struct {
@@ -18,6 +19,16 @@ type ExamController struct {
 	ExamRepository        repositories.ExamRepository
 	ExamCompRepo          repositories.ExamCompletionRepository
 	ExamCompletionService services.ExamCompletionService
+}
+
+func (e *ExamController) GetExams(w http.ResponseWriter, _ *http.Request) {
+	exams, err := e.ExamRepository.GetAll()
+	if err != nil {
+		error_handling.WriteErrorDetailResponse(w, err)
+		return
+	}
+	apiExams := e.mapToExams(exams)
+	writeJsonResponse(w, http.StatusOK, &apiExams)
 }
 
 func (e *ExamController) GetExam(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +42,7 @@ func (e *ExamController) GetExam(w http.ResponseWriter, r *http.Request) {
 		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
-	examDto := e.mapToExam(exam, examId)
+	examDto := e.mapToExam(exam)
 	writeJsonResponse(w, http.StatusOK, examDto)
 }
 
@@ -61,15 +72,6 @@ func (e *ExamController) CompleteExam(w http.ResponseWriter, r *http.Request) {
 	writeJsonResponse(w, http.StatusOK, mappers.ToApiExpGain(expGain))
 }
 
-func (e *ExamController) GetExamIds(w http.ResponseWriter, _ *http.Request) {
-	examIds, err := e.ExamRepository.GetExamIds()
-	if err != nil {
-		error_handling.WriteErrorDetailResponse(w, err)
-		return
-	}
-	writeJsonResponse(w, http.StatusOK, &examIds)
-}
-
 func (e *ExamController) GetCompletedExam(w http.ResponseWriter, r *http.Request) {
 	examId, err := getPathVariable(r, "examId")
 	if err != nil {
@@ -91,9 +93,21 @@ func (e *ExamController) GetCompletedExam(w http.ResponseWriter, r *http.Request
 	writeJsonResponse(w, http.StatusOK, &apiExamComp)
 }
 
-func (e *ExamController) mapToExam(exam *domain_model.Exam, examId uuid.UUID) *api.Exam {
-	dtoExam := api.Exam{Id: examId}
-	dtoQuestions := make([]api.Question, len(exam.Questions))
+func (e *ExamController) mapToExams(exams *[]domain_model.Exam) *[]api.Exam {
+	dtoExams := make([]api.Exam, len(*exams))
+	for i, exam := range *exams {
+		dtoExams[i] = *e.mapToExam(&exam)
+	}
+	return &dtoExams
+}
+
+func (e *ExamController) mapToExam(exam *domain_model.Exam) *api.Exam {
+	dtoExam := api.Exam{
+		Id:          (*exam).ID,
+		Title:       &(*exam).Title,
+		Description: &(*exam).Description,
+	}
+	dtoQuestions := make([]api.Question, len((*exam).Questions))
 	for i, question := range exam.Questions {
 		numCorrectAnswers := 0
 		dtoAnswers := make([]api.Answer, len(question.Answers))
@@ -125,6 +139,10 @@ func (e *ExamController) mapToExam(exam *domain_model.Exam, examId uuid.UUID) *a
 }
 
 func (e *ExamController) mapToCompletedExam(exComp *domain_model.ExamCompletion) *api.CompletedExam {
+	if exComp == nil || exComp.Exam == nil {
+		return nil
+	}
+
 	qIdQuestion := make(map[uuid.UUID]api.CompletedQuestion)
 	// fill out user answers
 	for _, answer := range exComp.Answers {

@@ -68,8 +68,10 @@ type Error struct {
 
 // Exam defines model for Exam.
 type Exam struct {
-	Id        openapi_types.UUID `json:"id"`
-	Questions []Question         `json:"questions"`
+	Description *string            `json:"description,omitempty"`
+	Id          openapi_types.UUID `json:"id"`
+	Questions   []Question         `json:"questions"`
+	Title       *string            `json:"title,omitempty"`
 }
 
 // ExamCompletion defines model for ExamCompletion.

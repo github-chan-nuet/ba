@@ -38,6 +38,8 @@ export type UserPostModel = UserPatchModel & {
 
 export type Exam = {
     id: string;
+    title?: string;
+    description?: string;
     questions: Array<Question>;
 };
 
@@ -413,7 +415,7 @@ export type GetExamsResponses = {
     /**
      * todo
      */
-    200: Array<string>;
+    200: Array<Exam>;
 };
 
 export type GetExamsResponse = GetExamsResponses[keyof GetExamsResponses];

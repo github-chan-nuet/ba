@@ -1,0 +1,101 @@
+.Exam {
+  &__Container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacingHorizontalXL);
+    margin-top: 1.5rem;
+
+    @media screen and (min-width: 968px) {
+      flex-direction: row;
+    }
+
+    &_inverted {
+      flex-direction: column-reverse;
+
+      @media screen and (min-width: 968px) {
+        flex-direction: row;
+      }
+    }
+  }
+
+  &__Questions {
+    flex: 1 1 0;
+    max-width: 1200px;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  &__Question {
+    display: flex;
+    flex-direction: column;
+    background-color: #fbfbfd;
+    border-radius: var(--borderRadiusXLarge);
+    padding: var(--spacingVerticalXXL);
+
+    * {
+      text-align: center;
+    }
+
+    &Title {
+      margin-bottom: var(--spacingVerticalXXL);
+    }
+  }
+
+  &__Answers {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacingVerticalM);
+    align-items: start;
+    margin-bottom: var(--spacingVerticalXXL);
+
+    @media screen and (min-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &__Answer {
+    position: relative;
+    background-color: #FFF;
+    border-radius: var(--borderRadiusXLarge);
+    padding: var(--spacingVerticalL) var(--spacingHorizontalXL);
+
+    &CorrectionIndicator {
+      position: absolute;
+      top: -5px;
+      left: -5px;
+    }
+  }
+
+  &__Aside {
+    position: relative;
+
+    @media screen and (min-width: 968px) {
+      flex: 0 1 400px;
+    }
+
+    &Container {
+      position: sticky;
+      top: 0;
+      background-color: #fbfbfd;
+      border-radius: var(--borderRadiusXLarge);
+      padding: var(--spacingVerticalXXL);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacingVerticalM);
+    }
+  }
+
+  &__ResultStatistics {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  &__ResultStatistic {
+    flex: 1 1 max-content;
+    min-width: 0;
+  }
+}
