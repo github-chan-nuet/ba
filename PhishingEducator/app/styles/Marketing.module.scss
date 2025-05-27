@@ -7,7 +7,22 @@
 
   &__container {
     max-width: 120rem;
-    padding-inline: 1.5rem;
     margin-inline: auto;
   }
+}
+
+.Title {
+  font-weight: bold;
+  background: linear-gradient(to left, #3762c5, #48d5ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block;
+  font-size: 10rem;
+  margin-bottom: 1rem;
+}
+
+.Section {
+  padding: 2rem;
+  width: 90%;
+  border-radius: 2rem;
 }

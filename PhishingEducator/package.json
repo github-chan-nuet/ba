@@ -11,6 +11,7 @@
     "generate:api": "tsx ./scripts/apigen.ts"
   },
   "dependencies": {
+    "@fluentui/react-charts": "^9.0.5",
     "@fluentui/react-components": "^9.61.6",
     "@fluentui/react-icons": "^2.0.294",
     "@hey-api/client-fetch": "^0.10.0",

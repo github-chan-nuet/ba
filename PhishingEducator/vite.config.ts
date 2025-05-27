@@ -8,13 +8,13 @@ export default defineConfig({
 
     // Add CJS interop plugin for Fluent UI packages until they are ESM compatible
     cjsInterop({
-      dependencies: ["@fluentui/react-components"]
+      dependencies: ["@fluentui/react-components", "@fluentui/react-charts"]
     })
   ],
 
   optimizeDeps: {
     exclude: ["@griffel/react"],
-    include: ["@fluentui/react-components", "@fluentui/react-icons", "@hey-api/client-fetch", "framer-motion"]
+    include: ["@fluentui/react-components", "@fluentui/react-icons", "@hey-api/client-fetch", "framer-motion", "@fluentui/react-charts"]
   },
 
   // Required for Fluent UI icons in SSR

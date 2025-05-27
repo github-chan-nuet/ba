@@ -40,7 +40,7 @@ export default function NavBar() {
       <div className={NavBarStyles.NavBar__items}>
         <button className={NavBarStyles.NavBar__item} onClick={onLogout}>
           <FluentIcons.SignOut24Regular />
-          <span className={NavBarStyles.NavBar__itemLabel}>Abmelden</span>
+          <span className={NavBarStyles.NavBar__itemLabel}>Abmelden Test</span>
         </button>
       </div>
     </div>
