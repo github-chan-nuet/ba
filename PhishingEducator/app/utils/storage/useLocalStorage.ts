@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 export default function useLocalStorage(key: string, initialValue: unknown) {
   const [value, setValue] = useState(() => {
     try {
-      const item = window.localStorage.getItem(key);
+      const item = typeof window !== "undefined" ? window.localStorage.getItem(key) : null;
       return item ? JSON.parse(item) : initialValue;
     } catch (e) {
       console.error(e);

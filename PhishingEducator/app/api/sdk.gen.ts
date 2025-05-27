@@ -139,7 +139,7 @@ export const createLessonCompletion = <ThrowOnError extends boolean = false>(opt
 
 /**
  * TODO
- * getExamIds
+ * getExams
  */
 export const getExams = <ThrowOnError extends boolean = false>(options?: Options<GetExamsData, ThrowOnError>) => {
     return (options?.client ?? _heyApiClient).get<GetExamsResponse, GetExamsError, ThrowOnError>({

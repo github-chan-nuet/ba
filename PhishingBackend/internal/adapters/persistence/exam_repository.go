@@ -1,10 +1,11 @@
 package persistence
 
 import (
-	"github.com/google/uuid"
 	"log/slog"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
+
+	"github.com/google/uuid"
 )
 
 var _ repositories.ExamRepository = (*ExamRepositoryImpl)(nil)
@@ -12,18 +13,14 @@ var _ repositories.ExamRepository = (*ExamRepositoryImpl)(nil)
 type ExamRepositoryImpl struct {
 }
 
-func (e *ExamRepositoryImpl) GetExamIds() ([]uuid.UUID, error) {
+func (e *ExamRepositoryImpl) GetAll() (*[]domain_model.Exam, error) {
 	var exams []domain_model.Exam
-	result := db.Model(&domain_model.Exam{}).Find(&exams)
+	result := db.Model(&domain_model.Exam{}).Preload("Questions.Answers").Find(&exams)
 	if result.Error != nil {
-		slog.Error("Could not get exam ids", "err", result.Error)
+		slog.Error("Coud not get exams", "err", result.Error)
 		return nil, result.Error
 	}
-	examIds := make([]uuid.UUID, len(exams))
-	for i, exam := range exams {
-		examIds[i] = exam.ID
-	}
-	return examIds, nil
+	return &exams, nil
 }
 
 func (e *ExamRepositoryImpl) Get(examId uuid.UUID) (*domain_model.Exam, error) {

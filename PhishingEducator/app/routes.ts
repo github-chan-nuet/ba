@@ -10,6 +10,10 @@ export default [
       route("courses", "routes/dashboard/courses/layout.tsx", [
         index("routes/dashboard/courses/index.tsx"),
         route(":courseHandle/:lessonHandle", "routes/dashboard/courses/lesson.tsx")
+      ]),
+      route("exams", "routes/dashboard/exams/layout.tsx", [
+        index("routes/dashboard/exams/index.tsx"),
+        route(":examId", "routes/dashboard/exams/exam.tsx")
       ])
     ])
   ])
