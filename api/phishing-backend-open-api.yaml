@@ -207,7 +207,7 @@ paths:
       summary: TODO
       tags:
         - Exam
-      description: getExamIds
+      description: getExams
       responses:
         '200':
           description: todo
@@ -216,8 +216,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
-                  format: uuid
+                  $ref: "#/components/schemas/Exam"
         '500':
           $ref: "#/components/responses/ProblemDetail"
 
@@ -429,6 +428,10 @@ components:
         id:
           type: string
           format: uuid
+        title:
+          type: string
+        description:
+          type: string
         questions:
           type: array
           items:

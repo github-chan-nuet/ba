@@ -16,9 +16,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
       const userId = parseJwt(token).id;
 
       const { data } = await getUser({
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
         path: {
           userId
         }
@@ -65,9 +62,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     const userId = parseJwt(token).id;
 
     const { error } = await patchUser({
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       path: {
         userId
       },
@@ -93,7 +87,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   };
 
   const calculateTotalXpForNextLevel = (currentLevel: number) => {
-    return 200 * ((1.5 ** currentLevel) - 1);
+    return Math.ceil(200 * ((1.5 ** currentLevel) - 1));
   }
 
   const value = {

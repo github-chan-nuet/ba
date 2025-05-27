@@ -93,7 +93,7 @@ func NewSecurawareServeMux() *http.ServeMux {
 
 	// exams
 	sMux.HandleFunc("OPTIONS /api/exams", handleOptions)
-	sMux.HandleFunc("GET /api/exams", examController.GetExamIds)
+	sMux.HandleFunc("GET /api/exams", examController.GetExams)
 
 	sMux.HandleFunc("OPTIONS /api/exams/{examId}", handleOptions)
 	sMux.HandleFunc("GET /api/exams/{examId}", examController.GetExam)

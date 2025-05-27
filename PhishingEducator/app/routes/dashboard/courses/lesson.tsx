@@ -16,7 +16,7 @@ export const handle = async ({ params }: Route.LoaderArgs) => {
   }
 }
 
-export async function clientLoader({ params }: Route.LoaderArgs) {
+export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const course = await getCourse(params.courseHandle);
   if (course) {
     const lesson = course.lessons.find(lesson => lesson.handle === params.lessonHandle);
@@ -35,13 +35,11 @@ export default function CourseLesson({ loaderData }: Route.ComponentProps) {
   const navigate = useNavigate();
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
 
+  // TODO: Nach clientLoader verschieben
   useEffect(() => {
     const fetchCompletions = async () => {
       try {
         const result = await getLessonCompletionsOfCourseAndUser({
-          headers: {
-            Authorization: `Bearer ${token}`
-          },
           path: {
             courseId: course.id
           }
@@ -69,9 +67,6 @@ export default function CourseLesson({ loaderData }: Route.ComponentProps) {
           },
           body: {
             lessonId: currentLesson.id,
-          },
-          headers: {
-            Authorization: `Bearer ${token}`
           }
         });
         if (resp.data && resp.response.status === 201) {

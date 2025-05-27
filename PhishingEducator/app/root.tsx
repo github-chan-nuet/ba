@@ -1,4 +1,4 @@
-import { FluentProvider, webLightTheme } from "@fluentui/react-components"
+import { FluentProvider, Spinner, webLightTheme } from "@fluentui/react-components"
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router"
 import GlobalToaster from "./utils/toaster/GlobalToaster"
 import AuthProvider from "./utils/auth/AuthProvider"
@@ -7,18 +7,18 @@ import { client } from "./api/client.gen";
 import "./styles/reset.scss";
 import "./styles/app.scss";
 
+const token = typeof window !== "undefined" ? (window.localStorage.getItem('login-token') ?? undefined) : undefined;
 client.setConfig({
-  baseUrl: import.meta.env.VITE_API_BASE_URL
-})
+  baseUrl: import.meta.env.VITE_API_BASE_URL,
+  auth: token ? JSON.parse(token) : undefined
+});
 
 export default function App() {
   return (
-    <FluentProvider theme={webLightTheme}>
-      <AuthProvider>
-        <Outlet />
-        <GlobalToaster />
-      </AuthProvider>
-    </FluentProvider>
+    <AuthProvider>
+      <Outlet />
+      <GlobalToaster />
+    </AuthProvider>
   )
 }
 
@@ -33,7 +33,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta name="fluentui-insertion-point" content="fluentui-insertion-point" />
       </head>
       <body>
-        {children}
+        <FluentProvider theme={webLightTheme}>
+          {children}
+        </FluentProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -43,6 +45,18 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export function HydrateFallback() {
   return (
-    <p>Lädt, bitte warten...</p>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100dvh'
+      }}
+    >
+      <Spinner
+        label="Lädt, bitte warten..."
+        labelPosition="below"
+      />
+    </div>
   )
 }

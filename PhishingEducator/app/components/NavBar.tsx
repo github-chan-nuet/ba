@@ -3,7 +3,7 @@ import * as FluentIcons from "@fluentui/react-icons";
 
 import NavBarStyles from "../styles/NavBar.module.scss";
 import { NavLink } from "react-router";
-import { tokens } from "@fluentui/react-components";
+import { createFocusOutlineStyle, makeStyles, tokens } from "@fluentui/react-components";
 
 export default function NavBar() {
   const { onLogout } = useAuth();
@@ -36,6 +36,11 @@ export default function NavBar() {
           iconBaseName="Lightbulb"
           href="/dashboard/courses"
         />
+        <NavBarItem
+          label="Prüfungen"
+          iconBaseName="BookQuestionMark"
+          href="/dashboard/exams"
+        />
       </div>
       <div className={NavBarStyles.NavBar__items}>
         <button className={NavBarStyles.NavBar__item} onClick={onLogout}>
@@ -59,17 +64,25 @@ type NavBarItemProps = {
   matchOnSubPages?: boolean
 };
 
+const useStyles = makeStyles({
+  focusIndicator: createFocusOutlineStyle({
+    selector: 'focus-within'
+  })
+});
+
 function NavBarItem({ href, label, iconBaseName, matchOnSubPages = true }: NavBarItemProps) {
   const iconKey = `${iconBaseName}24Regular` as Regular24Keys;
   const iconKeyActive = `${iconBaseName}24Filled` as Filled24Keys;
   const IconComponent = FluentIcons[iconKey];
   const IconActiveComponent = FluentIcons[iconKeyActive];
 
+  const styles = useStyles();
+
   return (
     <NavLink
       to={href}
       end={!matchOnSubPages}
-      className={NavBarStyles.NavBar__item}
+      className={`${NavBarStyles.NavBar__item} ${styles.focusIndicator}`}
     >
       {({ isActive }) => (
         <>

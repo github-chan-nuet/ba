@@ -1,11 +1,12 @@
 package repositories
 
 import (
-	"github.com/google/uuid"
 	"phishing_backend/internal/domain_model"
+
+	"github.com/google/uuid"
 )
 
 type ExamRepository interface {
 	Get(examId uuid.UUID) (*domain_model.Exam, error)
-	GetExamIds() ([]uuid.UUID, error)
+	GetAll() (*[]domain_model.Exam, error)
 }

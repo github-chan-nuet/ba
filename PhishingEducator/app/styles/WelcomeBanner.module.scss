@@ -1,0 +1,47 @@
+.WelcomeBanner {
+  position: relative;
+  max-width: 1025px;
+  background-color: var(--colorBrandBackground);
+  color: #FFF;
+  border-radius: var(--borderRadiusXLarge);
+  padding: var(--spacingVerticalXXXL) var(--spacingHorizontalXXXL);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacingVerticalS);
+  
+  @media screen and (min-width: 968px) {
+    padding-right: 320px;
+  }
+
+  &__text {
+    max-width: 545px;
+  }
+
+  &__illustrationContainer {
+    position: absolute;
+    right: 20px;
+    top: -60px;
+    width: 280px;
+    height: 340px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    @media screen and (max-width: 968px) {
+      display: none;
+    }
+  }
+
+  &__blob {
+    position: absolute;
+    width: 280px;
+    height: 340px;
+    z-index: -1;
+  }
+
+  &__illustration {
+    position: absolute;
+    width: 270px;
+    height: 270px;
+  }
+}

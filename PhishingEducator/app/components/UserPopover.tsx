@@ -9,8 +9,6 @@ export default function UserPopover() {
 
   const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState<boolean>(false);
 
-  console.log(user);
-
   return (
     <div
       style={{
