@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import useLocalStorage from "../storage/useLocalStorage";
 import AuthContext from "./AuthContext";
 import { getUser, loginAndReturnJwtToken, updateUser as patchUser, type User, type UserPatchModel } from "../../api";
+import { client } from "../../api/client.gen";
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -35,6 +36,9 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   }, [setToken, token]);
 
   useEffect(() => {
+    client.setConfig({
+      auth: token
+    });
     if (token) void refreshUser();
   }, [token, refreshUser]);
 
