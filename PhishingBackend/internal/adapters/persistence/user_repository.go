@@ -2,11 +2,12 @@ package persistence
 
 import (
 	"errors"
-	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgconn"
 	"log/slog"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
+
+	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 var _ repositories.UserRepository = (*UserRepositoryImpl)(nil)
@@ -16,8 +17,26 @@ const uniqueEmailConstraint = "users_email_key"
 type UserRepositoryImpl struct {
 }
 
-func (u *UserRepositoryImpl) UpdateUser(user *domain_model.User) error {
-	result := db.Model(user).Updates(*user)
+func (u *UserRepositoryImpl) UpdateUser(userPatch *domain_model.UserPatch) error {
+	updates := make(map[string]interface{})
+
+	if userPatch.Firstname != nil {
+		updates["firstname"] = *userPatch.Firstname
+	}
+	if userPatch.Lastname != nil {
+		updates["lastname"] = *userPatch.Lastname
+	}
+	if userPatch.Email != nil {
+		updates["email"] = *userPatch.Email
+	}
+	if userPatch.Password != nil {
+		updates["password"] = *userPatch.Password
+	}
+	if userPatch.ParticipatesInPhishingSimulation != nil {
+		updates["participates_in_phishing_simulation"] = *userPatch.ParticipatesInPhishingSimulation
+	}
+
+	result := db.Model(&domain_model.User{ID: userPatch.ID}).Updates(updates)
 	if result.Error != nil {
 		slog.Error("Could not update user", "err", result.Error)
 	}

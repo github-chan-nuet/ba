@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { Avatar } from "@fluentui/react-components";
+import { Avatar, Popover, PopoverSurface, PopoverTrigger } from "@fluentui/react-components";
 import { AnimatePresence } from "framer-motion";
 import AvatarXPTooltip from "./AvatarXPTooltip";
 import useAuth from "../utils/auth/useAuth";
+import UserPopover from "./UserPopover";
 
 export default function UserAvatar() {
   const { user } = useAuth();
@@ -21,9 +22,16 @@ export default function UserAvatar() {
     <div style={{
       position: "relative"
     }}>
-      <Avatar
-        name={`${user?.firstname} ${user?.lastname}`}
-      />
+      <Popover withArrow={true} openOnHover={true}>
+        <PopoverTrigger>
+          <Avatar
+            name={`${user?.firstname} ${user?.lastname}`}
+          />
+        </PopoverTrigger>
+        <PopoverSurface>
+          <UserPopover />
+        </PopoverSurface>
+      </Popover>
       <AnimatePresence>
         { showPopup && (
           <AvatarXPTooltip

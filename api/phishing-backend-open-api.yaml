@@ -396,6 +396,8 @@ components:
           type: integer
         totalExperience:
           type: integer
+        participatesInPhishingSimulation:
+          type: boolean
 
     UserPatchModel:
       type: object
@@ -408,6 +410,8 @@ components:
           type: string
         email:
           type: string
+        participatesInPhishingSimulation:
+          type: boolean
 
     UserPostModel:
       allOf:
