@@ -6,7 +6,7 @@ ALTER TABLE exam_question_answers RENAME TO exam_question_answer;
 ALTER TABLE exam_completions RENAME TO exam_completion;
 ALTER TABLE exam_completion_answers RENAME TO exam_completion_answer;
 
-ALTER TABLE user
+ALTER TABLE "user"
     ALTER COLUMN firstname SET NOT NULL,
     ALTER COLUMN lastname SET NOT NULL,
     ALTER COLUMN "password" SET NOT NULL,
