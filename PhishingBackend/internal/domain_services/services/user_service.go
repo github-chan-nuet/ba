@@ -10,7 +10,6 @@ var _ UserService = (*UserServiceImpl)(nil)
 
 type UserService interface {
 	Create(dto *domain_model.UserPostDto) error
-	Get(userId uuid.UUID) (*domain_model.User, error)
 	Update(userId uuid.UUID, dto *domain_model.UserPatchDto) error
 }
 
@@ -40,10 +39,6 @@ func (s *UserServiceImpl) Update(userId uuid.UUID, dto *domain_model.UserPatchDt
 		user.Password = hashedPw
 	}
 	return s.UserRepository.UpdateUser(user)
-}
-
-func (s *UserServiceImpl) Get(userId uuid.UUID) (*domain_model.User, error) {
-	return s.UserRepository.GetUser(userId)
 }
 
 func (s *UserServiceImpl) Create(dto *domain_model.UserPostDto) error {

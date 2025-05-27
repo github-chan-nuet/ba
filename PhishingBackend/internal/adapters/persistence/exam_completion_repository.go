@@ -22,7 +22,7 @@ func (r *ExamCompletionRepositoryImpl) GetCompletedExam(userId, examId uuid.UUID
 		Preload("Exam.Questions.Answers").
 		Preload("Answers.Answer.Question").
 		Where("user_fk = ? AND exam_fk = ?", userId, examId).
-		Find(&examComp)
+		First(&examComp)
 	if result.Error != nil {
 		slog.Error("Could not get exam completion by user and exam id", "err", result.Error)
 		return nil, result.Error

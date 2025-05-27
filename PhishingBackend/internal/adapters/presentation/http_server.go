@@ -49,6 +49,7 @@ func NewSecurawareServeMux() *http.ServeMux {
 		UserService: &services.UserServiceImpl{
 			UserRepository: &userRepository,
 		},
+		UserRepo:          &userRepository,
 		ExperienceService: &expService,
 	}
 	lessonCompletionController := controllers.LessonCompletionController{

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
-	"gorm.io/gorm"
 	"log/slog"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
@@ -37,13 +36,13 @@ func (u *UserRepositoryImpl) GetUser(userId uuid.UUID) (*domain_model.User, erro
 
 func (u *UserRepositoryImpl) GetByEmailAndPassword(email string, password []byte) (*domain_model.User, error) {
 	user := &domain_model.User{}
-	result := db.Where("email = ? AND password = ?", email, password).First(user)
+	result := db.Where("email = ? AND password = ?", email, password).Limit(1).Find(user)
 	if result.Error != nil {
 		slog.Error("Could not get user by email and password", "err", result.Error)
-		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
 		return nil, result.Error
+	}
+	if result.RowsAffected == 0 {
+		return nil, nil
 	}
 	return user, nil
 }
