@@ -125,11 +125,12 @@ type QuestionCompletion struct {
 
 // User defines model for User.
 type User struct {
-	Email           *string `json:"email,omitempty"`
-	Firstname       *string `json:"firstname,omitempty"`
-	Lastname        *string `json:"lastname,omitempty"`
-	Level           *int    `json:"level,omitempty"`
-	TotalExperience *int    `json:"totalExperience,omitempty"`
+	Email                            *string `json:"email,omitempty"`
+	Firstname                        *string `json:"firstname,omitempty"`
+	Lastname                         *string `json:"lastname,omitempty"`
+	Level                            *int    `json:"level,omitempty"`
+	ParticipatesInPhishingSimulation *bool   `json:"participatesInPhishingSimulation,omitempty"`
+	TotalExperience                  *int    `json:"totalExperience,omitempty"`
 }
 
 // UserAuthentication defines model for UserAuthentication.
@@ -140,18 +141,20 @@ type UserAuthentication struct {
 
 // UserPatchModel defines model for UserPatchModel.
 type UserPatchModel struct {
-	Email     *string `json:"email,omitempty"`
-	Firstname *string `json:"firstname,omitempty"`
-	Lastname  *string `json:"lastname,omitempty"`
-	Password  *string `json:"password,omitempty"`
+	Email                            *string `json:"email,omitempty"`
+	Firstname                        *string `json:"firstname,omitempty"`
+	Lastname                         *string `json:"lastname,omitempty"`
+	ParticipatesInPhishingSimulation *bool   `json:"participatesInPhishingSimulation,omitempty"`
+	Password                         *string `json:"password,omitempty"`
 }
 
 // UserPostModel defines model for UserPostModel.
 type UserPostModel struct {
-	Email     string `json:"email"`
-	Firstname string `json:"firstname"`
-	Lastname  string `json:"lastname"`
-	Password  string `json:"password"`
+	Email                            string `json:"email"`
+	Firstname                        string `json:"firstname"`
+	Lastname                         string `json:"lastname"`
+	ParticipatesInPhishingSimulation *bool  `json:"participatesInPhishingSimulation,omitempty"`
+	Password                         string `json:"password"`
 }
 
 // CourseId defines model for courseId.

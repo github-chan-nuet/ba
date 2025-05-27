@@ -7,19 +7,21 @@ import (
 
 func ToUserPatchDto(patch api.UserPatchModel) *domain_model.UserPatchDto {
 	return &domain_model.UserPatchDto{
-		Email:     patch.Email,
-		Firstname: patch.Firstname,
-		Lastname:  patch.Lastname,
-		Password:  patch.Password,
+		Email:                            patch.Email,
+		Firstname:                        patch.Firstname,
+		Lastname:                         patch.Lastname,
+		Password:                         patch.Password,
+		ParticipatesInPhishingSimulation: patch.ParticipatesInPhishingSimulation,
 	}
 }
 
 func ToUserPostDto(post api.UserPostModel) *domain_model.UserPostDto {
 	return &domain_model.UserPostDto{
-		Email:     post.Email,
-		Firstname: post.Firstname,
-		Lastname:  post.Lastname,
-		Password:  post.Password,
+		Email:                            post.Email,
+		Firstname:                        post.Firstname,
+		Lastname:                         post.Lastname,
+		Password:                         post.Password,
+		ParticipatesInPhishingSimulation: post.ParticipatesInPhishingSimulation,
 	}
 }
 

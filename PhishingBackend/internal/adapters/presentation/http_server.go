@@ -73,9 +73,11 @@ func NewSecurawareServeMux() *http.ServeMux {
 	sMux.HandleFunc("GET /api/health", controllers.GetHealth)
 
 	// lesson completions
+	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", handleOptions)
 	sMux.HandleFunc("GET /api/courses/{courseId}/completions", lessonCompletionController.GetLessonCompletionsOfCourseAndUser)
 	sMux.HandleFunc("POST /api/courses/{courseId}/completions", lessonCompletionController.CreateLessonCompletion)
-	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", handleOptions)
+
+	sMux.HandleFunc("OPTIONS /api/courses/completions", handleOptions)
 	sMux.HandleFunc("GET /api/courses/completions", lessonCompletionController.GetAllLessonCompletionsOfUser)
 
 	// users
@@ -90,16 +92,20 @@ func NewSecurawareServeMux() *http.ServeMux {
 	sMux.HandleFunc("PATCH /api/users/{userId}", userController.UpdateUser)
 
 	// exams
-	sMux.HandleFunc("GET /api/exams/{examId}", examController.GetExam)
-	sMux.HandleFunc("POST /api/exams/{examId}/completions", examController.CompleteExam)
-	sMux.HandleFunc("OPTIONS /api/exams/{examId}/completions", handleOptions)
+	sMux.HandleFunc("OPTIONS /api/exams", handleOptions)
 	sMux.HandleFunc("GET /api/exams", examController.GetExamIds)
+
+	sMux.HandleFunc("OPTIONS /api/exams/{examId}", handleOptions)
+	sMux.HandleFunc("GET /api/exams/{examId}", examController.GetExam)
+
+	sMux.HandleFunc("OPTIONS /api/exams/{examId}/completions", handleOptions)
+	sMux.HandleFunc("POST /api/exams/{examId}/completions", examController.CompleteExam)
 	sMux.HandleFunc("GET /api/exams/{examId}/completions", examController.GetCompletedExam)
 	return sMux
 }
 
 func handleOptions(w http.ResponseWriter, _ *http.Request) {
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, PATCH, DELETE")
 	w.Header().Set("Access-Control-Max-Age", "86400")
 	w.WriteHeader(http.StatusOK)
 }
@@ -130,8 +136,8 @@ type CorsMiddleware struct {
 }
 
 func (c *CorsMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	c.Handler.ServeHTTP(w, r)
 	cors := os.Getenv("PHBA_CORS")
 	w.Header().Set("Access-Control-Allow-Origin", cors)
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	c.Handler.ServeHTTP(w, r)
 }

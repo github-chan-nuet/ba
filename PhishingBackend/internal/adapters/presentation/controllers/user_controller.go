@@ -76,11 +76,12 @@ func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userResp := api.User{
-		Email:           &user.Email,
-		Firstname:       &user.Firstname,
-		Lastname:        &user.Lastname,
-		Level:           &exp.Level,
-		TotalExperience: &exp.TotalExperience,
+		Email:                            &user.Email,
+		Firstname:                        &user.Firstname,
+		Lastname:                         &user.Lastname,
+		ParticipatesInPhishingSimulation: &user.ParticipatesInPhishingSimulation,
+		Level:                            &exp.Level,
+		TotalExperience:                  &exp.TotalExperience,
 	}
 	writeJsonResponse(w, http.StatusOK, userResp)
 }

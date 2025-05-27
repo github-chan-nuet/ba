@@ -5,12 +5,13 @@ package integration_tests
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"net/http"
 	"phishing_backend/internal/adapters/presentation/api"
 	"phishing_backend/internal/domain_services/services"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestNewUserCanBeCreated(t *testing.T) {
@@ -38,6 +39,36 @@ func TestNewUserCanBeCreated(t *testing.T) {
 	assert.Equal(t, reqBody.Lastname, user.Lastname)
 	expectedPw := services.HashPassword(reqBody.Password)
 	assert.Equal(t, expectedPw, user.Password)
+	assert.Equal(t, false, user.ParticipatesInPhishingSimulation)
+}
+
+func TestNewUserCanBeCreatedWithParticipationInPhishingSimulation(t *testing.T) {
+	// given
+	reqBody := api.UserPostModel{
+		Email:                            createRandomEmail(),
+		Password:                         "password",
+		Firstname:                        "John",
+		Lastname:                         "Doe",
+		ParticipatesInPhishingSimulation: BoolPtr(true),
+	}
+	marshal, _ := json.Marshal(reqBody)
+	req, _ := http.NewRequest(http.MethodPost, ts.URL+"/api/users", bytes.NewReader(marshal))
+
+	// when
+	resp, err := http.DefaultClient.Do(req)
+
+	// then
+	assert.NoError(t, err)
+	assert.Equal(t, http.StatusCreated, resp.StatusCode)
+	// and user was stored into DB
+	user := getUser(reqBody.Email)
+	assert.NotNil(t, user)
+	assert.Equal(t, reqBody.Email, user.Email)
+	assert.Equal(t, reqBody.Firstname, user.Firstname)
+	assert.Equal(t, reqBody.Lastname, user.Lastname)
+	expectedPw := services.HashPassword(reqBody.Password)
+	assert.Equal(t, expectedPw, user.Password)
+	assert.Equal(t, *reqBody.ParticipatesInPhishingSimulation, user.ParticipatesInPhishingSimulation)
 }
 
 func TestNewUserCantHaveSameEmail(t *testing.T) {
@@ -70,4 +101,8 @@ func TestNewUserCantHaveSameEmail(t *testing.T) {
 		Status: 422,
 	}
 	assert.Equal(t, want, gotProb)
+}
+
+func BoolPtr(b bool) *bool {
+	return &b
 }
