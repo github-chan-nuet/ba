@@ -111,9 +111,11 @@ func (e *ExamCompletionServiceImpl) createUserAndActualAnswer(exam *Exam, qComps
 		q.userAnswers = toMap(&qComp.Answers)
 		qIdMap[qComp.QuestionId] = q
 	}
-	responses := make([]userAndActualAnswer, 0, len(exam.Questions))
+	responses := make([]userAndActualAnswer, len(exam.Questions))
+	i := 0
 	for _, resp := range qIdMap {
-		responses = append(responses, resp)
+		responses[i] = resp
+		i++
 	}
 	return &responses, nil
 }
@@ -142,13 +144,13 @@ func (u *userAndActualAnswer) getNumberOfWrongOrMissingAnswers() int {
 	// B - A
 	for val := range u.correctAnswers {
 		if _, exists := u.userAnswers[val]; !exists {
-			wrong += 1
+			wrong++
 		}
 	}
 	// A - B
 	for val := range u.userAnswers {
 		if _, exists := u.correctAnswers[val]; !exists {
-			wrong += 1
+			wrong++
 		}
 	}
 	return wrong

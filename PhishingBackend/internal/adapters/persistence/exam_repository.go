@@ -19,16 +19,19 @@ func (e *ExamRepositoryImpl) GetExamIds() ([]uuid.UUID, error) {
 		slog.Error("Could not get exam ids", "err", result.Error)
 		return nil, result.Error
 	}
-	examIds := make([]uuid.UUID, 0, len(exams))
-	for _, exam := range exams {
-		examIds = append(examIds, exam.ID)
+	examIds := make([]uuid.UUID, len(exams))
+	for i, exam := range exams {
+		examIds[i] = exam.ID
 	}
 	return examIds, nil
 }
 
 func (e *ExamRepositoryImpl) Get(examId uuid.UUID) (*domain_model.Exam, error) {
 	var exam domain_model.Exam
-	result := db.Model(&domain_model.Exam{}).Preload("Questions.Answers").Where("ID = ?", examId).Find(&exam)
+	result := db.Model(&domain_model.Exam{}).
+		Preload("Questions.Answers").
+		Where("ID = ?", examId).
+		First(&exam)
 	if result.Error != nil {
 		slog.Error("Could not get exam by id", "err", result.Error)
 		return nil, result.Error

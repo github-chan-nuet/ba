@@ -3,6 +3,7 @@ module phishing_backend
 go 1.24.1
 
 tool github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen
+tool go.uber.org/mock/mockgen
 
 require (
 	github.com/golang-jwt/jwt/v5 v5.2.2

@@ -277,6 +277,32 @@ paths:
         '500':
           $ref: "#/components/responses/ProblemDetail"
 
+    get:
+      security:
+        - bearerAuth: [ ]
+      summary: TODO
+      tags:
+        - Exam
+      operationId: getCompletedExam
+      description: TODO
+      parameters:
+        - $ref: "#/components/parameters/examId"
+      responses:
+        '200':
+          description: todo
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/CompletedExam"
+        '400':
+          $ref: "#/components/responses/ProblemDetail"
+        '401':
+          $ref: "#/components/responses/ProblemDetail"
+        '403':
+          $ref: "#/components/responses/ProblemDetail"
+        '500':
+          $ref: "#/components/responses/ProblemDetail"
+
 components:
   securitySchemes:
     bearerAuth:
@@ -370,6 +396,8 @@ components:
           type: integer
         totalExperience:
           type: integer
+        participatesInPhishingSimulation:
+          type: boolean
 
     UserPatchModel:
       type: object
@@ -382,6 +410,8 @@ components:
           type: string
         email:
           type: string
+        participatesInPhishingSimulation:
+          type: boolean
 
     UserPostModel:
       allOf:
@@ -406,6 +436,60 @@ components:
       required:
         - id
         - questions
+
+    CompletedExam:
+      properties:
+        completedAt:
+          type: string
+          format: date
+        questions:
+          type: array
+          items:
+            $ref: "#/components/schemas/CompletedQuestion"
+      required:
+        - questions
+        - completedAt
+
+    CompletedQuestion:
+      properties:
+        id:
+          type: string
+          format: uuid
+        question:
+          type: string
+        type:
+          type: string
+          enum: [ single_choice, multiple_choice ]
+        answers:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnswerWithCorrection"
+        userAnswers:
+          type: array
+          items:
+            type: string
+            format: uuid
+      required:
+        - userAnswers
+        - id
+        - question
+        - type
+        - answers
+
+    AnswerWithCorrection:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        answer:
+          type: string
+        isCorrect:
+          type: boolean
+      required:
+        - id
+        - answer
+        - isCorrect
 
     Question:
       type: object

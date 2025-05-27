@@ -1,6 +1,8 @@
 import { Button, Field, Input } from "@fluentui/react-components";
 import useAuth from "../utils/auth/useAuth";
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useToaster } from "../utils/toaster/useToaster";
+import ErrorToast from "./ErrorToast";
 
 type LoginFormProps = {
   onSwitchToRegister?: () => void
@@ -10,6 +12,7 @@ export default function LoginForm({
   onSwitchToRegister = () => {}
 }: LoginFormProps) {
   const { onLogin } = useAuth();
+  const { dispatchToast } = useToaster();
   const [formData, setFormData] = useState({ email: "", password: ""});
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -17,9 +20,24 @@ export default function LoginForm({
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
-  const handleLogin = (event: FormEvent) => {
+  const handleLogin = async (event: FormEvent) => {
     event.preventDefault();
-    onLogin(formData.email, formData.password);
+    try {
+      await onLogin(formData.email, formData.password);
+    } catch (e) {
+      if (
+        typeof e === "object" &&
+        e !== null &&
+        'title' in e &&
+        typeof e.title === "string"
+      ) {
+        dispatchToast(
+          <ErrorToast error={e} />,
+          { intent: "error"}
+        )
+      }
+      console.error(e);
+    }
   }
 
   return (
@@ -32,10 +50,10 @@ export default function LoginForm({
           gap: 16
         }}
       >
-        <Field label="E-Mail">
+        <Field label="E-Mail" required>
           <Input name="email" type="email" onChange={handleChange} />
         </Field>
-        <Field label="Passwort">
+        <Field label="Passwort" required>
           <Input name="password" type="password" onChange={handleChange} />
         </Field>
         <div style={{

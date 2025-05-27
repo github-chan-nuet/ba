@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"github.com/google/uuid"
+	openapi_types "github.com/oapi-codegen/runtime/types"
 	"net/http"
 	"phishing_backend/internal/adapters/presentation/api"
 	"phishing_backend/internal/adapters/presentation/error_handling"
@@ -15,6 +16,7 @@ import (
 type ExamController struct {
 	Authenticator         services.Authenticator
 	ExamRepository        repositories.ExamRepository
+	ExamCompRepo          repositories.ExamCompletionRepository
 	ExamCompletionService services.ExamCompletionService
 }
 
@@ -68,13 +70,34 @@ func (e *ExamController) GetExamIds(w http.ResponseWriter, _ *http.Request) {
 	writeJsonResponse(w, http.StatusOK, &examIds)
 }
 
+func (e *ExamController) GetCompletedExam(w http.ResponseWriter, r *http.Request) {
+	examId, err := getPathVariable(r, "examId")
+	if err != nil {
+		error_handling.WriteErrorDetailResponse(w, err)
+		return
+	}
+	authUserId, err := e.Authenticator.GetUser(r.Header.Get("Authorization"))
+	if err != nil {
+		error_handling.WriteErrorDetailResponse(w, err)
+		return
+	}
+
+	examComp, err := e.ExamCompRepo.GetCompletedExam(authUserId, examId)
+	if err != nil {
+		error_handling.WriteErrorDetailResponse(w, err)
+		return
+	}
+	apiExamComp := e.mapToCompletedExam(examComp)
+	writeJsonResponse(w, http.StatusOK, &apiExamComp)
+}
+
 func (e *ExamController) mapToExam(exam *domain_model.Exam, examId uuid.UUID) *api.Exam {
 	dtoExam := api.Exam{Id: examId}
-	dtoQuestions := make([]api.Question, 0, len(exam.Questions))
-	for _, question := range exam.Questions {
+	dtoQuestions := make([]api.Question, len(exam.Questions))
+	for i, question := range exam.Questions {
 		numCorrectAnswers := 0
-		dtoAnswers := make([]api.Answer, 0, len(question.Answers))
-		for _, answer := range question.Answers {
+		dtoAnswers := make([]api.Answer, len(question.Answers))
+		for j, answer := range question.Answers {
 			if answer.IsCorrect {
 				numCorrectAnswers++
 			}
@@ -82,7 +105,7 @@ func (e *ExamController) mapToExam(exam *domain_model.Exam, examId uuid.UUID) *a
 				Answer: answer.Answer,
 				Id:     answer.ID,
 			}
-			dtoAnswers = append(dtoAnswers, dtoAnswer)
+			dtoAnswers[j] = dtoAnswer
 		}
 
 		dtoQuestion := api.Question{
@@ -91,12 +114,65 @@ func (e *ExamController) mapToExam(exam *domain_model.Exam, examId uuid.UUID) *a
 			Question: question.Question,
 		}
 		if numCorrectAnswers == 1 {
-			dtoQuestion.Type = api.SingleChoice
+			dtoQuestion.Type = api.QuestionTypeSingleChoice
 		} else {
-			dtoQuestion.Type = api.MultipleChoice
+			dtoQuestion.Type = api.QuestionTypeMultipleChoice
 		}
-		dtoQuestions = append(dtoQuestions, dtoQuestion)
+		dtoQuestions[i] = dtoQuestion
 	}
 	dtoExam.Questions = dtoQuestions
 	return &dtoExam
+}
+
+func (e *ExamController) mapToCompletedExam(exComp *domain_model.ExamCompletion) *api.CompletedExam {
+	qIdQuestion := make(map[uuid.UUID]api.CompletedQuestion)
+	// fill out user answers
+	for _, answer := range exComp.Answers {
+		qId := answer.Answer.QuestionFk
+		entry, ok := qIdQuestion[qId]
+		if !ok {
+			entry = api.CompletedQuestion{
+				Id:          qId,
+				Question:    answer.Answer.Question.Question,
+				UserAnswers: make([]uuid.UUID, 4),
+			}
+		}
+		entry.UserAnswers = append(qIdQuestion[qId].UserAnswers, answer.Answer.ID)
+		qIdQuestion[qId] = entry
+	}
+	// fill out actual answers
+	for _, q := range exComp.Exam.Questions {
+		nCorrectAnswers := 0
+		answers := make([]api.AnswerWithCorrection, len(q.Answers))
+		for i, answer := range q.Answers {
+			answers[i] = api.AnswerWithCorrection{
+				Answer:    answer.Answer,
+				Id:        answer.ID,
+				IsCorrect: answer.IsCorrect,
+			}
+			if answer.IsCorrect {
+				nCorrectAnswers++
+			}
+		}
+		entry, _ := qIdQuestion[q.ID]
+		entry.Answers = answers
+		if nCorrectAnswers == 1 {
+			entry.Type = api.CompletedQuestionTypeSingleChoice
+		} else {
+			entry.Type = api.CompletedQuestionTypeMultipleChoice
+		}
+		qIdQuestion[q.ID] = entry
+	}
+	// map from map to array
+	qs := make([]api.CompletedQuestion, len(qIdQuestion))
+	i := 0
+	for _, q := range qIdQuestion {
+		qs[i] = q
+		i++
+	}
+	apiExamComp := api.CompletedExam{
+		CompletedAt: openapi_types.Date{Time: exComp.CompletedAt},
+		Questions:   qs,
+	}
+	return &apiExamComp
 }

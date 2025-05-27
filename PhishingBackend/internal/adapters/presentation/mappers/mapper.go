@@ -7,29 +7,31 @@ import (
 
 func ToUserPatchDto(patch api.UserPatchModel) *domain_model.UserPatchDto {
 	return &domain_model.UserPatchDto{
-		Email:     patch.Email,
-		Firstname: patch.Firstname,
-		Lastname:  patch.Lastname,
-		Password:  patch.Password,
+		Email:                            patch.Email,
+		Firstname:                        patch.Firstname,
+		Lastname:                         patch.Lastname,
+		Password:                         patch.Password,
+		ParticipatesInPhishingSimulation: patch.ParticipatesInPhishingSimulation,
 	}
 }
 
 func ToUserPostDto(post api.UserPostModel) *domain_model.UserPostDto {
 	return &domain_model.UserPostDto{
-		Email:     post.Email,
-		Firstname: post.Firstname,
-		Lastname:  post.Lastname,
-		Password:  post.Password,
+		Email:                            post.Email,
+		Firstname:                        post.Firstname,
+		Lastname:                         post.Lastname,
+		Password:                         post.Password,
+		ParticipatesInPhishingSimulation: post.ParticipatesInPhishingSimulation,
 	}
 }
 
 func ToQuestionCompletionDto(qs *[]api.QuestionCompletion) *[]domain_model.QuestionCompletionDto {
-	dtos := make([]domain_model.QuestionCompletionDto, 0, len(*qs))
-	for _, q := range *qs {
-		dtos = append(dtos, domain_model.QuestionCompletionDto{
+	dtos := make([]domain_model.QuestionCompletionDto, len(*qs))
+	for i, q := range *qs {
+		dtos[i] = domain_model.QuestionCompletionDto{
 			Answers:    q.Answers,
 			QuestionId: q.QuestionId,
-		})
+		}
 	}
 	return &dtos
 }

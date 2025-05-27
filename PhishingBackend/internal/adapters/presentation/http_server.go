@@ -6,19 +6,23 @@ import (
 	"os"
 	"phishing_backend/internal/adapters/persistence"
 	"phishing_backend/internal/adapters/presentation/controllers"
+	"phishing_backend/internal/adapters/presentation/error_handling"
 	"phishing_backend/internal/domain_services/services"
+	"runtime"
 )
 
 func SetupHttpServer() {
-	sMux := NewServeMux()
+	sMux := NewSecurawareServeMux()
+	cors := CorsMiddleware{Handler: sMux}
+	panicRec := PanicRecoveryMiddleware{Handler: &cors}
 	addr := os.Getenv("PHBA_WEBSERVER_ADDR")
 	slog.Info("Web server listening...", "address", addr)
-	err := http.ListenAndServe(addr, sMux)
+	err := http.ListenAndServe(addr, &panicRec)
 	slog.Error("Web server stopped", "error", err)
 	os.Exit(1)
 }
 
-func NewServeMux() *http.ServeMux {
+func NewSecurawareServeMux() *http.ServeMux {
 	// repositories
 	userRepository := persistence.UserRepositoryImpl{}
 	lessonCompletionRepository := persistence.LessonCompletionRepositoryImpl{}
@@ -45,6 +49,7 @@ func NewServeMux() *http.ServeMux {
 		UserService: &services.UserServiceImpl{
 			UserRepository: &userRepository,
 		},
+		UserRepo:          &userRepository,
 		ExperienceService: &expService,
 	}
 	lessonCompletionController := controllers.LessonCompletionController{
@@ -58,57 +63,81 @@ func NewServeMux() *http.ServeMux {
 	examController := controllers.ExamController{
 		Authenticator:         &authenticator,
 		ExamRepository:        &examRepo,
+		ExamCompRepo:          &examCompRepo,
 		ExamCompletionService: &examCompService,
 	}
 
 	sMux := http.NewServeMux()
+
 	// health
-	sMux.HandleFunc("GET /api/health", withCORS(controllers.GetHealth))
+	sMux.HandleFunc("GET /api/health", controllers.GetHealth)
 
 	// lesson completions
-	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", withCORS(handleOptions))
-	sMux.HandleFunc("GET /api/courses/{courseId}/completions", withCORS(lessonCompletionController.GetLessonCompletionsOfCourseAndUser))
-	sMux.HandleFunc("POST /api/courses/{courseId}/completions", withCORS(lessonCompletionController.CreateLessonCompletion))
+	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", handleOptions)
+	sMux.HandleFunc("GET /api/courses/{courseId}/completions", lessonCompletionController.GetLessonCompletionsOfCourseAndUser)
+	sMux.HandleFunc("POST /api/courses/{courseId}/completions", lessonCompletionController.CreateLessonCompletion)
 
-	sMux.HandleFunc("OPTIONS /api/courses/completions", withCORS(handleOptions))
-	sMux.HandleFunc("GET /api/courses/completions", withCORS(lessonCompletionController.GetAllLessonCompletionsOfUser))
+	sMux.HandleFunc("OPTIONS /api/courses/completions", handleOptions)
+	sMux.HandleFunc("GET /api/courses/completions", lessonCompletionController.GetAllLessonCompletionsOfUser)
 
 	// users
-	sMux.HandleFunc("OPTIONS /api/users", withCORS(handleOptions))
-	sMux.HandleFunc("POST /api/users", withCORS(userController.CreateUser))
+	sMux.HandleFunc("OPTIONS /api/users", handleOptions)
+	sMux.HandleFunc("POST /api/users", userController.CreateUser)
 
-	sMux.HandleFunc("OPTIONS /api/users/login", withCORS(handleOptions))
-	sMux.HandleFunc("POST /api/users/login", withCORS(userController.LoginAndReturnJwtToken))
+	sMux.HandleFunc("OPTIONS /api/users/login", handleOptions)
+	sMux.HandleFunc("POST /api/users/login", userController.LoginAndReturnJwtToken)
 
-	sMux.HandleFunc("OPTIONS /api/users/{userId}", withCORS(handleOptions))
-	sMux.HandleFunc("GET /api/users/{userId}", withCORS(userController.GetUser))
-	sMux.HandleFunc("PATCH /api/users/{userId}", withCORS(userController.UpdateUser))
+	sMux.HandleFunc("OPTIONS /api/users/{userId}", handleOptions)
+	sMux.HandleFunc("GET /api/users/{userId}", userController.GetUser)
+	sMux.HandleFunc("PATCH /api/users/{userId}", userController.UpdateUser)
 
 	// exams
-	sMux.HandleFunc("GET /api/exams/{examId}", withCORS(examController.GetExam))
-	sMux.HandleFunc("POST /api/exams/{examId}/completions", withCORS(examController.CompleteExam))
-	sMux.HandleFunc("OPTIONS /api/exams/{examId}/completions", withCORS(handleOptions))
-	sMux.HandleFunc("GET /api/exams", withCORS(examController.GetExamIds))
+	sMux.HandleFunc("OPTIONS /api/exams", handleOptions)
+	sMux.HandleFunc("GET /api/exams", examController.GetExamIds)
+
+	sMux.HandleFunc("OPTIONS /api/exams/{examId}", handleOptions)
+	sMux.HandleFunc("GET /api/exams/{examId}", examController.GetExam)
+
+	sMux.HandleFunc("OPTIONS /api/exams/{examId}/completions", handleOptions)
+	sMux.HandleFunc("POST /api/exams/{examId}/completions", examController.CompleteExam)
+	sMux.HandleFunc("GET /api/exams/{examId}/completions", examController.GetCompletedExam)
 	return sMux
 }
 
-func withCORS(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		env := os.Getenv("APP_ENV")
-
-		switch env {
-		case "development":
-			w.Header().Set("Access-Control-Allow-Origin", "*")
-		default:
-			w.Header().Set("Access-Control-Allow-Origin", "http://securaware.ch")
-		}
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-		next(w, r)
-	}
-}
-
 func handleOptions(w http.ResponseWriter, _ *http.Request) {
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, PATCH, DELETE")
 	w.Header().Set("Access-Control-Max-Age", "86400")
 	w.WriteHeader(http.StatusOK)
+}
+
+var _ http.Handler = (*PanicRecoveryMiddleware)(nil)
+
+type PanicRecoveryMiddleware struct {
+	Handler http.Handler
+}
+
+func (p *PanicRecoveryMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	defer func() {
+		if err := recover(); err != nil {
+			buf := make([]byte, 2048)
+			n := runtime.Stack(buf, false)
+			buf = buf[:n]
+			slog.Error("panic occurred", "error stack", string(buf))
+			error_handling.WriteErrorDetailResponse(w, error_handling.ErrPanic)
+		}
+	}()
+	p.Handler.ServeHTTP(w, r)
+}
+
+var _ http.Handler = (*CorsMiddleware)(nil)
+
+type CorsMiddleware struct {
+	Handler http.Handler
+}
+
+func (c *CorsMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	cors := os.Getenv("PHBA_CORS")
+	w.Header().Set("Access-Control-Allow-Origin", cors)
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	c.Handler.ServeHTTP(w, r)
 }

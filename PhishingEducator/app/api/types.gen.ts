@@ -21,6 +21,7 @@ export type User = {
     email?: string;
     level?: number;
     totalExperience?: number;
+    participatesInPhishingSimulation?: boolean;
 };
 
 export type UserPatchModel = {
@@ -28,6 +29,7 @@ export type UserPatchModel = {
     lastname?: string;
     password?: string;
     email?: string;
+    participatesInPhishingSimulation?: boolean;
 };
 
 export type UserPostModel = UserPatchModel & {
@@ -37,6 +39,25 @@ export type UserPostModel = UserPatchModel & {
 export type Exam = {
     id: string;
     questions: Array<Question>;
+};
+
+export type CompletedExam = {
+    completedAt: string;
+    questions: Array<CompletedQuestion>;
+};
+
+export type CompletedQuestion = {
+    id: string;
+    question: string;
+    type: 'single_choice' | 'multiple_choice';
+    answers: Array<AnswerWithCorrection>;
+    userAnswers: Array<string>;
+};
+
+export type AnswerWithCorrection = {
+    id: string;
+    answer: string;
+    isCorrect: boolean;
 };
 
 export type Question = {
@@ -438,6 +459,48 @@ export type GetExamsByExamIdResponses = {
 };
 
 export type GetExamsByExamIdResponse = GetExamsByExamIdResponses[keyof GetExamsByExamIdResponses];
+
+export type GetCompletedExamData = {
+    body?: never;
+    path: {
+        /**
+         * Id of the exam
+         */
+        examId: string;
+    };
+    query?: never;
+    url: '/exams/{examId}/completions';
+};
+
+export type GetCompletedExamErrors = {
+    /**
+     * An RFC 9457 problem object
+     */
+    400: ProblemDetail;
+    /**
+     * An RFC 9457 problem object
+     */
+    401: ProblemDetail;
+    /**
+     * An RFC 9457 problem object
+     */
+    403: ProblemDetail;
+    /**
+     * An RFC 9457 problem object
+     */
+    500: ProblemDetail;
+};
+
+export type GetCompletedExamError = GetCompletedExamErrors[keyof GetCompletedExamErrors];
+
+export type GetCompletedExamResponses = {
+    /**
+     * todo
+     */
+    200: CompletedExam;
+};
+
+export type GetCompletedExamResponse = GetCompletedExamResponses[keyof GetCompletedExamResponses];
 
 export type CompleteExamData = {
     body?: ExamCompletion;

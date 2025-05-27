@@ -2,13 +2,14 @@ package services
 
 import (
 	"errors"
-	"github.com/google/uuid"
-	"github.com/stretchr/testify/assert"
-	"go.uber.org/mock/gomock"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_model/validation"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"testing"
+
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
+	"go.uber.org/mock/gomock"
 )
 
 // ----- Update -----
@@ -52,8 +53,8 @@ func TestUpdateUpdatesUser(t *testing.T) {
 	// given
 	pbkdf2Iter = "1"
 	m := repositories.NewMockUserRepository(gomock.NewController(t))
-	var capture *domain_model.User
-	m.EXPECT().UpdateUser(gomock.Any()).DoAndReturn(func(user *domain_model.User) error {
+	var capture *domain_model.UserPatch
+	m.EXPECT().UpdateUser(gomock.Any()).DoAndReturn(func(user *domain_model.UserPatch) error {
 		capture = user
 		return nil
 	})
@@ -72,12 +73,12 @@ func TestUpdateUpdatesUser(t *testing.T) {
 
 	// then
 	assert.Nil(t, err)
-	assert.Equal(t, *patch.Email, capture.Email)
-	assert.Equal(t, *patch.Firstname, capture.Firstname)
-	assert.Equal(t, *patch.Lastname, capture.Lastname)
+	assert.Equal(t, *patch.Email, *capture.Email)
+	assert.Equal(t, *patch.Firstname, *capture.Firstname)
+	assert.Equal(t, *patch.Lastname, *capture.Lastname)
 	assert.Equal(t, userId, capture.ID)
 	wantPw := HashPassword(*patch.Password)
-	assert.Equal(t, wantPw, capture.Password)
+	assert.Equal(t, wantPw, *capture.Password)
 }
 
 func TestUpdateReturnsErrorOfRepository(t *testing.T) {

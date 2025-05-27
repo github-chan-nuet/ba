@@ -2,6 +2,7 @@ package error_handling
 
 import (
 	"errors"
+	"gorm.io/gorm"
 	"phishing_backend/internal/adapters/presentation/api"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
 	. "phishing_backend/internal/domain_services/services"
@@ -10,10 +11,11 @@ import (
 var (
 	ErrUnauthorized = errors.New("unauthorized")
 	ErrInvalidBody  = errors.New("invalid HTTP request body")
+	ErrPanic        = errors.New("panic occurred")
 	invalidJwtToken = api.ProblemDetail{
 		Type:   createUrn("invalid-jwt-token"),
 		Title:  "Dein JWT-Token ist ungültig",
-		Status: 400,
+		Status: 401,
 	}
 	stdProb = api.ProblemDetail{
 		Type:   createUrn("generic-error"),
@@ -33,7 +35,7 @@ var (
 		},
 		ErrNoAuthToken: {
 			Type:   createUrn("not-authenticated"),
-			Title:  "You are not authenticated",
+			Title:  "Du bist nicht eingeloggt",
 			Status: 401,
 			Detail: ptr("No Authorization header is present, please login"),
 		},
@@ -49,7 +51,13 @@ var (
 		ErrQuestionNotExisting: {
 			Type:   createUrn("question-does-not-exist"),
 			Title:  "Die Testfrage existiert nicht",
-			Status: 422,
+			Status: 404,
+		},
+		ErrPanic: stdProb,
+		gorm.ErrRecordNotFound: {
+			Type:   createUrn("entity-does-not-exist"),
+			Title:  "Die gewünschte Resource existiert nicht",
+			Status: 404,
 		},
 	}
 )

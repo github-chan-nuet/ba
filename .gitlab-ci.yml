@@ -18,6 +18,9 @@ build-phishingeducator:
     - cd PhishingEducator
     - npm ci
     - npm run build
+  artifacts:
+    paths:
+      - ./dist
 
 # https://gitlab.com/gitlab-org/gitlab/-/merge_requests/66787/diffs
 unit-test-phishingbackend:

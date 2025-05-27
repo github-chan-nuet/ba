@@ -6,12 +6,14 @@ import (
 	"phishing_backend/internal/adapters/presentation/api"
 	"phishing_backend/internal/adapters/presentation/error_handling"
 	"phishing_backend/internal/adapters/presentation/mappers"
+	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"phishing_backend/internal/domain_services/services"
 )
 
 type UserController struct {
 	Authenticator     services.Authenticator
 	UserService       services.UserService
+	UserRepo          repositories.UserRepository
 	ExperienceService services.ExperienceService
 }
 
@@ -63,7 +65,7 @@ func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 		error_handling.WriteErrorDetailResponse(w, error_handling.ErrUnauthorized)
 		return
 	}
-	user, err := c.UserService.Get(userId)
+	user, err := c.UserRepo.GetUser(userId)
 	if err != nil {
 		error_handling.WriteErrorDetailResponse(w, err)
 		return
@@ -74,11 +76,12 @@ func (c *UserController) GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	userResp := api.User{
-		Email:           &user.Email,
-		Firstname:       &user.Firstname,
-		Lastname:        &user.Lastname,
-		Level:           &exp.Level,
-		TotalExperience: &exp.TotalExperience,
+		Email:                            &user.Email,
+		Firstname:                        &user.Firstname,
+		Lastname:                         &user.Lastname,
+		ParticipatesInPhishingSimulation: &user.ParticipatesInPhishingSimulation,
+		Level:                            &exp.Level,
+		TotalExperience:                  &exp.TotalExperience,
 	}
 	writeJsonResponse(w, http.StatusOK, userResp)
 }

@@ -1,24 +1,36 @@
 package domain_model
 
 import (
-	"github.com/google/uuid"
 	"net/mail"
 	"phishing_backend/internal/domain_model/validation"
+
+	"github.com/google/uuid"
 )
 
 type User struct {
-	ID        uuid.UUID `gorm:"type:uuid;primary_key;"`
-	Firstname string
-	Lastname  string
-	Password  []byte `gorm:"type:bytea"`
-	Email     string
+	ID                               uuid.UUID `gorm:"type:uuid;primary_key;"`
+	Firstname                        string
+	Lastname                         string
+	Password                         []byte `gorm:"type:bytea"`
+	Email                            string
+	ParticipatesInPhishingSimulation bool
+}
+
+type UserPatch struct {
+	ID                               uuid.UUID
+	Email                            *string
+	Firstname                        *string
+	Lastname                         *string
+	Password                         *[]byte
+	ParticipatesInPhishingSimulation *bool
 }
 
 type UserPatchDto struct {
-	Email     *string
-	Firstname *string
-	Lastname  *string
-	Password  *string
+	Email                            *string
+	Firstname                        *string
+	Lastname                         *string
+	Password                         *string
+	ParticipatesInPhishingSimulation *bool
 }
 
 func (u *UserPatchDto) Validate() error {
@@ -37,10 +49,11 @@ func (u *UserPatchDto) Validate() error {
 }
 
 type UserPostDto struct {
-	Email     string
-	Firstname string
-	Lastname  string
-	Password  string
+	Email                            string
+	Firstname                        string
+	Lastname                         string
+	Password                         string
+	ParticipatesInPhishingSimulation *bool
 }
 
 func (u *UserPostDto) Validate() error {
