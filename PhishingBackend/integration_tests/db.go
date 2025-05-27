@@ -63,6 +63,9 @@ func initGormAndDatabaseConnection() *gorm.DB {
 	db, err := gorm.Open(postgres.Open(connString), &gorm.Config{
 		PrepareStmt: true,
 		Logger:      logger.Discard, // https://stackoverflow.com/a/55892341
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+		},
 	})
 	if err != nil {
 		slog.Error("Could not connect to db", "error", err)
