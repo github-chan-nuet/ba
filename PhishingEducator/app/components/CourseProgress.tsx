@@ -40,7 +40,8 @@ export default function CourseProgress({ lessons, currentLesson, completedLesson
             <div
               style={{
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
+                marginBottom: '.75rem'
               }}
             >
               <Body2>{lesson.label}</Body2>
