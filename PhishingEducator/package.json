@@ -11,14 +11,15 @@
     "generate:api": "tsx ./scripts/apigen.ts"
   },
   "dependencies": {
-    "@fluentui/react-charts": "^9.0.5",
     "@fluentui/react-components": "^9.61.6",
     "@fluentui/react-icons": "^2.0.294",
     "@hey-api/client-fetch": "^0.10.0",
     "@react-router/node": "^7.6.0",
+    "chart.js": "^4.4.9",
     "framer-motion": "^12.12.1",
     "isbot": "^5.1.17",
     "react": "^18.3.1",
+    "react-chartjs-2": "^5.3.0",
     "react-dom": "^18.3.1",
     "react-router": "^7.6.0",
     "sass": "^1.86.3"
