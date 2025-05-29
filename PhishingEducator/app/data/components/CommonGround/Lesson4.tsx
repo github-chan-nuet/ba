@@ -3,9 +3,9 @@ import { BuildingBank20Filled, ContactCard20Filled, Mail20Filled, Money20Filled,
 
 const Lesson4 = () => {
   return (
-    <>
+    <article style={{ fontSize: 16 }}>
       <Title2 as="h2" style={{ display: 'block', marginBottom: 16 }}>Konsequenzen von Phishing</Title2>
-      <p style={{ fontSize: '16px', color: '#4B5563', marginBottom: '24px' }}>
+      <p style={{ color: '#4B5563', marginBottom: '24px' }}>
         Phishing kann schwerwiegende Folgen haben – sowohl für Einzelpersonen als auch für Unternehmen. 
         Die Konsequenzen reichen von finanziellen Verlusten über Identitätsdiebstahl bis hin zu erheblichen 
         Schäden für die Reputation und Sicherheit eines Unternehmens.
@@ -94,11 +94,11 @@ const Lesson4 = () => {
         </Card>
       </div>
 
-      <p style={{ fontSize: '16px', color: '#4B5563' }}>
+      <p style={{ color: '#4B5563' }}>
         Diese Beispiele zeigen, wie gefährlich Phishing sein kann. Securaware hilft dir, solche Angriffe zu erkennen
         und dich effektiv zu schützen.
       </p>
-    </>
+    </article>
   );
 }
 

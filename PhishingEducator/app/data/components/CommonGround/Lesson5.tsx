@@ -3,9 +3,9 @@ import { Book20Filled, Briefcase20Filled, ContactCardGroup20Filled, Globe20Fille
 
 const Lesson5 = () => {
   return (
-    <>
+    <article style={{ fontSize: 16 }}>
       <Title2 as={"h2"} style={{ display: 'block', marginBottom: 16 }}>Warum Securaware?</Title2>
-      <p style={{ fontSize: '16px', color: '#4B5563', marginBottom: '24px' }}>
+      <p style={{ color: '#4B5563', marginBottom: '24px' }}>
         Die digitale Welt veränder sich rasant - wer sicher unterwegs sein möchte, muss sich laufend weiterbilden.
         Securaware bietet dir die Möglichkeit, dein Wissen rund um Cyber-Sicherheit gezielt auszubauen.
       </p>
@@ -122,7 +122,7 @@ const Lesson5 = () => {
           </div>
         </Card>
       </div>
-    </>
+    </article>
   )
 }
 

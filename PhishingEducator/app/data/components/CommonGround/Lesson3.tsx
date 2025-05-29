@@ -3,15 +3,15 @@ import { Globe20Filled, MailAlert20Filled, People20Filled } from "@fluentui/reac
 
 const Lesson3 = () => {
   return (
-    <>
+    <article style={{ fontSize: 16 }}>
       <Title2 as="h2" style={{ display: 'block', marginBottom: 16 }}>Wie verbreitet ist Phishing?</Title2>
-      <p style={{ fontSize: '16px', color: '#4B5563', marginBottom: '16px' }}>
+      <p style={{ color: '#4B5563', marginBottom: '16px' }}>
         Phishing ist eine der am weitesten verbreiteten Formen der Internetkriminalität. 
         Jeden Tag werden Millionen von Phishing-E-Mails, SMS und gefälschten Webseiten weltweit verschickt. 
         Sowohl Privatpersonen als auch Unternehmen sind betroffen.
       </p>
 
-      <p style={{ fontSize: '16px', color: '#4B5563', marginBottom: '24px' }}>
+      <p style={{ color: '#4B5563', marginBottom: '24px' }}>
         Der Grund für die hohe Verbreitung ist einfach: Phishing ist für Angreifer leicht durchzuführen, 
         kostengünstig und oft sehr erfolgreich. Schon ein einziger Klick kann zu einem finanziellen Schaden 
         oder Datenverlust führen.
@@ -63,11 +63,11 @@ const Lesson3 = () => {
         </Card>
       </div>
 
-      <p style={{ fontSize: '16px', color: '#4B5563' }}>
+      <p style={{ color: '#4B5563' }}>
         Die hohe Verbreitung macht es umso wichtiger, dass sich jeder mit dem Thema Phishing auseinandersetzt.
         Durch Schulungen wie bei Securaware kann man lernen, Gefahren zu erkennen und sich effektiv zu schützen.
       </p>
-    </>
+    </article>
   );
 }
 

@@ -3,15 +3,15 @@ import { Link20Filled, PersonAlert20Filled, TextField20Filled, Warning20Filled }
 
 const Lesson2 = () => {
   return (
-    <>
+    <article style={{ fontSize: 16 }}>
       <Title2 as="h2" style={{ display: 'block', marginBottom: 16 }}>Was ist Phishing?</Title2>
-      <p style={{ fontSize: '16px', color: '#4B5563', marginBottom: '16px' }}>
+      <p style={{ color: '#4B5563', marginBottom: '16px' }}>
         Unter dem Begriff <strong>Phishing</strong> versteht man eine Methode des digitalen Betrugs.
         Angreifer geben sich als vertrauenswürdige Quelle aus – zum Beispiel eine Bank, ein Kollege oder eine Behörde –
         um an vertrauliche Informationen wie Passwörter, Kreditkartendaten oder Zugangsdaten zu gelangen.
       </p>
 
-      <p style={{ fontSize: '16px', color: '#4B5563', marginBottom: '24px' }}>
+      <p style={{ color: '#4B5563', marginBottom: '24px' }}>
         Ziel ist es, durch Täuschung Personen dazu zu bringen, sensible Daten preiszugeben. Phishing zählt zu den
         häufigsten Cyberangriffsformen weltweit.
       </p>
@@ -104,12 +104,12 @@ const Lesson2 = () => {
         </Card>
       </div>
 
-      <p style={{ fontSize: '16px', color: '#4B5563' }}>
+      <p style={{ color: '#4B5563' }}>
         Phishing ist deshalb so gefährlich, weil es oft sehr gut gemacht ist. Nur wer gut informiert ist,
         kann diese Angriffe erkennen und verhindern. Schulungen wie bei Securaware helfen dabei,
         die Merkmale frühzeitig zu identifizieren und sich selbst sowie andere zu schützen.
       </p>
-    </>
+    </article>
   )
 }
 

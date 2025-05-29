@@ -3,9 +3,9 @@ import { Shield20Filled, Warning20Filled } from "@fluentui/react-icons";
 
 const Lesson1 = () => {
   return (
-    <>
+    <article style={{ fontSize: 16 }}>
       <Title2 as="h2" style={{ display: 'block', marginBottom: 16 }}>Schadensausmass von Phishing</Title2>
-      <p style={{ fontSize: '16px', color: '#4B5563', marginBottom: '24px' }}>
+      <p style={{ color: '#4B5563', marginBottom: '24px' }}>
         Phishing ist eine Form des Cyberangriffs, bei dem Angreifer versuchen,
         sensible Informationen wie Passwörter, Kreditkartendaten oder Zugangsdaten
         zu Online-Konten zu stehlen. Die Auswirkungen solcher Angriffe können erheblich sein.
@@ -46,11 +46,11 @@ const Lesson1 = () => {
         </Card>
       </div>
 
-      <p style={{ fontSize: '16px', color: '#4B5563' }}>
+      <p style={{ color: '#4B5563' }}>
         Die Bekämpfung von Phishing erfordert Aufklärung, technische Schutzmaßnahmen
         sowie ein wachsames Verhalten der Nutzer.
       </p>
-    </>
+    </article>
   );
 }
 
