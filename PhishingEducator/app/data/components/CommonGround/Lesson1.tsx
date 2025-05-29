@@ -1,9 +1,10 @@
-import { Card } from "@fluentui/react-components";
+import { Card, Title2 } from "@fluentui/react-components";
 import { Shield20Filled, Warning20Filled } from "@fluentui/react-icons";
 
 const Lesson1 = () => {
   return (
     <>
+      <Title2 as="h2" style={{ display: 'block', marginBottom: 16 }}>Schadensausmass von Phishing</Title2>
       <p style={{ fontSize: '16px', color: '#4B5563', marginBottom: '24px' }}>
         Phishing ist eine Form des Cyberangriffs, bei dem Angreifer versuchen,
         sensible Informationen wie Passwörter, Kreditkartendaten oder Zugangsdaten
@@ -11,13 +12,12 @@ const Lesson1 = () => {
       </p>
 
       <div style={{
-        display: 'flex',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
         gap: 16,
         marginBottom: 24
       }}>
-        <Card style={{
-          flex: 1
-        }}>
+        <Card>
           <div style={{ padding: '16px', marginBottom: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
               <Warning20Filled color="#EF4444" />
@@ -31,9 +31,7 @@ const Lesson1 = () => {
           </div>
         </Card>
 
-        <Card style={{
-          flex: 1
-        }}>
+        <Card>
           <div style={{ padding: '16px', marginBottom: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
               <Shield20Filled color="#D97706" />
