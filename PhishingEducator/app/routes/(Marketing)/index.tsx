@@ -1,5 +1,19 @@
 import { Display } from "@fluentui/react-components";
 
+export function meta() {
+  return [
+    { title: 'Securaware - Phishing erkennen und sicher im Netz unterwegs sein' },
+    {
+      name: 'description',
+      content: 'Securaware hilft dir, Phishing-Angriffe zu erkennen und sicher im Internet zu surfen. Lerne, wie du dich vor Betrug und Datendiebstahl schützt - einfach, effektiv und verständlich.'
+    },
+    {
+      name: 'keywords',
+      content: 'Phishing, Phishing erkennen, Online Sicherheit, Internet Schutz, Betrug verhindern, Cybersecurity für Privatpersonen, Securaware, Phishing Schutz, sicher im Netz, Online Betrug'
+    }
+  ]
+}
+
 export default function Home() {
   return (
     <>
