@@ -1,5 +1,8 @@
 import CommonGroundLesson1 from "./components/CommonGround/Lesson1";
 import CommonGroundLesson2 from "./components/CommonGround/Lesson2";
+import CommonGroundLesson3 from "./components/CommonGround/Lesson3";
+import CommonGroundLesson4 from "./components/CommonGround/Lesson4";
+import CommonGroundLesson5 from "./components/CommonGround/Lesson5";
 
 export type CourseRecord = {
   id: string;
@@ -45,36 +48,36 @@ const staticCourses = {
           id: '647ec003-43f2-46c3-ac31-891df5cb6d51',
           handle: 'extent-of-damage',
           label: 'Schadenausmass von Phishing',
-          description: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et',
+          description: 'Lerne, wie gross der Schaden durch Phishing sein kann - sowohl finanziell als auch auf persönlicher und unternehmerischer Ebene - und warum Prävention so wichtig ist.',
           contentElement: <CommonGroundLesson1 />
         },
         {
           id: '57a1c0f1-49fc-43af-9100-a3a8b133d1db',
           handle: 'definition',
           label: 'Definition von Phishing',
-          description: 'Dies ist eine Beschreibung des Schritts.',
+          description: 'Erfahre, was Phishing ist, wie Angreifer vorgehen und woran du typische Merkmale wie Täuschung, Dringlichkeit und gefälschte Links erkennst.',
           contentElement: <CommonGroundLesson2 />
         },
         {
           id: 'dbce4c4e-2d81-4ccc-ac35-5fbd01f56164',
           handle: 'commonness',
           label: 'Verbreitung',
-          description: 'Dies ist eine Beschreibung des Schritts.',
-          contentElement: <CommonGroundLesson2 />
+          description: 'Verstehe, warum Phishing so weit verbreitet ist und welche Faktoren wie globale Reichweite, menschliches Verhalten oder geringe Einstiegshürden es begünstigen.',
+          contentElement: <CommonGroundLesson3 />
         },
         {
           id: 'f346691a-59c9-4b98-89dd-b27d52a872aa',
           handle: 'consequences-and-examples',
           label: 'Konsequenzen und Beispiele',
-          description: 'Dies ist eine Beschreibung des Schritts.',
-          contentElement: <CommonGroundLesson2 />
+          description: 'Lerne, welche Auswirkungen ein Phishing-Angriff haben kann - von Geldverlust bis Identitätsdiebstahl - und entdecke reale Beispiele, die grosse Folgen hatten.',
+          contentElement: <CommonGroundLesson4 />
         },
         {
           id: '40737135-e1e2-475a-bd02-890f34dd49b4',
           handle: 'motivation-for-securaware',
           label: 'Motivation für Securaware',
-          description: 'Dies ist eine Beschreibung des Schritts.',
-          contentElement: <CommonGroundLesson2 />
+          description: 'Finde heraus, warum es sich lohnt, bei Securaware mitzumachen und aktiv zu beleiben - ob zum Schutz deiner Daten, aus beruflicher Verantwortung oder um deine Familie und Gesellschaft zu schützen.',
+          contentElement: <CommonGroundLesson5 />
         }
       ]
     },

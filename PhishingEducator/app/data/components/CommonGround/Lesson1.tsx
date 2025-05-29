@@ -1,23 +1,23 @@
-import { Card } from "@fluentui/react-components";
+import { Card, Title2 } from "@fluentui/react-components";
 import { Shield20Filled, Warning20Filled } from "@fluentui/react-icons";
 
 const Lesson1 = () => {
   return (
-    <>
-      <p style={{ fontSize: '16px', color: '#4B5563', marginBottom: '24px' }}>
+    <article style={{ fontSize: 16 }}>
+      <Title2 as="h2" style={{ display: 'block', marginBottom: 16 }}>Schadensausmass von Phishing</Title2>
+      <p style={{ color: '#4B5563', marginBottom: '24px' }}>
         Phishing ist eine Form des Cyberangriffs, bei dem Angreifer versuchen,
         sensible Informationen wie Passwörter, Kreditkartendaten oder Zugangsdaten
         zu Online-Konten zu stehlen. Die Auswirkungen solcher Angriffe können erheblich sein.
       </p>
 
       <div style={{
-        display: 'flex',
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
         gap: 16,
         marginBottom: 24
       }}>
-        <Card style={{
-          flex: 1
-        }}>
+        <Card>
           <div style={{ padding: '16px', marginBottom: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
               <Warning20Filled color="#EF4444" />
@@ -31,9 +31,7 @@ const Lesson1 = () => {
           </div>
         </Card>
 
-        <Card style={{
-          flex: 1
-        }}>
+        <Card>
           <div style={{ padding: '16px', marginBottom: '16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
               <Shield20Filled color="#D97706" />
@@ -48,11 +46,11 @@ const Lesson1 = () => {
         </Card>
       </div>
 
-      <p style={{ fontSize: '16px', color: '#4B5563' }}>
+      <p style={{ color: '#4B5563' }}>
         Die Bekämpfung von Phishing erfordert Aufklärung, technische Schutzmaßnahmen
         sowie ein wachsames Verhalten der Nutzer.
       </p>
-    </>
+    </article>
   );
 }
 

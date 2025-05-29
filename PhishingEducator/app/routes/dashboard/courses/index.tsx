@@ -8,6 +8,20 @@ import { ArrowRight20Regular, Rocket20Regular } from "@fluentui/react-icons";
 import type { Route } from "./+types";
 import { getAllLessonCompletionsOfUser, type CourseCompletion } from "../../../api";
 
+export function meta() {
+  return [
+    { title: 'Securaware - Online-Kurse' },
+    {
+      name: 'description',
+      content: 'Finde den passenden Kurs, um Phishing zu erkennen und dich online zu schützen. Lerne in deinem Tempo und werde Schritt für Schritt sicherer im Netz.'
+    },
+    {
+      name: 'keywords',
+      content: 'Phishing Kurse, Online Sicherheit lernen, Securaware, Betrug erkennen, Cybersecurity Training, Phishing Schulung, Internetbetrug, Selbstschutz online, Kursübersicht'
+    }
+  ]
+}
+
 export async function clientLoader() {
   const courses = await getCourses();
   return { courses };

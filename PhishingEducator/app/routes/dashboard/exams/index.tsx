@@ -4,6 +4,20 @@ import type { Route } from "./+types";
 import { Link } from "react-router";
 import { Rocket20Regular } from "@fluentui/react-icons";
 
+export function meta() {
+  return [
+    { title: 'Securaware - Prüfungen' },
+    {
+      name: 'description',
+      content: 'Stelle dein Wissen mit Prüfungen auf die Probe. Sieh auf einen Blick, was du bestanden hast und was noch vor dir liegt.'
+    },
+    {
+      name: 'keywords',
+      content: 'Phishing Test, Prüfungen, Cybersecurity Quiz, Wissen testen, Securaware Prüfung, Online Sicherheit prüfen, Phishing Simulation, Selbsttest, Sicherheitstraining'
+    }
+  ]
+}
+
 export async function clientLoader() {
   const { data, error } = await getExams();
   if (error) {

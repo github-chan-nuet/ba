@@ -9,6 +9,8 @@ import (
 	"phishing_backend/internal/adapters/presentation/error_handling"
 	"phishing_backend/internal/domain_services/services"
 	"runtime"
+	"strings"
+	"sync"
 )
 
 func SetupHttpServer() {
@@ -68,46 +70,86 @@ func NewSecurawareServeMux() *http.ServeMux {
 	}
 
 	sMux := http.NewServeMux()
+	routes := NewMethodMap()
 
 	// health
-	sMux.HandleFunc("GET /api/health", controllers.GetHealth)
+	routes.Add(sMux, "/api/health", http.MethodGet, controllers.GetHealth)
 
 	// lesson completions
-	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", handleOptions)
-	sMux.HandleFunc("GET /api/courses/{courseId}/completions", lessonCompletionController.GetLessonCompletionsOfCourseAndUser)
-	sMux.HandleFunc("POST /api/courses/{courseId}/completions", lessonCompletionController.CreateLessonCompletion)
+	routes.Add(sMux, "/api/courses/{courseId}/completions", http.MethodGet, lessonCompletionController.GetLessonCompletionsOfCourseAndUser)
+	routes.Add(sMux, "/api/courses/{courseId}/completions", http.MethodPost, lessonCompletionController.CreateLessonCompletion)
 
-	sMux.HandleFunc("OPTIONS /api/courses/completions", handleOptions)
-	sMux.HandleFunc("GET /api/courses/completions", lessonCompletionController.GetAllLessonCompletionsOfUser)
+	routes.Add(sMux, "/api/courses/completions", http.MethodGet, lessonCompletionController.GetAllLessonCompletionsOfUser)
 
 	// users
-	sMux.HandleFunc("OPTIONS /api/users", handleOptions)
-	sMux.HandleFunc("POST /api/users", userController.CreateUser)
+	routes.Add(sMux, "/api/users", http.MethodPost, userController.CreateUser)
 
-	sMux.HandleFunc("OPTIONS /api/users/login", handleOptions)
-	sMux.HandleFunc("POST /api/users/login", userController.LoginAndReturnJwtToken)
+	routes.Add(sMux, "/api/users/login", http.MethodPost, userController.LoginAndReturnJwtToken)
 
-	sMux.HandleFunc("OPTIONS /api/users/{userId}", handleOptions)
-	sMux.HandleFunc("GET /api/users/{userId}", userController.GetUser)
-	sMux.HandleFunc("PATCH /api/users/{userId}", userController.UpdateUser)
+	routes.Add(sMux, "/api/users/{userId}", http.MethodGet, userController.GetUser)
+	routes.Add(sMux, "/api/users/{userId}", http.MethodPatch, userController.UpdateUser)
 
 	// exams
-	sMux.HandleFunc("OPTIONS /api/exams", handleOptions)
-	sMux.HandleFunc("GET /api/exams", examController.GetExams)
+	routes.Add(sMux, "/api/exams", http.MethodGet, examController.GetExams)
 
-	sMux.HandleFunc("OPTIONS /api/exams/{examId}", handleOptions)
-	sMux.HandleFunc("GET /api/exams/{examId}", examController.GetExam)
+	routes.Add(sMux, "/api/exams/{examId}", http.MethodGet, examController.GetExam)
 
-	sMux.HandleFunc("OPTIONS /api/exams/{examId}/completions", handleOptions)
-	sMux.HandleFunc("POST /api/exams/{examId}/completions", examController.CompleteExam)
-	sMux.HandleFunc("GET /api/exams/{examId}/completions", examController.GetCompletedExam)
+	routes.Add(sMux, "/api/exams/{examId}/completions", http.MethodGet, examController.GetCompletedExam)
+	routes.Add(sMux, "/api/exams/{examId}/completions", http.MethodPost, examController.CompleteExam)
 	return sMux
 }
 
-func handleOptions(w http.ResponseWriter, _ *http.Request) {
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, PATCH, DELETE")
-	w.Header().Set("Access-Control-Max-Age", "86400")
-	w.WriteHeader(http.StatusOK)
+type MethodMap struct {
+	mu        sync.RWMutex
+	endpoints map[string]map[string]http.HandlerFunc
+}
+
+func NewMethodMap() *MethodMap {
+	return &MethodMap{
+		endpoints: make(map[string]map[string]http.HandlerFunc),
+	}
+}
+
+func (m *MethodMap) Add(mux *http.ServeMux, path, method string, handler http.HandlerFunc) {
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	if _, exists := m.endpoints[path]; !exists {
+		m.endpoints[path] = make(map[string]http.HandlerFunc)
+	}
+
+	m.endpoints[path][method] = handler
+
+	// Wrap the handler only once per path
+	if len(m.endpoints[path]) == 1 {
+		mux.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
+			m.mu.RLock()
+			methods := m.endpoints[path]
+			m.mu.RUnlock()
+
+			// Build Allow header
+			allowedMethods := make([]string, 0, len(methods))
+			for method := range methods {
+				allowedMethods = append(allowedMethods, method)
+			}
+			allowedMethods = append(allowedMethods, http.MethodOptions)
+
+			if r.Method == http.MethodOptions {
+				w.Header().Set("Allow", strings.Join(allowedMethods, ", "))
+				w.Header().Set("Access-Control-Allow-Methods", strings.Join(allowedMethods, ", "))
+				w.Header().Set("Access-Control-Max-Age", "86400")
+				w.WriteHeader(http.StatusNoContent)
+				return
+			}
+
+			if h, ok := methods[r.Method]; ok {
+				h(w, r)
+			} else {
+				w.Header().Set("Allow", strings.Join(allowedMethods, ", "))
+				http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+			}
+		})
+	}
 }
 
 var _ http.Handler = (*PanicRecoveryMiddleware)(nil)
