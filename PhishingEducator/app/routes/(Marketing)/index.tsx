@@ -12,6 +12,10 @@ import {
     Trophy28Filled
 } from "@fluentui/react-icons";
 import React, { useRef, useEffect, useState } from 'react';
+import {Chart, CategoryScale, LinearScale, BarElement,} from 'chart.js';
+
+import { Bar } from 'react-chartjs-2';
+import { Pen48Regular } from "@fluentui/react-icons/fonts";
 
 export default function Home() {
     // const IconComponent = FluentIcons["LineHorizontal128Filled"];
@@ -82,37 +86,28 @@ export default function Home() {
                      style={{
                          paddingTop: "10rem",
                          // backgroundImage: "linear-gradient(to bottom, oklch(0.985 0.002 247.839), #48d5ff)",
-                         backgroundImage: "radial-gradient(oklch(0.985 0.002 247.839), #48d5ff)",
+                         // backgroundImage: "radial-gradient(oklch(0.985 0.002 247.839), #48d5ff)",
+                         backgroundColor: "#fff",
                      }}
             >
                 Test
 
                 <div style={{
                     display: "grid",
-                    gap: "3rem",
-                    gridTemplateColumns: "1fr 1fr 1fr",
+                    gap: "6rem",
+                    gridTemplateColumns: "1fr 1fr",
                     gridTemplateRows: "1fr 1fr",
                     gridAutoFlow: "row",
                     justifyItems: "center",
                     margin: "10rem",
                 }}>
-                    <FunctionElement title={"Phishing"} description={"Das ist so"} imageSrc={phishing}/>
+                    <FeatureCard description={"Phishing"} title={"Phishing"} icon={<FoodFish24Filled />} />
 
-                    <Ahh description={"Phishing"} title={"Phishing"} icon={<FoodFish24Filled />} />
+                    <FeatureCard description={"Phishing Simulation"} title={"Phishing Simulation"} icon={<Mail48Filled />} />
 
-                    <FunctionElement title={"Phishing Simulation"} description={"Das ist so"} imageSrc={phishing}/>
+                    <FeatureCard description={"Test"} title={"Teste dein Wissen"} icon={<Pen48Filled />} />
 
-                    <Mail48Filled width="1000" height="1000" style={{fontSize: "1rem", width: "10rem", height: "10rem"}} />
-
-                    <FunctionElement title={"Test"} description={"Das ist so"} imageSrc={phishing}/>
-
-                    <Pen48Filled style={{fontSize: "1rem", width: "10rem", height: "10rem"}} />
-
-                    <FunctionElement title={"Spilerischer Vergleich"} description={"Das ist so"} imageSrc={phishing}/>
-
-                    <Trophy28Filled />
-
-                    <FunctionElement title={"Phishing"} description={"Das ist so"} imageSrc={phishing}/>
+                    <FeatureCard description={"Spilerischer Vergleich"} title={"Spilerischer Vergleich"} icon={<Trophy28Filled />} />
 
                 </div>
             </section>
@@ -251,31 +246,14 @@ function FunctionElement({title, description, imageSrc}) {
     );
 }
 
-function Ahh({title, description, icon}) {
+function FeatureCard({title, description, icon}) {
     const styledIcon = React.cloneElement(icon, {
         className: MarketingStyles.Icon,
     })
     return (
-        <div style={{
-            width: "100%",
-            height: "45rem",
-            borderRadius: "1.5rem",
-            backgroundColor: "white",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-        }}>
-            <div style={{
-                backgroundColor: "blue",
-                width: "15rem",
-                height: "15rem",
-                borderRadius: "9999rem",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center"
-            }}>
+        <div className={MarketingStyles.FeatureCard}>
+            <div className={MarketingStyles.FeatureCard__icon}>
                 {styledIcon}
-                {/*<children style={{width: "10rem", height: "10rem", color: "red"}} />*/}
             </div>
             <b style={{marginTop: "1.3rem", fontSize: "2rem"}}>{title}</b>
             <p style={{marginTop: "1.7rem", fontSize: "1.4rem"}}>{description}</p>
@@ -283,19 +261,7 @@ function Ahh({title, description, icon}) {
     );
 }
 
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend
-} from 'chart.js';
-
-import { Bar } from 'react-chartjs-2';
-import { Pen48Regular } from "@fluentui/react-icons/fonts";
-
+Chart.register(CategoryScale, LinearScale, BarElement,);
 
 function PhishingCostDiagram() {
     const chartRef = useRef(null);
@@ -307,28 +273,16 @@ function PhishingCostDiagram() {
             ([entry]) => {
                 if (entry.isIntersecting) {
                     setShowChart(true);
-                    observer.disconnect(); // Only trigger once
+                    observer.disconnect();
                 }
             },
             { threshold: 1 }
         );
-
         if (containerRef.current) {
             observer.observe(containerRef.current);
         }
-
         return () => observer.disconnect();
     }, []);
-
-
-    ChartJS.register(
-        CategoryScale,
-        LinearScale,
-        BarElement,
-        Title,
-        Tooltip,
-        Legend
-    );
 
     const fontFamily = 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
 
@@ -386,22 +340,14 @@ function PhishingCostDiagram() {
         },
     };
 
-// 'colorPaletteRedBackground1' | 'colorPaletteRedBackground2' | 'colorPaletteRedBackground3' | 'colorPaletteRedForeground1' |
-// 'colorPaletteRedForeground2' | 'colorPaletteRedForeground3' | 'colorPaletteRedForegroundInverted' | 'colorPaletteRedBorderActive'
-// | 'colorPaletteRedBorder1' | 'colorPaletteRedBorder2';
-
+    const filledBar = [4_600_000_000, 7_000_000_000, 10_200_000_000, 12_600_000_000, 16_800_000_000];
+    const emptyBar = filledBar.map(() => 0);
     const data = {
         labels: ['2020', '2021', '2022', '2023', '2024'],
         datasets: [
             {
                 label: 'Aus Phishing entstandene Schäden in den USA',
-                data: showChart ? [
-                    4_600_000_000,
-                    7_000_000_000,
-                    10_200_000_000,
-                    12_600_000_000,
-                    16_800_000_000,
-                ] : [0,0,0,0,0],
+                data: showChart ? filledBar : emptyBar,
                 backgroundColor: '#d83b01',
             },
         ],

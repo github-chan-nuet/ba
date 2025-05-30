@@ -25,6 +25,7 @@
   padding: 2rem;
   width: 90%;
   border-radius: 2rem;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 0px 4px;
 
   &__title {
     font-size: 2rem;
@@ -40,5 +41,38 @@
 .Icon {
   width: 10rem;
   height: 10rem;
-  color: red;
+  color: #3762c5;
+}
+
+.FeatureCard {
+  width: 100%;
+  height: 45rem;
+  border-radius: 1.5rem;
+  background-color: oklch(0.985 0.002 247.839);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.16) 0 0 4px;
+
+  &__icon {
+    background-color: white;
+    width: 15rem;
+    height: 15rem;
+    border-radius: 9999rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.5rem;
+    box-shadow: rgba(0, 0, 0, 0.16) 0 0 4px;
+
+    > * {
+      animation: blendIn 1s cubic-bezier(0.6, 0.04, 0.98, 0.335); // cubic-bezier(0.65, 0, 0.35, 1);
+    }
+
+  }
+}
+
+@keyframes blendIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
 }
