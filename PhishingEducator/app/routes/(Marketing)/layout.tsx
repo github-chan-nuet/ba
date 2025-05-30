@@ -38,9 +38,7 @@ export default function MarketingLayout() {
             Login
           </ToggleButton>
         </header>
-        <main>
-          <Outlet />
-        </main>
+        <Outlet />
       </div>
     </div>
   )

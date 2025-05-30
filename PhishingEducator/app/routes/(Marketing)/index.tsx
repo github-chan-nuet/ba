@@ -1,114 +1,58 @@
 import {Button, Display, tokens} from "@fluentui/react-components";
-// import * as FluentIcons from "@fluentui/react-icons";
 import MarketingStyles from "../../styles/Marketing.module.scss";
-import hacker from '../../assets/images/hacker.png';
-import phishing from '../../assets/images/phishing.png';
 import lines from '../../assets/images/lines.svg';
-import {
-    ArrowRight24Regular, FoodFish24Filled, Mail48Filled, Pen48Filled,
-    Shield24Filled,
-    Shield24Regular,
-    ShieldTask28Filled,
-    Trophy28Filled
-} from "@fluentui/react-icons";
-import React, { useRef, useEffect, useState } from 'react';
-import {Chart, CategoryScale, LinearScale, BarElement,} from 'chart.js';
+import { FoodFish24Filled, Mail48Filled, Pen48Filled, ShieldTask28Filled, Trophy28Filled } from "@fluentui/react-icons";
+import React, {useRef, useEffect, useState, type ReactElement} from 'react';
+import {Chart, CategoryScale, LinearScale, BarElement, type ChartOptions,} from 'chart.js';
 
 import { Bar } from 'react-chartjs-2';
-import { Pen48Regular } from "@fluentui/react-icons/fonts";
 
 export default function Home() {
-    // const IconComponent = FluentIcons["LineHorizontal128Filled"];
     useEffect(() => {
         document.title = 'Securaware';
     }, []);
     return (
-
-        <article style={{display: "flex", flexDirection: "column", alignItems: "center", gap: "10rem"}}>
-            <div
-                style={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    zIndex: -10,
-                    height: "100vh",
-                    width: "100%",
-                    backgroundColor: "oklch(0.985 0.002 247.839)",
-                }}
-            >
-                <div
-                    style={{
-                        position: "absolute",
-                        bottom: "auto",
-                        left: "auto",
-                        right: 0,
-                        top: 0,
-                        height: "500px",
-                        width: "500px",
-                        transform: "translate(-70%, 25%)",
-                        borderRadius: "9999px", // full rounding
-                        backgroundColor: "rgba(0, 120, 212, 0.5)", // "rgba(173, 109, 244, 0.5)",
-                        opacity: 0.5,
-                        filter: "blur(80px)",
-                    }}/>
-            </div>
-            <div
+        <main style={{display: "flex", flexDirection: "column", alignItems: "center", gap: "10rem", paddingBottom: "10rem"}}>
+            <section className={MarketingStyles.CircleBackground}>
+                <div className={MarketingStyles.CircleBackground__cirlce} />
+            </section>
+            <section
                 style={{
                     maxWidth: "70rem",
                     textAlign: "center",
                     margin: "5rem auto 0 auto",
-                    height: "100vh",
+                    height: "80vh",
                 }}
             >
                 <h1 className={MarketingStyles.Title}>
                     Securaware
                 </h1>
                 <div>
-                    <hr style={{
-                        height: "0.2rem",
-                        width: "35rem",
-                        backgroundColor: "black",
-                        color: "black",
-                        marginBottom: "4rem"
-                    }}/>
+                    <hr className={MarketingStyles.Line}/>
                 </div>
-                {/*<IconComponent style={{fontSize: "2rem", width: "10rem"}} />*/}
-                <Display
-                    style={{
-                        lineHeight: 1.1
-                    }}
-                >
+                <Display style={{lineHeight: 1.1}}>
                     Gemeinsam gegen <strong>Phishing und Cyberbetrug </strong>
                     für eine <strong>sichere digitale Zukunft</strong>
                 </Display>
-            </div>
+            </section>
             <section className={MarketingStyles.Section}
                      style={{
-                         paddingTop: "10rem",
+                         paddingTop: "3rem",
                          // backgroundImage: "linear-gradient(to bottom, oklch(0.985 0.002 247.839), #48d5ff)",
                          // backgroundImage: "radial-gradient(oklch(0.985 0.002 247.839), #48d5ff)",
                          backgroundColor: "#fff",
                      }}
             >
-                Test
+                <h2 style={{textAlign: "center", fontSize: "2rem"}}>Was bietet Securaware?</h2>
 
-                <div style={{
-                    display: "grid",
-                    gap: "6rem",
-                    gridTemplateColumns: "1fr 1fr",
-                    gridTemplateRows: "1fr 1fr",
-                    gridAutoFlow: "row",
-                    justifyItems: "center",
-                    margin: "10rem",
-                }}>
-                    <FeatureCard description={"Phishing"} title={"Phishing"} icon={<FoodFish24Filled />} />
+                <div className={MarketingStyles.FeatureGrid}>
+                    <FeatureCard title={"Phishing"} description={"Phishing"}  icon={<FoodFish24Filled />} />
 
-                    <FeatureCard description={"Phishing Simulation"} title={"Phishing Simulation"} icon={<Mail48Filled />} />
+                    <FeatureCard title={"Phishing Simulation"} description={"Phishing Simulation"} icon={<Mail48Filled />} />
 
-                    <FeatureCard description={"Test"} title={"Teste dein Wissen"} icon={<Pen48Filled />} />
+                    <FeatureCard title={"Teste dein Wissen"} description={"Test"}  icon={<Pen48Filled />} />
 
-                    <FeatureCard description={"Spilerischer Vergleich"} title={"Spilerischer Vergleich"} icon={<Trophy28Filled />} />
-
+                    <FeatureCard title={"Spilerischer Vergleich"} description={"Spilerischer Vergleich"} icon={<Trophy28Filled />} />
                 </div>
             </section>
 
@@ -174,90 +118,21 @@ export default function Home() {
                     </div>
                 </div>
             </section>
-
-            <div style={{
-                backgroundColor: tokens.colorPaletteBlueBackground2,
-                width: "100%",
-                height: "100%",
-            }}>
-                colorPaletteBlueBackground2
-            </div>
-            <div style={{
-                backgroundColor: tokens.colorPaletteBlueForeground2,
-                width: "100%",
-                height: "100%",
-            }}>
-                colorPaletteBlueForeground2
-            </div>
-            <div style={{
-                backgroundColor: tokens.colorPaletteBlueBorderActive,
-                width: "100%",
-                height: "100%",
-            }}>
-                colorPaletteBlueBorderActive
-            </div>
-            <div style={{
-                backgroundColor: tokens.colorPaletteRoyalBlueBackground2,
-                width: "100%",
-                height: "100%",
-            }}>
-                colorPaletteRoyalBlueBackground2
-            </div>
-            <div style={{
-                backgroundColor: tokens.colorPaletteRoyalBlueForeground2,
-                width: "100%",
-                height: "100%",
-            }}>
-                colorPaletteRoyalBlueForeground2
-            </div>
-            <div style={{
-                backgroundColor: tokens.colorPaletteRoyalBlueBorderActive,
-                width: "100%",
-                height: "100%",
-            }}>
-                colorPaletteRoyalBlueBorderActive
-            </div>
-            {tokens.colorPaletteRedBorder1}
-        </article>
+        </main>
     );
 }
 
-// @ts-ignore
-function FunctionElement({title, description, imageSrc}) {
+type FeatureCardProps = {title: string, description: string, icon: ReactElement};
+function FeatureCard({title, description, icon}: FeatureCardProps) {
+    const styledIcon = React.cloneElement(icon, {className: MarketingStyles.Icon})
     return (
-        <div style={{
-            width: "100%",
-            height: "45rem",
-            borderRadius: "1.5rem",
-            backgroundColor: "white",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-        }}>
-            <img src={imageSrc} alt="fds" style={{
-                width: "17.4rem",
-                backgroundColor: "oklch(0.985 0.002 247.839)",
-                borderRadius: "9999rem",
-                marginTop: "2.5rem",
-            }}/>
-            <b style={{marginTop: "1.3rem", fontSize: "2rem"}}>{title}</b>
-            <p style={{marginTop: "1.7rem", fontSize: "1.4rem"}}>{description}</p>
-        </div>
-    );
-}
-
-function FeatureCard({title, description, icon}) {
-    const styledIcon = React.cloneElement(icon, {
-        className: MarketingStyles.Icon,
-    })
-    return (
-        <div className={MarketingStyles.FeatureCard}>
+        <section className={MarketingStyles.FeatureCard}>
             <div className={MarketingStyles.FeatureCard__icon}>
                 {styledIcon}
             </div>
-            <b style={{marginTop: "1.3rem", fontSize: "2rem"}}>{title}</b>
+            <h3 style={{marginTop: "1.3rem", fontSize: "2rem"}}>{title}</h3>
             <p style={{marginTop: "1.7rem", fontSize: "1.4rem"}}>{description}</p>
-        </div>
+        </section>
     );
 }
 
@@ -286,7 +161,7 @@ function PhishingCostDiagram() {
 
     const fontFamily = 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
 
-    const options = {
+    const options: ChartOptions<'bar'> = {
         responsive: true,
         maintainAspectRatio: false,
         animation: {
@@ -300,9 +175,9 @@ function PhishingCostDiagram() {
                 ticks: {
                     stepSize: 4_000_000_000,
                     display: true,
-                    callback: function (value: number) {
-                        if (value === 0) return '';
-                        return value / 1_000_000_000 + ' Mrd. $';
+                    callback: function (tickValue: string | number) {
+                        if (tickValue === 0 || typeof tickValue === 'string') return '';
+                        return tickValue / 1_000_000_000 + ' Mrd. $';
                     },
                     font: {
                         size: 16,
