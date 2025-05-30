@@ -11,7 +11,7 @@ import {
     ShieldTask28Filled,
     Trophy28Filled
 } from "@fluentui/react-icons";
-import { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 
 export default function Home() {
     // const IconComponent = FluentIcons["LineHorizontal128Filled"];
@@ -98,7 +98,7 @@ export default function Home() {
                 }}>
                     <FunctionElement title={"Phishing"} description={"Das ist so"} imageSrc={phishing}/>
 
-                    <FoodFish24Filled />
+                    <Ahh description={"Phishing"} title={"Phishing"} icon={<FoodFish24Filled />} />
 
                     <FunctionElement title={"Phishing Simulation"} description={"Das ist so"} imageSrc={phishing}/>
 
@@ -245,6 +245,38 @@ function FunctionElement({title, description, imageSrc}) {
                 borderRadius: "9999rem",
                 marginTop: "2.5rem",
             }}/>
+            <b style={{marginTop: "1.3rem", fontSize: "2rem"}}>{title}</b>
+            <p style={{marginTop: "1.7rem", fontSize: "1.4rem"}}>{description}</p>
+        </div>
+    );
+}
+
+function Ahh({title, description, icon}) {
+    const styledIcon = React.cloneElement(icon, {
+        className: MarketingStyles.Icon,
+    })
+    return (
+        <div style={{
+            width: "100%",
+            height: "45rem",
+            borderRadius: "1.5rem",
+            backgroundColor: "white",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+        }}>
+            <div style={{
+                backgroundColor: "blue",
+                width: "15rem",
+                height: "15rem",
+                borderRadius: "9999rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+            }}>
+                {styledIcon}
+                {/*<children style={{width: "10rem", height: "10rem", color: "red"}} />*/}
+            </div>
             <b style={{marginTop: "1.3rem", fontSize: "2rem"}}>{title}</b>
             <p style={{marginTop: "1.7rem", fontSize: "1.4rem"}}>{description}</p>
         </div>
