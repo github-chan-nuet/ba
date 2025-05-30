@@ -1,13 +1,14 @@
 package repositories
 
 import (
-	"github.com/google/uuid"
 	"phishing_backend/internal/domain_model"
+
+	"github.com/google/uuid"
 )
 
 type PhishingSimulationRepository interface {
 	Create(run *domain_model.PhishingSimulationRun) error
 	Update(run *domain_model.PhishingSimulationRun) error
 	GetLatestRun(userId uuid.UUID) (*domain_model.PhishingSimulationRun, error)
-	GetTemplates() ([]domain_model.PhishingSimulationTemplate, error)
+	GetTemplates() ([]domain_model.PhishingSimulationContentTemplate, error)
 }
