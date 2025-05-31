@@ -25,7 +25,7 @@ type EmailSenderImpl struct {
 // https://zetcode.com/golang/email-smtp/
 func (e *EmailSenderImpl) Send(email *domain_model.Email) error {
 	from := "info@securaware.ch"
-	to := []string{email.Subject}
+	to := []string{email.Recipient}
 
 	msg := []byte(
 		"From: " + from + newLine +
