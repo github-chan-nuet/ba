@@ -114,6 +114,7 @@ const staticCourses = {
         }
       ]
     },
+    /*
     {
       id: 'c567dff4-5bd0-4aeb-a629-43245010dc5b',
       handle: 'sensitive-information',
@@ -142,5 +143,6 @@ const staticCourses = {
       description: 'Entdecke hilfreiche Tools und Techniken zur Abwehr von Phishing - wie Multi-Faktor-Authentifizierung, Browser-Erweiterungen und Domain-Checker.',
       lessons: []
     }
+    */
   ] as Array<CourseRecord>,
 }
