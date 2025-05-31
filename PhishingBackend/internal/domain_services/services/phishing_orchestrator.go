@@ -10,7 +10,7 @@ import (
 var _ PhishingOrchestrator = (*PhishingOrchestratorImpl)(nil)
 
 type PhishingOrchestrator interface {
-	StartPhishingJob(days int)
+	StartPhishingJob(days time.Duration)
 }
 
 type PhishingOrchestratorImpl struct {
@@ -18,7 +18,7 @@ type PhishingOrchestratorImpl struct {
 	PhishingSimulationRepository repositories.PhishingSimulationRepository
 }
 
-func (r *PhishingOrchestratorImpl) StartPhishingJob(days int) {
+func (r *PhishingOrchestratorImpl) StartPhishingJob(days time.Duration) {
 	//d := r.CalculateDuration(days)
 	//r.
 }
