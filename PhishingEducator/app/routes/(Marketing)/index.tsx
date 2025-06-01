@@ -7,7 +7,8 @@ import {Chart, CategoryScale, LinearScale, BarElement, type ChartOptions,} from 
 
 import { Bar } from 'react-chartjs-2';
 
-export default function Home() {
+type HomeProps = {setAuthOpen: () => void};
+export default function Home({setAuthOpen}: HomeProps) {
     useEffect(() => {
         document.title = 'Securaware';
     }, []);
@@ -31,29 +32,14 @@ export default function Home() {
                     <hr className={MarketingStyles.Line}/>
                 </div>
                 <Display style={{lineHeight: 1.1}}>
-                    Gemeinsam gegen <strong>Phishing und Cyberbetrug </strong>
+                    Gemeinsam gegen <strong>Phishing und Cyberbetrug</strong>
                     für eine <strong>sichere digitale Zukunft</strong>
                 </Display>
             </section>
-            <section className={MarketingStyles.Section}
-                     style={{
-                         paddingTop: "3rem",
-                         // backgroundImage: "linear-gradient(to bottom, oklch(0.985 0.002 247.839), #48d5ff)",
-                         // backgroundImage: "radial-gradient(oklch(0.985 0.002 247.839), #48d5ff)",
-                         backgroundColor: "#fff",
-                     }}
-            >
+
+            <section className={MarketingStyles.Section} style={{paddingTop: "3rem", backgroundColor: "#fff"}}>
                 <h2 style={{textAlign: "center", fontSize: "2rem"}}>Was bietet Securaware?</h2>
-
-                <div className={MarketingStyles.FeatureGrid}>
-                    <FeatureCard title={"Phishing"} description={"Phishing"}  icon={<FoodFish24Filled />} />
-
-                    <FeatureCard title={"Phishing Simulation"} description={"Phishing Simulation"} icon={<Mail48Filled />} />
-
-                    <FeatureCard title={"Teste dein Wissen"} description={"Test"}  icon={<Pen48Filled />} />
-
-                    <FeatureCard title={"Spilerischer Vergleich"} description={"Spilerischer Vergleich"} icon={<Trophy28Filled />} />
-                </div>
+                <FeatureGrid />
             </section>
 
             <section className={MarketingStyles.Section} style={{
@@ -86,7 +72,6 @@ export default function Home() {
                 gridTemplateRows: "1fr",
                 gap: "2rem",
                 alignContent: "space-around",
-                // border: "1px solid black",
             }}>
                 <div style={{
                     backgroundColor: tokens.colorPaletteBlueBorderActive,
@@ -106,13 +91,12 @@ export default function Home() {
                     <div>
                         <Button
                             size="large"
-                            shape={"circular"} // shape: 'rounded' | 'circular' | 'square';
+                            shape={"circular"}
                             iconPosition="after"
                             appearance="primary"
                             icon={<ShieldTask28Filled/>}
                             style={{width: "15rem", height: "4rem"}}
-                            onClick={() => {
-                            }}>
+                            onClick={setAuthOpen}>
                             Schütze dich jetzt
                         </Button>
                     </div>
@@ -120,6 +104,49 @@ export default function Home() {
             </section>
         </main>
     );
+}
+
+function FeatureGrid() {
+    const gridRef = useRef(null);
+    const [isInView, setIsInView] = useState(false);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsInView(true);
+                    observer.disconnect();
+                }
+            },
+            { threshold: 0.9 }
+        );
+        if (gridRef.current) {
+            observer.observe(gridRef.current);
+        }
+        return () => observer.disconnect();
+    }, []);
+
+    const className = isInView ? MarketingStyles.FeatureGrid + " " + MarketingStyles.FeatureGrid__active : MarketingStyles.FeatureGrid;
+
+    return (
+        <div className={className} ref={gridRef}>
+            <FeatureCard title={"Online Kurse"}
+                         description={"Über Securawares online Kurse lernst du alles rund um Phishing!"}
+                         icon={<FoodFish24Filled />} />
+
+            <FeatureCard title={"Phishing Simulation"}
+                         description={"Identifiziere Phishing-E-Mails und vertiefe dein Wissen mit Hinweisen zu falsch identifizierten E-Mails"}
+                         icon={<Mail48Filled />} />
+
+            <FeatureCard title={"Teste dein Wissen"}
+                         description={"Teste dein Wissen mit fortlaufend neuen Tests und sammle XP dabei"}
+                         icon={<Pen48Filled />} />
+
+            <FeatureCard title={"Spilerischer Vergleich"}
+                         description={"Vergleiche dich mit Freunden und weiteren Benutzern über deine gesammelte XP"}
+                         icon={<Trophy28Filled />} />
+        </div>
+    )
 }
 
 type FeatureCardProps = {title: string, description: string, icon: ReactElement};
@@ -130,8 +157,8 @@ function FeatureCard({title, description, icon}: FeatureCardProps) {
             <div className={MarketingStyles.FeatureCard__icon}>
                 {styledIcon}
             </div>
-            <h3 style={{marginTop: "1.3rem", fontSize: "2rem"}}>{title}</h3>
-            <p style={{marginTop: "1.7rem", fontSize: "1.4rem"}}>{description}</p>
+            <h3 className={MarketingStyles.FeatureCard__title}>{title}</h3>
+            <p className={MarketingStyles.FeatureCard__text}>{description}</p>
         </section>
     );
 }

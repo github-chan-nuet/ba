@@ -3,8 +3,8 @@ import { useState } from "react";
 import MarketingStyles from "../../styles/Marketing.module.scss";
 import AuthDrawer from "../../components/AuthDrawer";
 import { Body1Stronger, ToggleButton } from "@fluentui/react-components";
-import { Outlet } from "react-router";
 import logo from '../../assets/images/securaware.png';
+import Home from ".";
 
 export default function MarketingLayout() {
   const [isAuthDrawerOpen, setIsAuthDrawerOpen] = useState(false);
@@ -38,7 +38,7 @@ export default function MarketingLayout() {
             Login
           </ToggleButton>
         </header>
-        <Outlet />
+        <Home setAuthOpen={() => setIsAuthDrawerOpen(!isAuthDrawerOpen)} />
       </div>
     </div>
   )
