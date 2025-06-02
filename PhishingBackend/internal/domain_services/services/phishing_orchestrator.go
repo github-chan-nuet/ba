@@ -2,7 +2,6 @@ package services
 
 import (
 	"math/rand"
-	"phishing_backend/internal/domain_services/interfaces/email"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"time"
 )
@@ -14,7 +13,6 @@ type PhishingOrchestrator interface {
 }
 
 type PhishingOrchestratorImpl struct {
-	EmailSender                  email.EmailSender
 	UserRepository               repositories.UserRepository
 	PhishingSimulationRepository repositories.PhishingSimulationRepository
 	PhishingRunService           PhishingRunService

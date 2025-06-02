@@ -1,6 +1,9 @@
 package services
 
-import "phishing_backend/internal/domain_model"
+import (
+	"phishing_backend/internal/domain_model"
+	"phishing_backend/internal/domain_services/interfaces/email"
+)
 
 var _ PhishingRunService = (*PhishingRunServiceImpl)(nil)
 
@@ -9,8 +12,10 @@ type PhishingRunService interface {
 }
 
 type PhishingRunServiceImpl struct {
+	EmailSender email.EmailSender
 }
 
 func (s *PhishingRunServiceImpl) GenerateRun(*domain_model.User) error {
+
 	return nil
 }

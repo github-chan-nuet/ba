@@ -13,10 +13,11 @@ func main() {
 	emailSender := communication.EmailSenderImpl{}
 	userRepository := persistence.UserRepositoryImpl{}
 	phishingSimulationRepository := persistence.PhishingSimulationRepositoryImpl{}
-	phishingRunService := services.PhishingRunServiceImpl{}
+	phishingRunService := services.PhishingRunServiceImpl{
+		EmailSender: &emailSender,
+	}
 
 	phishingOrchestrator := services.PhishingOrchestratorImpl{
-		EmailSender:                  &emailSender,
 		UserRepository:               &userRepository,
 		PhishingSimulationRepository: &phishingSimulationRepository,
 		PhishingRunService:           &phishingRunService,
