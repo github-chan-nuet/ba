@@ -16,7 +16,11 @@ type PhishingSimulationRepositoryImpl struct {
 }
 
 func (r *PhishingSimulationRepositoryImpl) Create(run *domain_model.PhishingSimulationRun) error {
-	return nil
+	result := db.Create(run)
+	if result.Error != nil {
+		slog.Error("Could not save phishing simulation run")
+	}
+	return result.Error
 }
 
 func (r *PhishingSimulationRepositoryImpl) Update(run *domain_model.PhishingSimulationRun) error {
