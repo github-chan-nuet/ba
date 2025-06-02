@@ -1,8 +1,8 @@
-import { Button, Checkbox, Divider, Drawer, DrawerBody, DrawerHeader, DrawerHeaderTitle, Field, Input, Spinner } from "@fluentui/react-components";
+import { Button, Checkbox, Divider, Drawer, DrawerBody, DrawerHeader, DrawerHeaderTitle, Field, Input, Spinner, Toast, ToastBody, ToastTitle } from "@fluentui/react-components";
 import { Dismiss24Regular } from "@fluentui/react-icons";
 import useAuth from "../utils/auth/useAuth";
-import { updateUser } from "../api";
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useToaster } from "../utils/toaster/useToaster";
 
 type ProfileDrawerProps = {
   isOpen: boolean;
@@ -10,19 +10,24 @@ type ProfileDrawerProps = {
 };
 
 export default function ProfileDrawer({ isOpen, setIsOpen }: ProfileDrawerProps) {
-  const { user, token } = useAuth();
+  const { user, updateUser } = useAuth();
+  const { dispatchToast } = useToaster();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showSpinner, setShowSpinner] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     firstname: user?.firstname,
     lastname: user?.lastname, 
     email: user?.email,
-    password: ""
+    password: "",
+    participatesInPhishingSimulation: user?.participatesInPhishingSimulation
   });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, checked, type, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
   }
 
   const handleSave = async (event: FormEvent) => {
@@ -33,22 +38,30 @@ export default function ProfileDrawer({ isOpen, setIsOpen }: ProfileDrawerProps)
     setIsLoading(true);
     const spinnerTimeout = setTimeout(() => {
       setShowSpinner(true);
-    }, 500);
+    }, 250);
 
-    const { error } = await updateUser({
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      path: {
-        userId: user.id
-      },
-      body: {
-        firstname: formData.firstname
-      }
-    });
-    if (error) {
-      console.error("Failed to update user", error);
-    } 
+    try {
+      await updateUser({
+        firstname: formData.firstname,
+        lastname: formData.lastname,
+        participatesInPhishingSimulation: formData.participatesInPhishingSimulation
+      });
+      dispatchToast(
+        <Toast>
+          <ToastTitle>Profil-Einstellungen gespeichert!</ToastTitle>
+        </Toast>,
+        { intent: "success" }
+      )
+    } catch (e) {
+      dispatchToast(
+        <Toast>
+          <ToastTitle>Es ist ein Fehler aufgetreten!</ToastTitle>
+          <ToastBody>Bitte versuchen Sie es später erneut.</ToastBody>
+        </Toast>,
+        { intent: "error" }
+      );
+      console.error(e);
+    }
 
     clearTimeout(spinnerTimeout);
     setShowSpinner(false);
@@ -92,10 +105,16 @@ export default function ProfileDrawer({ isOpen, setIsOpen }: ProfileDrawerProps)
             <Input name="lastname" type="text" value={formData.lastname} onChange={handleChange} />
           </Field>
           <Field label="E-Mail">
-            <Input name="email" type="email" value={formData.email} onChange={handleChange} />
+            <Input name="email" type="email" value={formData.email} disabled={true} />
           </Field>
           <Divider />
-          <Checkbox name="phishing-simulation" type="checkbox" label="Ich möchte von der automatisieren Phishing Simulation profitieren." />
+          <Checkbox
+            name="participatesInPhishingSimulation"
+            type="checkbox"
+            defaultChecked={formData.participatesInPhishingSimulation}
+            onChange={handleChange}
+            label="Ich möchte von der automatisieren Phishing Simulation profitieren."
+          />
 
           <div
             style={{

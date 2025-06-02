@@ -4,8 +4,21 @@ import lines from '../../assets/images/lines.svg';
 import { FoodFish24Filled, Mail48Filled, Pen48Filled, ShieldTask28Filled, Trophy28Filled } from "@fluentui/react-icons";
 import React, {useRef, useEffect, useState, type ReactElement} from 'react';
 import {Chart, CategoryScale, LinearScale, BarElement, type ChartOptions,} from 'chart.js';
-
 import { Bar } from 'react-chartjs-2';
+
+export function meta() {
+    return [
+        { title: 'Securaware - Phishing erkennen und sicher im Netz unterwegs sein' },
+        {
+            name: 'description',
+            content: 'Securaware hilft dir, Phishing-Angriffe zu erkennen und sicher im Internet zu surfen. Lerne, wie du dich vor Betrug und Datendiebstahl schützt - einfach, effektiv und verständlich.'
+        },
+        {
+            name: 'keywords',
+            content: 'Phishing, Phishing erkennen, Online Sicherheit, Internet Schutz, Betrug verhindern, Cybersecurity für Privatpersonen, Securaware, Phishing Schutz, sicher im Netz, Online Betrug'
+        }
+    ]
+}
 
 type HomeProps = {setAuthOpen: () => void};
 export default function Home({setAuthOpen}: HomeProps) {

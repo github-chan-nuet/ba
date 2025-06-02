@@ -92,26 +92,21 @@ func TestCanRetrieveCompletedExam(t *testing.T) {
 	json.NewDecoder(resp.Body).Decode(&compExam)
 	wantCompletedAt := time.Now().UTC().Truncate(24 * time.Hour)
 	assert.Equal(t, wantCompletedAt, compExam.CompletedAt.Time)
-	wantCompQs := make([]api.CompletedQuestion, len(exam.Questions))
-	i, j := 0, 0
-	if compExam.Questions[0].Id != exam.Questions[0].ID {
-		i = 1
-	}
-	wantCompQs[0] = api.CompletedQuestion{
-		Answers:     *toAnswerWithCorrections(&exam.Questions[i].Answers),
-		Id:          exam.Questions[i].ID,
-		Question:    exam.Questions[i].Question,
-		Type:        getQuestionType(&exam.Questions[i]),
-		UserAnswers: exComp[j].Answers,
-	}
-	i = (i + 1) % 2
-	j++
-	wantCompQs[1] = api.CompletedQuestion{
-		Answers:     *toAnswerWithCorrections(&exam.Questions[i].Answers),
-		Id:          exam.Questions[i].ID,
-		Question:    exam.Questions[i].Question,
-		Type:        getQuestionType(&exam.Questions[i]),
-		UserAnswers: exComp[j].Answers,
+	wantCompQs := [...]api.CompletedQuestion{
+		{
+			Answers:     *toAnswerWithCorrections(&exam.Questions[0].Answers),
+			Id:          exam.Questions[0].ID,
+			Question:    exam.Questions[0].Question,
+			Type:        getQuestionType(&exam.Questions[0]),
+			UserAnswers: exComp[0].Answers,
+		},
+		{
+			Answers:     *toAnswerWithCorrections(&exam.Questions[1].Answers),
+			Id:          exam.Questions[1].ID,
+			Question:    exam.Questions[1].Question,
+			Type:        getQuestionType(&exam.Questions[1]),
+			UserAnswers: exComp[1].Answers,
+		},
 	}
 	assert.ElementsMatch(t, wantCompQs, compExam.Questions)
 }

@@ -16,6 +16,15 @@ type User struct {
 	ParticipatesInPhishingSimulation bool
 }
 
+type UserPatch struct {
+	ID                               uuid.UUID
+	Email                            *string
+	Firstname                        *string
+	Lastname                         *string
+	Password                         *[]byte
+	ParticipatesInPhishingSimulation *bool
+}
+
 type UserPatchDto struct {
 	Email                            *string
 	Firstname                        *string

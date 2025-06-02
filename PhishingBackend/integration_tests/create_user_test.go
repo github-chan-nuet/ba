@@ -55,7 +55,7 @@ func TestNewUserCanBeCreatedWithParticipationInPhishingSimulation(t *testing.T) 
 	req, _ := http.NewRequest(http.MethodPost, ts.URL+"/api/users", bytes.NewReader(marshal))
 
 	// when
-	resp, error := http.DefaultClient.Do(req)
+	resp, err := http.DefaultClient.Do(req)
 
 	// then
 	assert.NoError(t, err)
@@ -68,7 +68,7 @@ func TestNewUserCanBeCreatedWithParticipationInPhishingSimulation(t *testing.T) 
 	assert.Equal(t, reqBody.Lastname, user.Lastname)
 	expectedPw := services.HashPassword(reqBody.Password)
 	assert.Equal(t, expectedPw, user.Password)
-	assert.Equal(t, reqBody.ParticipatesInPhishingSimulation, user.ParticipatesInPhishingSimulation)
+	assert.Equal(t, *reqBody.ParticipatesInPhishingSimulation, user.ParticipatesInPhishingSimulation)
 }
 
 func TestNewUserCantHaveSameEmail(t *testing.T) {
@@ -101,4 +101,8 @@ func TestNewUserCantHaveSameEmail(t *testing.T) {
 		Status: 422,
 	}
 	assert.Equal(t, want, gotProb)
+}
+
+func BoolPtr(b bool) *bool {
+	return &b
 }

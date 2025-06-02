@@ -2,11 +2,25 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import useAuth from "../../../utils/auth/useAuth";
 import { getCourses, type CourseRecord } from "../../../data/courses";
-import { Body1, Button, Card, CardFooter, CardHeader, ProgressBar, Subtitle2Stronger } from "@fluentui/react-components";
+import { Body1, Button, Card, CardFooter, CardHeader, ProgressBar, Subtitle1 } from "@fluentui/react-components";
 import { ArrowRight20Regular, Rocket20Regular } from "@fluentui/react-icons";
 
 import type { Route } from "./+types";
 import { getAllLessonCompletionsOfUser, type CourseCompletion } from "../../../api";
+
+export function meta() {
+  return [
+    { title: 'Securaware - Online-Kurse' },
+    {
+      name: 'description',
+      content: 'Finde den passenden Kurs, um Phishing zu erkennen und dich online zu schützen. Lerne in deinem Tempo und werde Schritt für Schritt sicherer im Netz.'
+    },
+    {
+      name: 'keywords',
+      content: 'Phishing Kurse, Online Sicherheit lernen, Securaware, Betrug erkennen, Cybersecurity Training, Phishing Schulung, Internetbetrug, Selbstschutz online, Kursübersicht'
+    }
+  ]
+}
 
 export async function clientLoader() {
   const courses = await getCourses();
@@ -21,11 +35,7 @@ export default function Courses({ loaderData }: Route.ComponentProps) {
   useEffect(() => {
     const fetchCompletions = async () => {
       try {
-        const result = await getAllLessonCompletionsOfUser({
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+        const result = await getAllLessonCompletionsOfUser();
         if (result.response.status === 200 && result.data) {
           setCompletions(() => result.data);
         }
@@ -77,10 +87,10 @@ function CourseCard({
     <Card size="large">
       <CardHeader
         style={{
-          flexGrow: 1,
+          marginBottom: 'auto',
           gridAutoRows: 'min-content auto'
         }}
-        header={<Subtitle2Stronger>{course.label}</Subtitle2Stronger>}
+        header={<Subtitle1>{course.label}</Subtitle1>}
         description={<Body1>{course.description}</Body1>}
       />
       <div className="card-revert-padding">

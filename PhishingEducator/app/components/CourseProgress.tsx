@@ -37,7 +37,13 @@ export default function CourseProgress({ lessons, currentLesson, completedLesson
                   backgroundColor: "black"
                 }}></div> }
             </div>
-            <div>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                marginBottom: '.75rem'
+              }}
+            >
               <Body2>{lesson.label}</Body2>
               <Body1>{lesson.description}</Body1>
             </div>

@@ -32,9 +32,3 @@ http:
       loadBalancer:
         servers:
           - url: "http://phishing_educator:80"
-
-  middlewares:
-    traefik-auth:
-      basicAuth:
-        users:
-          - "mib:$apr1$8Bm2OTIW$VNSGdjh2wfNmgMMbnKLw60"

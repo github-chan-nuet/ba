@@ -1,8 +1,9 @@
-import { Button, Field, Input, Toast, ToastTitle } from "@fluentui/react-components";
+import { Button, Field, Input } from "@fluentui/react-components";
 import { createUser } from "../api";
 import useAuth from "../utils/auth/useAuth";
 import { useToaster } from "../utils/toaster/useToaster";
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import ErrorToast from "./ErrorToast";
 
 export default function RegisterForm() {
   const { dispatchToast } = useToaster();
@@ -18,16 +19,22 @@ export default function RegisterForm() {
     event.preventDefault();
     const { error } = await createUser({ body: formData });
     if (error) {
-      if (error.title) {
-        dispatchToast(
-          <Toast>
-            <ToastTitle>{error.title}</ToastTitle>
-          </Toast>
-        )
-      }
+      dispatchToast(
+        <ErrorToast error={error} />,
+        { intent: "error" }
+      );
+      console.error(error);
       return;
     }
-    onLogin(formData.email, formData.password);
+    try {
+      await onLogin(formData.email, formData.password);
+    } catch (e) {
+      dispatchToast(
+        <ErrorToast error={e} />,
+        { intent: "error" }
+      );
+      console.error(e);
+    }
   }
 
   return (

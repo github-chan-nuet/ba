@@ -1,16 +1,79 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { useToaster } from "../toaster/useToaster";
 import useLocalStorage from "../storage/useLocalStorage";
-import { Toast, ToastTitle } from "@fluentui/react-components";
 import AuthContext from "./AuthContext";
-import { getUser, loginAndReturnJwtToken, type User } from "../../api";
+import { getUser, loginAndReturnJwtToken, updateUser as patchUser, type User, type UserPatchModel } from "../../api";
+import { client } from "../../api/client.gen";
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { dispatchToast } = useToaster();
   const navigate = useNavigate();
   const [token, setToken] = useLocalStorage('login-token', null);
   const [user, setUser] = useState<(User & { totalXpForNextLevel: number; id?: string | undefined; } ) | null>(null);
+
+  const refreshUser = useCallback(async () => {
+    if (!token) return;
+
+    try {
+      const userId = parseJwt(token).id;
+
+      const { data } = await getUser({
+        path: {
+          userId
+        }
+      });
+
+      if (!data) throw new Error('Kein Profil gefunden');
+      setUser({
+        ...data,
+        totalXpForNextLevel: calculateTotalXpForNextLevel(data.level ?? 0),
+        id: userId
+      });
+    } catch (e) {
+      setToken(null);
+      setUser(null);
+      console.error(e);
+    }
+  }, [setToken, token]);
+
+  useEffect(() => {
+    client.setConfig({
+      auth: token
+    });
+    if (token) void refreshUser();
+  }, [token, refreshUser]);
+
+  const login = async (email: string, password: string) => {
+    const { data, error } = await loginAndReturnJwtToken({ body: { email, password } });
+    if (error) {
+      throw error;
+    }
+    if (data) {
+      setToken(data);
+      navigate("/dashboard");
+    }
+  };
+
+  const logout = () => {
+    setToken(null);
+    setUser(null);
+    navigate("/");
+  }
+
+
+  const updateUser = async (userPatch: UserPatchModel) => {
+    if (!token) return;
+
+    const userId = parseJwt(token).id;
+
+    const { error } = await patchUser({
+      path: {
+        userId
+      },
+      body: userPatch
+    });
+    if (error) throw error;
+    await refreshUser();
+  }
 
   const addExperienceGain = (xpGain: number, newLevel: number|undefined) => {
     setUser(prev => {
@@ -28,73 +91,16 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
   };
 
   const calculateTotalXpForNextLevel = (currentLevel: number) => {
-    return 200 * ((1.5 ** currentLevel) - 1);
-  }
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      if (!token) {
-        setUser(null);
-        return;
-      }
-
-      try {
-        const userId = parseJwt(token).id;
-        const response = await getUser({
-          path: {
-            userId,
-          },
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        if (response.data) {
-          setUser({
-            ...response.data,
-            totalXpForNextLevel: calculateTotalXpForNextLevel(response.data.level ?? 0),
-            id: userId
-          });
-        }
-      } catch (e) {
-        console.error("Failed to load user profile", e);
-        setUser(null);
-        dispatchToast(
-          <Toast>
-            <ToastTitle>Failed to load user profile</ToastTitle>
-          </Toast>
-        );
-      }
-    };
-
-    fetchUser();
-  }, [token, dispatchToast]);
-
-  const handleLogin = async (email: string, password: string) => {
-    const { data, error } = await loginAndReturnJwtToken({ body: { email, password } });
-    if (!error) {
-      setToken(data);
-      navigate("/dashboard");
-    } else if (error.title) {
-      dispatchToast(
-        <Toast>
-          <ToastTitle>{error.title}</ToastTitle>
-        </Toast>
-      );
-    }
-  };
-
-  const handleLogout = () => {
-    setToken(null);
-    setUser(null);
-    navigate("/");
+    return Math.ceil(200 * ((1.5 ** currentLevel) - 1));
   }
 
   const value = {
     token,
     user,
+    updateUser,
     onExperienceGain: addExperienceGain,
-    onLogin: handleLogin,
-    onLogout: handleLogout
+    onLogin: login,
+    onLogout: logout
   };
 
   return (

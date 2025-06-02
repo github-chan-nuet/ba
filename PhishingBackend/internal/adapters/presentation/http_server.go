@@ -9,6 +9,7 @@ import (
 	"phishing_backend/internal/adapters/presentation/error_handling"
 	"phishing_backend/internal/domain_services/services"
 	"runtime"
+	"strings"
 )
 
 func SetupHttpServer() {
@@ -49,6 +50,7 @@ func NewSecurawareServeMux() *http.ServeMux {
 		UserService: &services.UserServiceImpl{
 			UserRepository: &userRepository,
 		},
+		UserRepo:          &userRepository,
 		ExperienceService: &expService,
 	}
 	lessonCompletionController := controllers.LessonCompletionController{
@@ -66,47 +68,83 @@ func NewSecurawareServeMux() *http.ServeMux {
 		ExamCompletionService: &examCompService,
 	}
 
-	sMux := http.NewServeMux()
+	routes := NewSmuxCreator()
 
 	// health
-	sMux.HandleFunc("GET /api/health", controllers.GetHealth)
+	routes.Add("/api/health", http.MethodGet, controllers.GetHealth)
 
 	// lesson completions
-	sMux.HandleFunc("OPTIONS /api/courses/{courseId}/completions", handleOptions)
-	sMux.HandleFunc("GET /api/courses/{courseId}/completions", lessonCompletionController.GetLessonCompletionsOfCourseAndUser)
-	sMux.HandleFunc("POST /api/courses/{courseId}/completions", lessonCompletionController.CreateLessonCompletion)
+	routes.Add("/api/courses/{courseId}/completions", http.MethodGet, lessonCompletionController.GetLessonCompletionsOfCourseAndUser)
+	routes.Add("/api/courses/{courseId}/completions", http.MethodPost, lessonCompletionController.CreateLessonCompletion)
 
-	sMux.HandleFunc("OPTIONS /api/courses/completions", handleOptions)
-	sMux.HandleFunc("GET /api/courses/completions", lessonCompletionController.GetAllLessonCompletionsOfUser)
+	routes.Add("/api/courses/completions", http.MethodGet, lessonCompletionController.GetAllLessonCompletionsOfUser)
 
 	// users
-	sMux.HandleFunc("OPTIONS /api/users", handleOptions)
-	sMux.HandleFunc("POST /api/users", userController.CreateUser)
+	routes.Add("/api/users", http.MethodPost, userController.CreateUser)
 
-	sMux.HandleFunc("OPTIONS /api/users/login", handleOptions)
-	sMux.HandleFunc("POST /api/users/login", userController.LoginAndReturnJwtToken)
+	routes.Add("/api/users/login", http.MethodPost, userController.LoginAndReturnJwtToken)
 
-	sMux.HandleFunc("OPTIONS /api/users/{userId}", handleOptions)
-	sMux.HandleFunc("GET /api/users/{userId}", userController.GetUser)
-	sMux.HandleFunc("PATCH /api/users/{userId}", userController.UpdateUser)
+	routes.Add("/api/users/{userId}", http.MethodGet, userController.GetUser)
+	routes.Add("/api/users/{userId}", http.MethodPatch, userController.UpdateUser)
 
 	// exams
-	sMux.HandleFunc("OPTIONS /api/exams", handleOptions)
-	sMux.HandleFunc("GET /api/exams", examController.GetExamIds)
+	routes.Add("/api/exams", http.MethodGet, examController.GetExams)
 
-	sMux.HandleFunc("OPTIONS /api/exams/{examId}", handleOptions)
-	sMux.HandleFunc("GET /api/exams/{examId}", examController.GetExam)
+	routes.Add("/api/exams/{examId}", http.MethodGet, examController.GetExam)
 
-	sMux.HandleFunc("OPTIONS /api/exams/{examId}/completions", handleOptions)
-	sMux.HandleFunc("POST /api/exams/{examId}/completions", examController.CompleteExam)
-	sMux.HandleFunc("GET /api/exams/{examId}/completions", examController.GetCompletedExam)
-	return sMux
+	routes.Add("/api/exams/{examId}/completions", http.MethodGet, examController.GetCompletedExam)
+	routes.Add("/api/exams/{examId}/completions", http.MethodPost, examController.CompleteExam)
+	return routes.BuildWithOptionEndpoints()
 }
 
-func handleOptions(w http.ResponseWriter, _ *http.Request) {
-	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, PATCH, DELETE")
-	w.Header().Set("Access-Control-Max-Age", "86400")
-	w.WriteHeader(http.StatusOK)
+type SmuxCreator struct {
+	// map of paths of methods -> handlers
+	endpoints map[string]map[string]http.HandlerFunc
+}
+
+func NewSmuxCreator() *SmuxCreator {
+	return &SmuxCreator{
+		endpoints: make(map[string]map[string]http.HandlerFunc),
+	}
+}
+
+func (m *SmuxCreator) Add(path, method string, handler http.HandlerFunc) {
+	if _, exists := m.endpoints[path]; !exists {
+		m.endpoints[path] = make(map[string]http.HandlerFunc)
+	}
+	m.endpoints[path][method] = handler
+}
+
+func (m *SmuxCreator) addOptionsEndpoints() {
+	for path, methodMap := range m.endpoints {
+		allowedMethods := make([]string, 0, len(methodMap)+2)
+		for method := range methodMap {
+			allowedMethods = append(allowedMethods, method)
+		}
+		allowedMethods = append(allowedMethods, http.MethodOptions, http.MethodHead)
+		m.endpoints[path][http.MethodOptions] = m.createOptionsEndpoint(allowedMethods)
+	}
+}
+
+func (m *SmuxCreator) createOptionsEndpoint(allowedMethods []string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		methods := strings.Join(allowedMethods, ", ")
+		w.Header().Set("Allow", methods)
+		w.Header().Set("Access-Control-Allow-Methods", methods)
+		w.Header().Set("Access-Control-Max-Age", "86400") // one day in seconds
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
+
+func (m *SmuxCreator) BuildWithOptionEndpoints() *http.ServeMux {
+	m.addOptionsEndpoints()
+	sMux := http.NewServeMux()
+	for path, methodMap := range m.endpoints {
+		for method, handler := range methodMap {
+			sMux.HandleFunc(method+" "+path, handler)
+		}
+	}
+	return sMux
 }
 
 var _ http.Handler = (*PanicRecoveryMiddleware)(nil)
@@ -135,8 +173,8 @@ type CorsMiddleware struct {
 }
 
 func (c *CorsMiddleware) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	c.Handler.ServeHTTP(w, r)
 	cors := os.Getenv("PHBA_CORS")
 	w.Header().Set("Access-Control-Allow-Origin", cors)
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+	c.Handler.ServeHTTP(w, r)
 }
