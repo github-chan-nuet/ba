@@ -1,6 +1,8 @@
 package services
 
 import (
+	"log/slog"
+	"math/rand"
 	"time"
 )
 
@@ -10,6 +12,19 @@ func StartCronJob(d time.Duration, fn func(utc time.Time)) {
 	for {
 		now := <-ticker.C
 		fn(now.UTC())
+	}
+}
+
+func StartRandomCronJob(min, max time.Duration, fn func(utc time.Time)) {
+	if max <= min {
+		panic("max must be greater than min")
+	}
+	for {
+		sleepDuration := min + time.Duration(rand.Int63n(int64(max-min)))
+		slog.Info("Sleeping for", "duration", sleepDuration.String())
+		time.Sleep(sleepDuration)
+
+		fn(time.Now().UTC())
 	}
 }
 
