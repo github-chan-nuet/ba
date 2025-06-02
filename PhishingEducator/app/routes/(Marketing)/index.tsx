@@ -31,8 +31,8 @@ export default function Home({setAuthOpen}: HomeProps) {
                 <div>
                     <hr className={MarketingStyles.Line}/>
                 </div>
-                <Display style={{lineHeight: 1.1}}>
-                    Gemeinsam gegen <strong>Phishing und Cyberbetrug</strong>
+                <Display style={{lineHeight: 1.1, fontSize: "2rem"}}>
+                    Gemeinsam gegen <strong>Phishing und Cyberbetrug </strong>
                     für eine <strong>sichere digitale Zukunft</strong>
                 </Display>
             </section>
@@ -42,21 +42,8 @@ export default function Home({setAuthOpen}: HomeProps) {
                 <FeatureGrid />
             </section>
 
-            <section className={MarketingStyles.Section} style={{
-                backgroundColor: "#fff",
-                display: "grid",
-                gridTemplateColumns: "1fr 2fr",
-                gridTemplateRows: "1fr",
-                gap: "2rem",
-                alignContent: "space-around",
-                height: "80vh",
-            }}>
-                <div style={{
-                    textAlign: "center",
-                    display: "flex",
-                    justifyContent: "space-around",
-                    flexDirection: "column",
-                }}>
+            <section className={MarketingStyles.Section + " " + MarketingStyles.PhishingAttacks}>
+                <div className={MarketingStyles.PhishingAttacks__text_container}>
                     <h3 className={MarketingStyles.Section__title}>Phishing-Angriffe <br/> nehmen rasant zu</h3>
                     <p className={MarketingStyles.Section__text}>Phishing-Angriffe kommen immer häufiger vor, dies bestätigt die amerikanische Sicherheitsbehörde FBI.
                         Die Graphik weist die aus Phishing entstandene Schäden in den USA auf. Der Trend ist klar - Phishing-Angriffe häufen sich.</p>
@@ -64,15 +51,7 @@ export default function Home({setAuthOpen}: HomeProps) {
                 <PhishingCostDiagram />
             </section>
 
-            <section className={MarketingStyles.Section} style={{
-                height: "80vh",
-                backgroundColor: "#fff",
-                display: "grid",
-                gridTemplateColumns: "2fr 3fr",
-                gridTemplateRows: "1fr",
-                gap: "2rem",
-                alignContent: "space-around",
-            }}>
+            <section className={MarketingStyles.Section + " " + MarketingStyles.SecurawareSolution}>
                 <div style={{
                     backgroundColor: tokens.colorPaletteBlueBorderActive,
                     backgroundImage: "url(\"" + lines + "\")",
@@ -109,6 +88,12 @@ export default function Home({setAuthOpen}: HomeProps) {
 function FeatureGrid() {
     const gridRef = useRef(null);
     const [isInView, setIsInView] = useState(false);
+
+    useEffect(() => {
+        if (window.matchMedia("(orientation: portrait)").matches) {
+            setIsInView(true);
+        }
+    }, []);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -169,6 +154,11 @@ function PhishingCostDiagram() {
     const chartRef = useRef(null);
     const containerRef = useRef(null);
     const [showChart, setShowChart] = useState(false);
+    const [isPortrait, setIsPortrait] = useState(false);
+
+    useEffect(() => {
+        setIsPortrait(window.matchMedia("(orientation: portrait)").matches)
+    }, []);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -207,7 +197,7 @@ function PhishingCostDiagram() {
                         return tickValue / 1_000_000_000 + ' Mrd. $';
                     },
                     font: {
-                        size: 16,
+                        size: isPortrait ? 12 : 16,
                         family: fontFamily,
                     },
                     color: 'black',
@@ -216,7 +206,7 @@ function PhishingCostDiagram() {
             x: {
                 ticks: {
                     font: {
-                        size: 26,
+                        size: isPortrait ? 14 : 26,
                         family: fontFamily,
                     },
                     color: 'black',
@@ -229,12 +219,6 @@ function PhishingCostDiagram() {
             },
             title: {
                 display: false,
-                text: "Aus Phishing entstandene Schäden in den USA",
-                font: {
-                    size: 30,
-                    family: fontFamily,
-                },
-                color: 'black',
             },
             tooltip: {
                 enabled: false,
@@ -254,7 +238,7 @@ function PhishingCostDiagram() {
             },
         ],
     };
-    return (<div ref={containerRef}>
+    return (<div ref={containerRef} style={{maxWidth: "100%"}}>
                 <Bar ref={chartRef} options={options} data={data}/>
             </div>);
 }

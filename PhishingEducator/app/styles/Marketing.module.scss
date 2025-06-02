@@ -84,15 +84,12 @@
     justify-content: center;
     margin-top: 1.5rem;
     box-shadow: rgba(0, 0, 0, 0.16) 0 0 4px;
-
-    > * {
-      //animation: blendIn 1s cubic-bezier(0.65, 0, 0.35, 1);
-    }
   }
 
   &__title {
     margin-top: 1.3rem;
     font-size: 2rem;
+    text-align: center;
   }
 
   &__text {
@@ -150,4 +147,51 @@
   background-color: black;
   color: black;
   margin-bottom: 4rem;
+}
+
+.SecurawareSolution {
+  height: 80vh;
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  grid-template-rows: 1fr;
+  gap: 2rem;
+  align-content: space-around;
+}
+
+.PhishingAttacks {
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 1fr;
+  gap: 2rem;
+  align-content: space-around;
+  height: 80vh;
+
+  &__text_container {
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+  }
+}
+
+@media (orientation: portrait) {
+  .Section, .FeatureGrid {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .Title {
+    font-size: 4rem;
+  }
+
+  .Line {
+    width: 10rem;
+  }
+
+  .FeatureGrid {
+    margin: 3rem 1rem 1rem 1rem;
+  }
+
 }

@@ -33,3 +33,21 @@ a {
     flex: 1;
   }
 }
+
+@media screen and (max-width: 1680px) {
+  html {
+    font-size: 12pt;
+  }
+}
+
+@media screen and (max-width: 736px) {
+  html {
+    font-size: 9pt;
+  }
+}
+
+@media screen and (max-width: 360px) {
+  html {
+    font-size: 10pt;
+  }
+}
