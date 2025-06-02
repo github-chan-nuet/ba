@@ -1,10 +1,12 @@
-import {Button, Display, tokens} from "@fluentui/react-components";
+import {Body1Stronger, Button, Display, ToggleButton, tokens} from "@fluentui/react-components";
 import MarketingStyles from "../../styles/Marketing.module.scss";
 import lines from '../../assets/images/lines.svg';
 import { FoodFish24Filled, Mail48Filled, Pen48Filled, ShieldTask28Filled, Trophy28Filled } from "@fluentui/react-icons";
 import React, {useRef, useEffect, useState, type ReactElement} from 'react';
 import {Chart, CategoryScale, LinearScale, BarElement, type ChartOptions,} from 'chart.js';
 import { Bar } from 'react-chartjs-2';
+import AuthDrawer from "../../components/AuthDrawer";
+import logo from "../../assets/images/securaware.png";
 
 export function meta() {
     return [
@@ -20,11 +22,45 @@ export function meta() {
     ]
 }
 
+export default function MarketingLayout() {
+    const [isAuthDrawerOpen, setIsAuthDrawerOpen] = useState(false);
+    return (
+        <div className={MarketingStyles.Marketing}>
+            <div className={MarketingStyles.Marketing__container}>
+                <AuthDrawer isOpen={isAuthDrawerOpen} setIsOpen={setIsAuthDrawerOpen} />
+                <header style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginLeft: "1rem",
+                    marginRight: "1rem",
+                    paddingBlock: 24
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        gap: '0.5rem',
+                    }}>
+                        <img src={logo} alt="" width={20} />
+                        <Body1Stronger style={{ fontSize: '1.5rem' }}>
+                            Securaware
+                        </Body1Stronger>
+                    </div>
+                    <ToggleButton
+                        appearance="primary"
+                        onClick={() => setIsAuthDrawerOpen(!isAuthDrawerOpen)}
+                        checked={isAuthDrawerOpen}
+                    >
+                        Login
+                    </ToggleButton>
+                </header>
+                <Home setAuthOpen={() => setIsAuthDrawerOpen(true)} />
+            </div>
+        </div>
+    )
+}
+
 type HomeProps = {setAuthOpen: () => void};
-export default function Home({setAuthOpen}: HomeProps) {
-    useEffect(() => {
-        document.title = 'Securaware';
-    }, []);
+function Home({setAuthOpen}: HomeProps) {
     return (
         <main style={{display: "flex", flexDirection: "column", alignItems: "center", gap: "10rem", paddingBottom: "10rem"}}>
             <section className={MarketingStyles.CircleBackground}>
@@ -88,6 +124,11 @@ export default function Home({setAuthOpen}: HomeProps) {
                             appearance="primary"
                             icon={<ShieldTask28Filled/>}
                             style={{width: "15rem", height: "4rem"}}
+                            // onClick={() => {
+                            //     console.log("hoi");
+                            //     console.log(setAuthOpen);
+                            //     setAuthOpen();
+                            // }}>
                             onClick={setAuthOpen}>
                             Schütze dich jetzt
                         </Button>
