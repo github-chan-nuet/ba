@@ -13,5 +13,6 @@ type UserRepository interface {
 	GetByEmailAndPassword(username string, password []byte) (*domain_model.User, error)
 	CreateUser(user *domain_model.User) error
 	GetUser(userId uuid.UUID) (*domain_model.User, error)
+	GetUsersForPhishingSimulation() ([]domain_model.User, error)
 	UpdateUser(*domain_model.UserPatch) error
 }

@@ -3,14 +3,25 @@ package main
 import (
 	"log/slog"
 	"os"
+	"phishing_backend/internal/adapters/communication"
+	"phishing_backend/internal/adapters/persistence"
 	"phishing_backend/internal/adapters/presentation"
 	"phishing_backend/internal/domain_services/services"
-	"time"
 )
 
 func main() {
-	phishingOrchestrator := services.PhishingOrchestratorImpl{}
-	phishingOrchestrator.StartPhishingJob(2 * time.Minute)
+	emailSender := communication.EmailSenderImpl{}
+	userRepository := persistence.UserRepositoryImpl{}
+	phishingSimulationRepository := persistence.PhishingSimulationRepositoryImpl{}
+	phishingRunService := services.PhishingRunServiceImpl{}
+
+	phishingOrchestrator := services.PhishingOrchestratorImpl{
+		EmailSender:                  &emailSender,
+		UserRepository:               &userRepository,
+		PhishingSimulationRepository: &phishingSimulationRepository,
+		PhishingRunService:           &phishingRunService,
+	}
+	phishingOrchestrator.StartPhishingJob()
 
 	presentation.SetupHttpServer()
 }

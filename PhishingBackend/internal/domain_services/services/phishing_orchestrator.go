@@ -10,21 +10,42 @@ import (
 var _ PhishingOrchestrator = (*PhishingOrchestratorImpl)(nil)
 
 type PhishingOrchestrator interface {
-	StartPhishingJob(days time.Duration)
+	StartPhishingJob()
 }
 
 type PhishingOrchestratorImpl struct {
 	EmailSender                  email.EmailSender
+	UserRepository               repositories.UserRepository
 	PhishingSimulationRepository repositories.PhishingSimulationRepository
+	PhishingRunService           PhishingRunService
 }
 
-func (r *PhishingOrchestratorImpl) StartPhishingJob(days time.Duration) {
-	//d := r.CalculateDuration(days)
-	//r.
+func (p *PhishingOrchestratorImpl) StartPhishingJob() {
+	go StartRandomCronJob(15*time.Minute, 60*time.Minute, p.generatePhishingRuns)
 }
 
-func (r *PhishingOrchestratorImpl) CalculateDuration(days int) time.Duration {
-	randMinutes := rand.Intn(60*24 - 1)
-	duration := time.Duration(int64(days-1))*time.Hour*24 + time.Duration(randMinutes)*time.Minute
-	return duration
+func (p *PhishingOrchestratorImpl) generatePhishingRuns(currentTime time.Time) {
+	users, err := p.UserRepository.GetUsersForPhishingSimulation()
+	if err != nil {
+		return
+	}
+
+	day := 24 * time.Hour
+
+	minPeriod := 2 * day
+	maxPeriod := 10 * day
+	for _, user := range users {
+		periodUntilNextRun := minPeriod + time.Duration(rand.Int63n(int64(maxPeriod-minPeriod)))
+
+		latestRun, err := p.PhishingSimulationRepository.GetLatestRun(user.ID)
+		if err != nil {
+			continue
+		}
+
+		if latestRun == nil ||
+			latestRun.SentAt == nil ||
+			latestRun.SentAt.Add(periodUntilNextRun).UTC().Before(currentTime) {
+			err = p.PhishingRunService.GenerateRun(&user)
+		}
+	}
 }
