@@ -43,5 +43,15 @@ func (r *PhishingSimulationRepositoryImpl) GetLatestRun(userId uuid.UUID) (*doma
 }
 
 func (r *PhishingSimulationRepositoryImpl) GetTemplates() ([]domain_model.PhishingSimulationContentTemplate, error) {
+	var templates []domain_model.PhishingSimulationContentTemplate
+	result := db.Model(&domain_model.PhishingSimulationContentTemplate{}).Find(&templates)
+	if result.Error != nil {
+		slog.Error("Could not fetch phishing simulation templates")
+		return nil, result.Error
+	}
+	return templates, nil
+}
+
+func (r *PhishingSimulationRepositoryImpl) GetUserVulnerabilities(userId uuid.UUID) ([]domain_model.PhishingSimulationUserVulnerability, error) {
 	return nil, nil
 }
