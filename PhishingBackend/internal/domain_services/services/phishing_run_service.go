@@ -4,6 +4,7 @@ import (
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/email"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -43,6 +44,16 @@ func (s *PhishingRunServiceImpl) GenerateRun(user *domain_model.User) error {
 			Subject:   first.Subject,
 		}
 		err = s.EmailSender.Send(&email)
+		if err != nil {
+			return err
+		}
+
+		now := time.Now().UTC()
+		runPatch := domain_model.PhishingSimulationRunPatch{
+			ID:     run.ID,
+			SentAt: &now,
+		}
+		err = s.PhishingSimulationRepository.Update(&runPatch)
 		if err != nil {
 			return err
 		}
