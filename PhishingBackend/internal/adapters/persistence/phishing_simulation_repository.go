@@ -23,7 +23,36 @@ func (r *PhishingSimulationRepositoryImpl) Create(run *domain_model.PhishingSimu
 	return result.Error
 }
 
-func (r *PhishingSimulationRepositoryImpl) Update(run *domain_model.PhishingSimulationRun) error {
+func (r *PhishingSimulationRepositoryImpl) Update(runPatch *domain_model.PhishingSimulationRunPatch) error {
+	var existing domain_model.PhishingSimulationRun
+	if err := db.First(&existing, runPatch.ID).Error; err != nil {
+		return errors.New("Simulation run not found")
+	}
+
+	updates := map[string]interface{}{}
+
+	if runPatch.SentAt != nil {
+		if existing.SentAt != nil {
+			return errors.New("SentAt is already set")
+		}
+		updates["sent_at"] = *runPatch.SentAt
+	}
+
+	if runPatch.OpenedAt != nil {
+		if existing.OpenedAt != nil {
+			return errors.New("OpenedAt is already set")
+		}
+		updates["opened_at"] = *runPatch.OpenedAt
+	}
+
+	if len(updates) > 0 {
+		if err := db.Model(&domain_model.PhishingSimulationRun{}).
+			Where("id = ?", runPatch.ID).
+			Updates(updates).Error; err != nil {
+			slog.Error("Could not update Phishing Simulation run")
+			return err
+		}
+	}
 	return nil
 }
 

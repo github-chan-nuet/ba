@@ -16,3 +16,9 @@ type PhishingSimulationRun struct {
 	SentAt                   *time.Time                                   `gorm:"type:date"`
 	OpenedAt                 *time.Time                                   `gorm:"type:date"`
 }
+
+type PhishingSimulationRunPatch struct {
+	ID       uuid.UUID
+	SentAt   *time.Time
+	OpenedAt *time.Time
+}
