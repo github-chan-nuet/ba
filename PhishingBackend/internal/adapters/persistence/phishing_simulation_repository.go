@@ -84,3 +84,13 @@ func (r *PhishingSimulationRepositoryImpl) GetTemplates() ([]domain_model.Phishi
 func (r *PhishingSimulationRepositoryImpl) GetUserVulnerabilities(userId uuid.UUID) ([]domain_model.PhishingSimulationUserVulnerability, error) {
 	return nil, nil
 }
+
+func (r *PhishingSimulationRepositoryImpl) GetRecognitionFeatures() ([]domain_model.PhishingSimulationRecognitionFeature, error) {
+	var recognitionFeatures []domain_model.PhishingSimulationRecognitionFeature
+	result := db.Model(&domain_model.PhishingSimulationRecognitionFeature{}).Find(&recognitionFeatures)
+	if result.Error != nil {
+		slog.Error("Could not fetch phishing simulation recognition features")
+		return nil, result.Error
+	}
+	return recognitionFeatures, nil
+}

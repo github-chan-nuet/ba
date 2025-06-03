@@ -12,4 +12,5 @@ type PhishingSimulationRepository interface {
 	GetLatestRun(userId uuid.UUID) (*domain_model.PhishingSimulationRun, error)
 	GetTemplates() ([]domain_model.PhishingSimulationContentTemplate, error)
 	GetUserVulnerabilities(userId uuid.UUID) ([]domain_model.PhishingSimulationUserVulnerability, error)
+	GetRecognitionFeatures() ([]domain_model.PhishingSimulationRecognitionFeature, error)
 }
