@@ -44,8 +44,8 @@ CREATE TABLE phishing_simulation_run
   id          uuid NOT NULL,
   user_fk     uuid NOT NULL,
   template_fk uuid NOT NULL,
-  sent_at     date NULL,
-  opened_at   date NULL,
+  sent_at     timestamptz NULL,
+  opened_at   timestamptz NULL,
 
   CONSTRAINT phishing_simulation_run_pkey PRIMARY KEY (id),
   CONSTRAINT fk_phishing_simulation_run_user FOREIGN KEY (user_fk) REFERENCES public.user (id),
@@ -54,12 +54,14 @@ CREATE TABLE phishing_simulation_run
 
 CREATE TABLE phishing_simulation_user_vulnerability
 (
-  id uuid NOT NULL,
-  score float NOT NULL,
-  content_category_fk uuid NOT NULL,
+  id                     uuid NOT NULL,
+  user_fk                uuid NOT NULL,
+  score                  float NOT NULL,
+  content_category_fk    uuid NOT NULL,
   recognition_feature_fk uuid NOT NULL,
 
   CONSTRAINT phishing_simulation_user_vulnerability_pkey PRIMARY KEY (id),
+  CONSTRAINT fk_phishing_simulation_user_vulnerability_user FOREIGN KEY (user_fk) REFERENCES public.user (id),
   CONSTRAINT fk_phishing_simulation_user_vulnerability_content_category FOREIGN KEY (content_category_fk) REFERENCES public.phishing_simulation_content_category (id),
   CONSTRAINT fk_phishing_simulation_user_vulnerability_recognition_feature FOREIGN KEY (recognition_feature_fk) REFERENCES public.phishing_simulation_recognition_feature (id)
 );
