@@ -10,11 +10,22 @@ import (
 )
 
 func main() {
-	emailSender := communication.EmailSenderImpl{}
+	smtpUser := os.Getenv("PHBA_SMTP_USER")
+	smtpPw := os.Getenv("PHBA_SMTP_PASSWORD")
+	smtpAddr := os.Getenv("PHBA_SMTP_ADDR")
+	smtpHost := os.Getenv("PHBA_SMTP_HOST")
+
+	emailSender := communication.EmailSenderImpl{
+		SmtpUser: smtpUser,
+		SmtpPw:   smtpPw,
+		SmtpAddr: smtpAddr,
+		SmtpHost: smtpHost,
+	}
 	userRepository := persistence.UserRepositoryImpl{}
 	phishingSimulationRepository := persistence.PhishingSimulationRepositoryImpl{}
 	phishingRunService := services.PhishingRunServiceImpl{
-		EmailSender: &emailSender,
+		EmailSender:                  &emailSender,
+		PhishingSimulationRepository: &phishingSimulationRepository,
 	}
 
 	phishingOrchestrator := services.PhishingOrchestratorImpl{
