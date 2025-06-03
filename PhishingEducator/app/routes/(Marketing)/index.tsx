@@ -124,11 +124,6 @@ function Home({setAuthOpen}: HomeProps) {
                             appearance="primary"
                             icon={<ShieldTask28Filled/>}
                             style={{width: "15rem", height: "4rem"}}
-                            // onClick={() => {
-                            //     console.log("hoi");
-                            //     console.log(setAuthOpen);
-                            //     setAuthOpen();
-                            // }}>
                             onClick={setAuthOpen}>
                             Schütze dich jetzt
                         </Button>
@@ -293,7 +288,7 @@ function PhishingCostDiagram() {
         ],
     };
     return (<div ref={containerRef} style={{maxWidth: "100%"}}>
-                <Bar ref={chartRef} options={options} data={data}/>
+                <Bar ref={chartRef} options={options} data={data} style={{ width: "100%", height: "100%" }}/>
             </div>);
 }
 
