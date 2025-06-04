@@ -8,9 +8,10 @@ CREATE TABLE phishing_simulation_content_category
 
 CREATE TABLE phishing_simulation_recognition_feature
 (
-  id               uuid NOT NULL,
-  "name"           text NOT NULL,
-  user_instruction text NULL,
+  id                   uuid NOT NULL,
+  "name"               text NOT NULL,
+  is_always_applicable bool NOT NULL,
+  user_instruction     text NULL,
 
   CONSTRAINT phishing_simulation_recognition_feature_pkey PRIMARY KEY (id)
 );
@@ -44,6 +45,10 @@ CREATE TABLE phishing_simulation_run
   id          uuid NOT NULL,
   user_fk     uuid NOT NULL,
   template_fk uuid NOT NULL,
+  sender_addr text NOT NULL,
+  sender_name text NOT NULL,
+  "subject"   text NOT NULL,
+  content     text NOT NULL,
   sent_at     timestamptz NULL,
   opened_at   timestamptz NULL,
 
