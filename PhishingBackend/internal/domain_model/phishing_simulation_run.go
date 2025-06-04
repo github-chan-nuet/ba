@@ -12,7 +12,7 @@ type PhishingSimulationRun struct {
 	User                     *User `gorm:"foreignKey:UserFk"`
 	TemplateFk               uuid.UUID
 	Template                 *PhishingSimulationContentTemplate           `gorm:"foreignKey:TemplateFk"`
-	RecognitionFeatureValues []*PhishingSimulationRecognitionFeatureValue `gorm:"many2many:phishing_simulation_run_recognition_feature_values;"`
+	RecognitionFeatureValues []*PhishingSimulationRecognitionFeatureValue `gorm:"many2many:phishing_simulation_run_recognition_feature_value;"`
 	SenderAddr               string
 	SenderName               string
 	Subject                  string

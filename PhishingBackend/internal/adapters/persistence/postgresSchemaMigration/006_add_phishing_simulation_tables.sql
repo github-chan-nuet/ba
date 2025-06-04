@@ -70,3 +70,12 @@ CREATE TABLE phishing_simulation_user_vulnerability
   CONSTRAINT fk_phishing_simulation_user_vulnerability_content_category FOREIGN KEY (content_category_fk) REFERENCES public.phishing_simulation_content_category (id),
   CONSTRAINT fk_phishing_simulation_user_vulnerability_recognition_feature FOREIGN KEY (recognition_feature_fk) REFERENCES public.phishing_simulation_recognition_feature (id)
 );
+
+CREATE TABLE phishing_simulation_run_recognition_feature_value
+(
+  recognition_feature_id      uuid NOT NULL,
+  phishing_simulation_run_id  uuid NOT NULL,
+
+  CONSTRAINT fk_phishing_simulation_run_recognition_feature_value_recognition_feature FOREIGN KEY (recognition_feature_id) REFERENCES public.phishing_simulation_recognition_feature (id),
+  CONSTRAINT fk_phishing_simulation_run_recognition_feature_value_run FOREIGN KEY (phishing_simulation_run_id) REFERENCES public.phishing_simulation_run (id)
+);
