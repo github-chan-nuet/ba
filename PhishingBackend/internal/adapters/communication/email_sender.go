@@ -1,6 +1,9 @@
 package communication
 
 import (
+	"bytes"
+	"mime"
+	"mime/quotedprintable"
 	"net/smtp"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/email"
@@ -24,17 +27,27 @@ type EmailSenderImpl struct {
 
 // https://zetcode.com/golang/email-smtp/
 func (e *EmailSenderImpl) Send(email *domain_model.Email) error {
+	var msg bytes.Buffer
+
 	from := "info@securaware.ch"
 	to := []string{email.Recipient}
 
-	msg := []byte(
-		"From: " + from + newLine +
-			"To: " + email.Recipient + newLine +
-			"Subject: " + email.Subject + newLine + newLine +
-			email.Content + newLine)
+	encodedSubject := mime.QEncoding.Encode("utf-8", email.Subject)
+
+	msg.WriteString("From: " + from + newLine)
+	msg.WriteString("To: " + email.Recipient + newLine)
+	msg.WriteString("Subject: " + encodedSubject + newLine)
+	msg.WriteString("MIME-Version: 1.0" + newLine)
+	msg.WriteString("Content-Type: text/html; charset=utf-8" + newLine)
+	msg.WriteString("Content-Transfer-Encoding: quoted-printable" + newLine)
+	msg.WriteString(newLine)
+
+	qpWriter := quotedprintable.NewWriter(&msg)
+	qpWriter.Write([]byte(email.Content))
+	qpWriter.Close()
 
 	auth := smtp.PlainAuth("", e.SmtpUser, e.SmtpPw, e.SmtpHost)
 
-	err := smtp.SendMail(e.SmtpAddr, auth, from, to, msg)
+	err := smtp.SendMail(e.SmtpAddr, auth, from, to, msg.Bytes())
 	return err
 }
