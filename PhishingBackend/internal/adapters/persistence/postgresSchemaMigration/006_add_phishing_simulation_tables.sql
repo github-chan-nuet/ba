@@ -45,10 +45,6 @@ CREATE TABLE phishing_simulation_run
   id          uuid NOT NULL,
   user_fk     uuid NOT NULL,
   template_fk uuid NOT NULL,
-  sender_addr text NOT NULL,
-  sender_name text NOT NULL,
-  "subject"   text NOT NULL,
-  content     text NOT NULL,
   sent_at     timestamptz NULL,
   opened_at   timestamptz NULL,
 
