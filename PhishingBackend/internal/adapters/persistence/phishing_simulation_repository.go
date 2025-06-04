@@ -59,6 +59,8 @@ func (r *PhishingSimulationRepositoryImpl) Update(runPatch *domain_model.Phishin
 func (r *PhishingSimulationRepositoryImpl) GetLatestRun(userId uuid.UUID) (*domain_model.PhishingSimulationRun, error) {
 	var latestRun domain_model.PhishingSimulationRun
 	result := db.Model(&domain_model.PhishingSimulationRun{}).
+		Preload("Template").
+		Preload("RecognitionFeatureValues").
 		Where("user_fk = ?", userId).
 		First(&latestRun)
 	if result.Error != nil {
@@ -73,7 +75,9 @@ func (r *PhishingSimulationRepositoryImpl) GetLatestRun(userId uuid.UUID) (*doma
 
 func (r *PhishingSimulationRepositoryImpl) GetTemplates() ([]domain_model.PhishingSimulationContentTemplate, error) {
 	var templates []domain_model.PhishingSimulationContentTemplate
-	result := db.Model(&domain_model.PhishingSimulationContentTemplate{}).Find(&templates)
+	result := db.Model(&domain_model.PhishingSimulationContentTemplate{}).
+		Preload("ContentCategory").
+		Find(&templates)
 	if result.Error != nil {
 		slog.Error("Could not fetch phishing simulation templates")
 		return nil, result.Error
@@ -84,6 +88,8 @@ func (r *PhishingSimulationRepositoryImpl) GetTemplates() ([]domain_model.Phishi
 func (r *PhishingSimulationRepositoryImpl) GetUserVulnerabilities(userId uuid.UUID) ([]domain_model.PhishingSimulationUserVulnerability, error) {
 	var vulnerabilities []domain_model.PhishingSimulationUserVulnerability
 	result := db.Model(&domain_model.PhishingSimulationUserVulnerability{}).
+		Preload("ContentCategory").
+		Preload("RecognitionFeature").
 		Where("user_fk = ?", userId).
 		Find(&vulnerabilities)
 	if result.Error != nil {
