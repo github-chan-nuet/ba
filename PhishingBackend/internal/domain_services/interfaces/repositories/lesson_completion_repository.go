@@ -13,4 +13,5 @@ type LessonCompletionRepository interface {
 	CountForUser(userId uuid.UUID) (int, error)
 	GetAllCompletedLessonsInAllCourses(userId uuid.UUID) ([]domain_model.LessonCompletion, error)
 	GetLessonCompletionsOfCourseAndUser(userId, courseId uuid.UUID) ([]domain_model.LessonCompletion, error)
+	GetLatestLessonCompletions() (*[]domain_model.LastLessonCompletion, error)
 }

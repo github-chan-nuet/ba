@@ -16,6 +16,28 @@ const uniqueLessonCompletion = "unique_lesson_completion_per_usr"
 type LessonCompletionRepositoryImpl struct {
 }
 
+func (c *LessonCompletionRepositoryImpl) GetLatestLessonCompletions() (*[]domain_model.LastLessonCompletion, error) {
+	rows, err := db.Table("lesson_completion").
+		Select("userfk as user, max(time) as last_completion_time").
+		Group("userfk").
+		Rows()
+	if err != nil {
+		slog.Error("Could not get all the latest lesson completions", "err", err)
+		return nil, err
+	}
+
+	lasts := make([]domain_model.LastLessonCompletion, 0)
+	for rows.Next() {
+		last := domain_model.LastLessonCompletion{}
+		if err := rows.Scan(&last.UserID, &last.Time); err != nil {
+			slog.Error("Could not get userId and time of result", "err", err)
+			return nil, err
+		}
+		lasts = append(lasts, last)
+	}
+	return &lasts, nil
+}
+
 func (c *LessonCompletionRepositoryImpl) GetLessonCompletionsOfCourseAndUser(userId, courseId uuid.UUID) ([]domain_model.LessonCompletion, error) {
 	var lessonCompletions []domain_model.LessonCompletion
 	result := db.Where("user_fk = ? AND course_id = ?", userId, courseId).Find(&lessonCompletions)
