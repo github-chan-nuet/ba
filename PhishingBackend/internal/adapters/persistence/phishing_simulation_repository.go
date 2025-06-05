@@ -103,6 +103,7 @@ func (r *PhishingSimulationRepositoryImpl) GetRecognitionFeatures() ([]domain_mo
 	var recognitionFeatures []domain_model.PhishingSimulationRecognitionFeature
 	result := db.Model(&domain_model.PhishingSimulationRecognitionFeature{}).
 		Preload("RecognitionFeatureValues").
+		Preload("RecognitionFeatureValues.RecognitionFeature").
 		Find(&recognitionFeatures)
 	if result.Error != nil {
 		slog.Error("Could not fetch phishing simulation recognition features")
