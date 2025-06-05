@@ -101,7 +101,9 @@ func (r *PhishingSimulationRepositoryImpl) GetUserVulnerabilities(userId uuid.UU
 
 func (r *PhishingSimulationRepositoryImpl) GetRecognitionFeatures() ([]domain_model.PhishingSimulationRecognitionFeature, error) {
 	var recognitionFeatures []domain_model.PhishingSimulationRecognitionFeature
-	result := db.Model(&domain_model.PhishingSimulationRecognitionFeature{}).Find(&recognitionFeatures)
+	result := db.Model(&domain_model.PhishingSimulationRecognitionFeature{}).
+		Preload("RecognitionFeatureValues").
+		Find(&recognitionFeatures)
 	if result.Error != nil {
 		slog.Error("Could not fetch phishing simulation recognition features")
 		return nil, result.Error
