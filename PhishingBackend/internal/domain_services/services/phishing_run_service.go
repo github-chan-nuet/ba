@@ -66,7 +66,6 @@ func (s *PhishingRunServiceImpl) getScoredTemplates(vulnerabilities []domain_mod
 	var scoredTemplatesTotal []domain_model.ScoredTemplate
 	recognitionFeatures, err := s.PhishingSimulationRepository.GetRecognitionFeatures()
 	if err == nil {
-		slog.Info("RecognitionFeatures", "info", recognitionFeatures)
 		templates, err := s.PhishingSimulationRepository.GetTemplates()
 		if err == nil {
 			for _, template := range templates {
@@ -80,6 +79,9 @@ func (s *PhishingRunServiceImpl) getScoredTemplates(vulnerabilities []domain_mod
 
 func (s *PhishingRunServiceImpl) sendRun(run *domain_model.PhishingSimulationRun) error {
 	email := s.PhishingEmailGenerationService.GenerateEmail(run)
+	if email == nil {
+		return errors.New("Email could not be generated")
+	}
 
 	err := s.EmailSender.Send(email)
 	if err != nil {
