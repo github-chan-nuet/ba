@@ -123,7 +123,6 @@ func handleRecognitionFeature(arg string, run *domain_model.PhishingSimulationRu
 }
 
 func handleEducationLink(arg string, run *domain_model.PhishingSimulationRun) (string, error) {
-	slog.Info("run", "info", run)
 	domainFeatureValue := utils.Find(run.RecognitionFeatureValues, func(featureValue domain_model.PhishingSimulationRecognitionFeatureValue) bool {
 		return featureValue.RecognitionFeature.Name == "Domain"
 	})

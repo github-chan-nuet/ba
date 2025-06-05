@@ -2,7 +2,6 @@ package services
 
 import (
 	"errors"
-	"log/slog"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/email"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
@@ -29,14 +28,10 @@ func (s *PhishingRunServiceImpl) GenerateRun(user *domain_model.User) error {
 		return errors.New("Error while fetching vulnerabilities")
 	}
 
-	slog.Info("Vulnerabilities", "info", vulnerabilities)
-
 	scoredTemplates := s.getScoredTemplates(vulnerabilities)
 	if len(scoredTemplates) == 0 {
 		return errors.New("No Scored Templates found")
 	}
-
-	slog.Info("Scored Templates", "info", scoredTemplates)
 
 	lowestScoredTemplate := scoredTemplates[0]
 	for _, scoredTemplate := range scoredTemplates[1:] {
