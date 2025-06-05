@@ -9,7 +9,6 @@ import (
 	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"strconv"
 	"strings"
-	"sync"
 	"text/template"
 	"time"
 )
@@ -30,17 +29,7 @@ type ReminderOrchestratorImpl struct {
 }
 
 func (r *ReminderOrchestratorImpl) ExecuteReminderJobAfterDurationEachDay() {
-	for {
-		nextInvocation := time.Now().Truncate(time.Hour * 24).Add(time.Hour*24 + r.StartEachDayAfter)
-		timeTillNext := nextInvocation.Sub(time.Now())
-		var wg sync.WaitGroup
-		wg.Add(1)
-		time.AfterFunc(timeTillNext, func() {
-			r.executeReminderJob()
-			wg.Done()
-		})
-		wg.Wait()
-	}
+	ExecuteEachDayAfterDuration(r.StartEachDayAfter, r.executeReminderJob)
 }
 
 func (r *ReminderOrchestratorImpl) executeReminderJob() {
@@ -70,9 +59,9 @@ func (r *ReminderOrchestratorImpl) executeReminderJob() {
 				toPrepares = append(toPrepares, userReminderToPrepare{user: user})
 				continue
 			}
-			reminder := userReminderMap[user.ID]
+			reminder, remExists := userReminderMap[user.ID]
 			oneWeekAgo := now.Add(-1 * time.Hour * 24 * 7)
-			if last.Before(oneWeekAgo) && reminder.SentTime.Before(oneWeekAgo) {
+			if last.Before(oneWeekAgo) && (!remExists || reminder.SentTime.Before(oneWeekAgo)) {
 				toPrepare := userReminderToPrepare{user: user, reminder: userReminderMap[user.ID]}
 				toPrepares = append(toPrepares, toPrepare)
 			}
@@ -93,6 +82,10 @@ func (r *ReminderOrchestratorImpl) prepareAndSendReminders(toPrepares *[]userRem
 		return
 	}
 	idToActualTemplate, err := r.prepareTemplates(templates)
+	idToTemplate := make(map[int]domain_model.ReminderEmailTemplate, len(*templates))
+	for _, t := range *templates {
+		idToTemplate[t.Id] = t
+	}
 	if err != nil {
 		slog.Error("Skipping reminder job as a template could not be created")
 		return
@@ -107,6 +100,8 @@ func (r *ReminderOrchestratorImpl) prepareAndSendReminders(toPrepares *[]userRem
 				Count:      1,
 				TemplateFk: (*templates)[rand.Intn(len(*templates))].Id,
 			}
+			templ, _ := idToTemplate[reminder.TemplateFk]
+			reminder.EmailTemplate = &templ
 		} else {
 			reminder = *toPrepare.reminder
 			reminder.SentTime = time.Now().UTC()
@@ -146,14 +141,14 @@ func (r *ReminderOrchestratorImpl) getNewRandomTemplate(templates *[]domain_mode
 }
 
 type userTemplate struct {
-	firstname string
-	lastname  string
+	Firstname string
+	Lastname  string
 }
 
 func (r *ReminderOrchestratorImpl) sendAndSaveReminder(reminder *domain_model.Reminder, t *template.Template) {
 	usrTmpl := userTemplate{
-		firstname: reminder.User.Firstname,
-		lastname:  reminder.User.Lastname,
+		Firstname: reminder.User.Firstname,
+		Lastname:  reminder.User.Lastname,
 	}
 	var sb strings.Builder
 	err := t.Execute(&sb, usrTmpl)
