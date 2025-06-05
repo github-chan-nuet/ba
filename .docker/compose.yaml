@@ -47,7 +47,7 @@ services:
     image: ${CI_REGISTRY_IMAGE}/phishing-proxy:${CI_COMMIT_SHA}
     env_file: .env
     volumes:
-      - ./traefik/acme.json:/acme.json
+      - ./traefik/acme.json:/etc/traefik/acme/acme.json
     restart: unless-stopped
     ports:
       - 80:80
