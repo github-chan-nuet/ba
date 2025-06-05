@@ -69,9 +69,9 @@ CREATE TABLE phishing_simulation_user_vulnerability
 
 CREATE TABLE phishing_simulation_run_recognition_feature_value
 (
-  recognition_feature_id      uuid NOT NULL,
-  phishing_simulation_run_id  uuid NOT NULL,
+  phishing_simulation_recognition_feature_value_id uuid NOT NULL,
+  phishing_simulation_run_id                       uuid NOT NULL,
 
-  CONSTRAINT fk_phishing_simulation_run_recognition_feature_value_recognition_feature FOREIGN KEY (recognition_feature_id) REFERENCES public.phishing_simulation_recognition_feature (id),
+  CONSTRAINT fk_phishing_simulation_run_recognition_feature_value_recognition_feature FOREIGN KEY (phishing_simulation_recognition_feature_value_id) REFERENCES public.phishing_simulation_recognition_feature_value (id),
   CONSTRAINT fk_phishing_simulation_run_recognition_feature_value_run FOREIGN KEY (phishing_simulation_run_id) REFERENCES public.phishing_simulation_run (id)
 );
