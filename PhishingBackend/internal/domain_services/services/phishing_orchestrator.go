@@ -1,6 +1,7 @@
 package services
 
 import (
+	"log/slog"
 	"math/rand"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"time"
@@ -44,6 +45,9 @@ func (p *PhishingOrchestratorImpl) generatePhishingRuns(currentTime time.Time) {
 			latestRun.SentAt == nil ||
 			latestRun.SentAt.Add(periodUntilNextRun).UTC().Before(currentTime) {
 			err = p.PhishingRunService.GenerateRun(&user)
+			if err != nil {
+				slog.Error("Generate Run Failed", "error", err)
+			}
 		}
 	}
 }
