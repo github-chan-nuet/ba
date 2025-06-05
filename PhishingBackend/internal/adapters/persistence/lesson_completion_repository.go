@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
+	"time"
 )
 
 var _ repositories.LessonCompletionRepository = (*LessonCompletionRepositoryImpl)(nil)
@@ -16,7 +17,7 @@ const uniqueLessonCompletion = "unique_lesson_completion_per_usr"
 type LessonCompletionRepositoryImpl struct {
 }
 
-func (c *LessonCompletionRepositoryImpl) GetLatestLessonCompletions() (*[]domain_model.LastLessonCompletion, error) {
+func (c *LessonCompletionRepositoryImpl) GetLatestLessonCompletions() (map[uuid.UUID]time.Time, error) {
 	rows, err := db.Table("lesson_completion").
 		Select("userfk as user, max(time) as last_completion_time").
 		Group("userfk").
@@ -26,16 +27,17 @@ func (c *LessonCompletionRepositoryImpl) GetLatestLessonCompletions() (*[]domain
 		return nil, err
 	}
 
-	lasts := make([]domain_model.LastLessonCompletion, 0)
+	lasts := make(map[uuid.UUID]time.Time)
 	for rows.Next() {
-		last := domain_model.LastLessonCompletion{}
-		if err := rows.Scan(&last.UserID, &last.Time); err != nil {
+		var userId uuid.UUID
+		var lastTime time.Time
+		if err := rows.Scan(&userId, &lastTime); err != nil {
 			slog.Error("Could not get userId and time of result", "err", err)
 			return nil, err
 		}
-		lasts = append(lasts, last)
+		lasts[userId] = lastTime
 	}
-	return &lasts, nil
+	return lasts, nil
 }
 
 func (c *LessonCompletionRepositoryImpl) GetLessonCompletionsOfCourseAndUser(userId, courseId uuid.UUID) ([]domain_model.LessonCompletion, error) {

@@ -1,6 +1,7 @@
 package communication
 
 import (
+	"log/slog"
 	"net/smtp"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/email"
@@ -30,6 +31,9 @@ func (e *EmailSenderImpl) Send(email *domain_model.Email) error {
 	auth := smtp.PlainAuth("", e.SmtpUser, e.SmtpPw, e.SmtpHost)
 
 	err := smtp.SendMail(e.SmtpAddr, auth, from, to, msg)
+	if err != nil {
+		slog.Error("Could not send out email", "recipient", email.Recipient, "subject", email.Subject, "error", err)
+	}
 	return err
 }
 

@@ -81,23 +81,12 @@ func (u *UserRepositoryImpl) CreateUser(user *domain_model.User) error {
 	return nil
 }
 
-func (u *UserRepositoryImpl) GetAllUserIds() (*[]uuid.UUID, error) {
-	rows, err := db.Table("user").
-		Select("id").
-		Rows()
-	if err != nil {
-		slog.Error("Could not get all user ids", "err", err)
-		return nil, err
+func (u *UserRepositoryImpl) GetAllUsers() (*[]domain_model.User, error) {
+	var users []domain_model.User
+	result := db.Find(&users)
+	if result.Error != nil {
+		slog.Error("Could not get all users", "err", result.Error)
+		return nil, result.Error
 	}
-
-	ids := make([]uuid.UUID, 0)
-	for rows.Next() {
-		id := uuid.Nil
-		if err := rows.Scan(&id); err != nil {
-			slog.Error("Could not get userId of result", "err", err)
-			return nil, err
-		}
-		ids = append(ids, id)
-	}
-	return &ids, nil
+	return &users, nil
 }

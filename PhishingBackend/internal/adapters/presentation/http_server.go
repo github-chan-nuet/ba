@@ -4,7 +4,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
-	"phishing_backend/internal/adapters/persistence"
+	"phishing_backend/internal/adapters"
 	"phishing_backend/internal/adapters/presentation/controllers"
 	"phishing_backend/internal/adapters/presentation/error_handling"
 	"phishing_backend/internal/domain_services/services"
@@ -13,8 +13,8 @@ import (
 	"sync"
 )
 
-func SetupHttpServer() {
-	sMux := NewSecurawareServeMux()
+func SetupHttpServer(d *adapters.Dependencies) {
+	sMux := NewSecurawareServeMux(d)
 	cors := CorsMiddleware{Handler: sMux}
 	panicRec := PanicRecoveryMiddleware{Handler: &cors}
 	addr := os.Getenv("PHBA_WEBSERVER_ADDR")
@@ -24,49 +24,29 @@ func SetupHttpServer() {
 	os.Exit(1)
 }
 
-func NewSecurawareServeMux() *http.ServeMux {
-	// repositories
-	userRepository := persistence.UserRepositoryImpl{}
-	lessonCompletionRepository := persistence.LessonCompletionRepositoryImpl{}
-	examRepo := persistence.ExamRepositoryImpl{}
-	examCompRepo := persistence.ExamCompletionRepositoryImpl{}
-
-	// services
-	expService := services.ExperienceServiceImpl{
-		LessonCompRepo: &lessonCompletionRepository,
-		ExamCompRepo:   &examCompRepo,
-	}
-	examCompService := services.ExamCompletionServiceImpl{
-		ExamRepo:          &examRepo,
-		ExamCompRepo:      &examCompRepo,
-		ExperienceService: &expService,
-	}
-	authenticator := services.AuthenticatorImpl{
-		UserRepository: &userRepository,
-	}
-
+func NewSecurawareServeMux(d *adapters.Dependencies) *http.ServeMux {
 	// controllers
 	userController := controllers.UserController{
-		Authenticator: &authenticator,
+		Authenticator: d.Authenticator,
 		UserService: &services.UserServiceImpl{
-			UserRepository: &userRepository,
+			UserRepository: d.UserRepository,
 		},
-		UserRepo:          &userRepository,
-		ExperienceService: &expService,
+		UserRepo:          d.UserRepository,
+		ExperienceService: d.ExperienceService,
 	}
 	lessonCompletionController := controllers.LessonCompletionController{
-		Authenticator: &authenticator,
+		Authenticator: d.Authenticator,
 		LessonCompletionService: &services.LessonCompletionServiceImpl{
-			Repo: &lessonCompletionRepository,
+			Repo: d.LessonCompletionRepository,
 		},
-		ExperienceService:          &expService,
-		LessonCompletionRepository: &lessonCompletionRepository,
+		ExperienceService:          d.ExperienceService,
+		LessonCompletionRepository: d.LessonCompletionRepository,
 	}
 	examController := controllers.ExamController{
-		Authenticator:         &authenticator,
-		ExamRepository:        &examRepo,
-		ExamCompRepo:          &examCompRepo,
-		ExamCompletionService: &examCompService,
+		Authenticator:         d.Authenticator,
+		ExamRepository:        d.ExamRepository,
+		ExamCompRepo:          d.ExamCompletionRepository,
+		ExamCompletionService: d.ExamCompletionService,
 	}
 
 	sMux := http.NewServeMux()
