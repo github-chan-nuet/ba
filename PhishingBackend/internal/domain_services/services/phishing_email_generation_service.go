@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log/slog"
 	"phishing_backend/internal/domain_model"
+	"phishing_backend/internal/utils"
 	"regexp"
 	"strings"
 )
@@ -109,6 +110,7 @@ type PlaceholderHandler func(arg string, run *domain_model.PhishingSimulationRun
 
 var placeholderHandlers = map[string]PlaceholderHandler{
 	"RecognitionFeature": handleRecognitionFeature,
+	"EducationLink":      handleEducationLink,
 }
 
 func handleRecognitionFeature(arg string, run *domain_model.PhishingSimulationRun) (string, error) {
@@ -118,4 +120,16 @@ func handleRecognitionFeature(arg string, run *domain_model.PhishingSimulationRu
 		}
 	}
 	return "", errors.New("Missing Feature Value for Feature: " + arg)
+}
+
+func handleEducationLink(arg string, run *domain_model.PhishingSimulationRun) (string, error) {
+	slog.Info("run", "info", run)
+	domainFeatureValue := utils.Find(run.RecognitionFeatureValues, func(featureValue domain_model.PhishingSimulationRecognitionFeatureValue) bool {
+		return featureValue.RecognitionFeature.Name == "Domain"
+	})
+	if domainFeatureValue == nil {
+		return "", errors.New("Missing Feature Value for Feature: Domain")
+	}
+
+	return "https://www." + domainFeatureValue.Value + "?r=" + run.ID.String(), nil
 }
