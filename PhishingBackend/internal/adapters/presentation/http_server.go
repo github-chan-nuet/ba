@@ -10,7 +10,6 @@ import (
 	"phishing_backend/internal/domain_services/services"
 	"runtime"
 	"strings"
-	"sync"
 )
 
 func SetupHttpServer() {
@@ -69,87 +68,83 @@ func NewSecurawareServeMux() *http.ServeMux {
 		ExamCompletionService: &examCompService,
 	}
 
-	sMux := http.NewServeMux()
-	routes := NewMethodMap()
+	routes := NewSmuxCreator()
 
 	// health
-	routes.Add(sMux, "/api/health", http.MethodGet, controllers.GetHealth)
+	routes.Add("/api/health", http.MethodGet, controllers.GetHealth)
 
 	// lesson completions
-	routes.Add(sMux, "/api/courses/{courseId}/completions", http.MethodGet, lessonCompletionController.GetLessonCompletionsOfCourseAndUser)
-	routes.Add(sMux, "/api/courses/{courseId}/completions", http.MethodPost, lessonCompletionController.CreateLessonCompletion)
+	routes.Add("/api/courses/{courseId}/completions", http.MethodGet, lessonCompletionController.GetLessonCompletionsOfCourseAndUser)
+	routes.Add("/api/courses/{courseId}/completions", http.MethodPost, lessonCompletionController.CreateLessonCompletion)
 
-	routes.Add(sMux, "/api/courses/completions", http.MethodGet, lessonCompletionController.GetAllLessonCompletionsOfUser)
+	routes.Add("/api/courses/completions", http.MethodGet, lessonCompletionController.GetAllLessonCompletionsOfUser)
 
 	// users
-	routes.Add(sMux, "/api/users", http.MethodPost, userController.CreateUser)
+	routes.Add("/api/users", http.MethodPost, userController.CreateUser)
 
-	routes.Add(sMux, "/api/users/login", http.MethodPost, userController.LoginAndReturnJwtToken)
+	routes.Add("/api/users/login", http.MethodPost, userController.LoginAndReturnJwtToken)
 
-	routes.Add(sMux, "/api/users/{userId}", http.MethodGet, userController.GetUser)
-	routes.Add(sMux, "/api/users/{userId}", http.MethodPatch, userController.UpdateUser)
+	routes.Add("/api/users/{userId}", http.MethodGet, userController.GetUser)
+	routes.Add("/api/users/{userId}", http.MethodPatch, userController.UpdateUser)
 
 	// exams
-	routes.Add(sMux, "/api/exams", http.MethodGet, examController.GetExams)
+	routes.Add("/api/exams", http.MethodGet, examController.GetExams)
 
-	routes.Add(sMux, "/api/exams/{examId}", http.MethodGet, examController.GetExam)
+	routes.Add("/api/exams/{examId}", http.MethodGet, examController.GetExam)
 
-	routes.Add(sMux, "/api/exams/{examId}/completions", http.MethodGet, examController.GetCompletedExam)
-	routes.Add(sMux, "/api/exams/{examId}/completions", http.MethodPost, examController.CompleteExam)
-	return sMux
+	routes.Add("/api/exams/{examId}/completions", http.MethodGet, examController.GetCompletedExam)
+	routes.Add("/api/exams/{examId}/completions", http.MethodPost, examController.CompleteExam)
+	return routes.BuildWithOptionEndpoints()
 }
 
-type MethodMap struct {
-	mu        sync.RWMutex
+type SmuxCreator struct {
+	// map of paths of methods -> handlers
 	endpoints map[string]map[string]http.HandlerFunc
 }
 
-func NewMethodMap() *MethodMap {
-	return &MethodMap{
+func NewSmuxCreator() *SmuxCreator {
+	return &SmuxCreator{
 		endpoints: make(map[string]map[string]http.HandlerFunc),
 	}
 }
 
-func (m *MethodMap) Add(mux *http.ServeMux, path, method string, handler http.HandlerFunc) {
-	m.mu.Lock()
-	defer m.mu.Unlock()
-
+func (m *SmuxCreator) Add(path, method string, handler http.HandlerFunc) {
 	if _, exists := m.endpoints[path]; !exists {
 		m.endpoints[path] = make(map[string]http.HandlerFunc)
 	}
-
 	m.endpoints[path][method] = handler
+}
 
-	// Wrap the handler only once per path
-	if len(m.endpoints[path]) == 1 {
-		mux.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
-			m.mu.RLock()
-			methods := m.endpoints[path]
-			m.mu.RUnlock()
-
-			// Build Allow header
-			allowedMethods := make([]string, 0, len(methods))
-			for method := range methods {
-				allowedMethods = append(allowedMethods, method)
-			}
-			allowedMethods = append(allowedMethods, http.MethodOptions)
-
-			if r.Method == http.MethodOptions {
-				w.Header().Set("Allow", strings.Join(allowedMethods, ", "))
-				w.Header().Set("Access-Control-Allow-Methods", strings.Join(allowedMethods, ", "))
-				w.Header().Set("Access-Control-Max-Age", "86400")
-				w.WriteHeader(http.StatusNoContent)
-				return
-			}
-
-			if h, ok := methods[r.Method]; ok {
-				h(w, r)
-			} else {
-				w.Header().Set("Allow", strings.Join(allowedMethods, ", "))
-				http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
-			}
-		})
+func (m *SmuxCreator) addOptionsEndpoints() {
+	for path, methodMap := range m.endpoints {
+		allowedMethods := make([]string, 0, len(methodMap)+2)
+		for method := range methodMap {
+			allowedMethods = append(allowedMethods, method)
+		}
+		allowedMethods = append(allowedMethods, http.MethodOptions, http.MethodHead)
+		m.endpoints[path][http.MethodOptions] = m.createOptionsEndpoint(allowedMethods)
 	}
+}
+
+func (m *SmuxCreator) createOptionsEndpoint(allowedMethods []string) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		methods := strings.Join(allowedMethods, ", ")
+		w.Header().Set("Allow", methods)
+		w.Header().Set("Access-Control-Allow-Methods", methods)
+		w.Header().Set("Access-Control-Max-Age", "86400") // one day in seconds
+		w.WriteHeader(http.StatusNoContent)
+	}
+}
+
+func (m *SmuxCreator) BuildWithOptionEndpoints() *http.ServeMux {
+	m.addOptionsEndpoints()
+	sMux := http.NewServeMux()
+	for path, methodMap := range m.endpoints {
+		for method, handler := range methodMap {
+			sMux.HandleFunc(method+" "+path, handler)
+		}
+	}
+	return sMux
 }
 
 var _ http.Handler = (*PanicRecoveryMiddleware)(nil)
