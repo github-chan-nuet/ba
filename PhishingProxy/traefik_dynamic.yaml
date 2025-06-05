@@ -45,6 +45,6 @@ http:
   middlewares:
     redirect-phishing-domains-to-securaware:
       redirectRegex:
-        regex: "^(https?)://(?!securaware\\.ch)([^/]+)(/.*)?"
+        regex: "^(https?)://[^/]+(/.*)?"
         replacement: "https://securaware.ch/phishing-simulation?${query}"
         permanent: true
