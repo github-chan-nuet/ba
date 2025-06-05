@@ -23,9 +23,11 @@ func main() {
 	}
 	userRepository := persistence.UserRepositoryImpl{}
 	phishingSimulationRepository := persistence.PhishingSimulationRepositoryImpl{}
+	phishingEmailGenerationService := services.PhishingEmailGenerationServiceImpl{}
 	phishingRunService := services.PhishingRunServiceImpl{
-		EmailSender:                  &emailSender,
-		PhishingSimulationRepository: &phishingSimulationRepository,
+		EmailSender:                    &emailSender,
+		PhishingSimulationRepository:   &phishingSimulationRepository,
+		PhishingEmailGenerationService: &phishingEmailGenerationService,
 	}
 
 	phishingOrchestrator := services.PhishingOrchestratorImpl{
