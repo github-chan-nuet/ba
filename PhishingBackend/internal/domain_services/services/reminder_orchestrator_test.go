@@ -60,12 +60,22 @@ func mockTemplate(repo *repositories.MockReminderEmailTemplateRepository) *domai
 		Template: "Hallo {{ .Firstname }} {{  .Lastname }}",
 		Subject:  "Testemail",
 	}
-	unused := domain_model.ReminderEmailTemplate{
+	repo.EXPECT().GetAll().Return(&[]domain_model.ReminderEmailTemplate{templ}, nil)
+	return &templ
+}
+
+func mockTemplates(repo *repositories.MockReminderEmailTemplateRepository) *domain_model.ReminderEmailTemplate {
+	first := domain_model.ReminderEmailTemplate{
 		Id:       1,
 		Template: "Error",
 		Subject:  "Error",
 	}
-	repo.EXPECT().GetAll().Return(&[]domain_model.ReminderEmailTemplate{unused, templ}, nil)
+	templ := domain_model.ReminderEmailTemplate{
+		Id:       2,
+		Template: "Hallo {{ .Firstname }} {{  .Lastname }}",
+		Subject:  "Testemail",
+	}
+	repo.EXPECT().GetAll().Return(&[]domain_model.ReminderEmailTemplate{first, templ}, nil)
 	return &templ
 }
 
@@ -85,12 +95,7 @@ func getWantMail(u domain_model.User, t *domain_model.ReminderEmailTemplate) dom
 func TestShouldSendReminderWhenNoReminderWasSentAndNoLessonCompleted(t *testing.T) {
 	// given
 	ctx := createReminderOrchestratorSut(t)
-	user := domain_model.User{
-		ID:        uuid.UUID{},
-		Firstname: "Hans",
-		Lastname:  "Nötig",
-		Email:     "a@gmail.com",
-	}
+	user := createUser()
 	compLessons := make(map[uuid.UUID]time.Time)
 	ctx.lessonRepo.EXPECT().GetLatestLessonCompletions().Return(compLessons, nil)
 	ctx.usrRepo.EXPECT().GetAllUsers().Return(&[]domain_model.User{user}, nil)
@@ -110,12 +115,7 @@ func TestShouldSendReminderWhenNoReminderWasSentAndNoLessonCompleted(t *testing.
 func TestShouldSendReminderWhenLessonWasCompletedOneWeekAgo(t *testing.T) {
 	// given
 	ctx := createReminderOrchestratorSut(t)
-	user := domain_model.User{
-		ID:        uuid.UUID{},
-		Firstname: "Hans",
-		Lastname:  "Nötig",
-		Email:     "a@gmail.com",
-	}
+	user := createUser()
 	compLessons := make(map[uuid.UUID]time.Time)
 	compLessons[user.ID] = time.Now().UTC().Add(-7*24*time.Hour - 5*time.Minute)
 	ctx.lessonRepo.EXPECT().GetLatestLessonCompletions().Return(compLessons, nil)
@@ -136,12 +136,7 @@ func TestShouldSendReminderWhenLessonWasCompletedOneWeekAgo(t *testing.T) {
 func TestShouldNotSendReminderWhen2RemindersWereSent(t *testing.T) {
 	// given
 	ctx := createReminderOrchestratorSut(t)
-	user := domain_model.User{
-		ID:        uuid.UUID{},
-		Firstname: "Hans",
-		Lastname:  "Nötig",
-		Email:     "a@gmail.com",
-	}
+	user := createUser()
 	compLessons := make(map[uuid.UUID]time.Time)
 	ctx.lessonRepo.EXPECT().GetLatestLessonCompletions().Return(compLessons, nil)
 	ctx.usrRepo.EXPECT().GetAllUsers().Return(&[]domain_model.User{user}, nil)
@@ -166,12 +161,7 @@ func TestShouldNotSendReminderWhen2RemindersWereSent(t *testing.T) {
 func TestShouldNotSendReminderWhenLessonWasCompletedAlmostOneWeekAgo(t *testing.T) {
 	// given
 	ctx := createReminderOrchestratorSut(t)
-	user := domain_model.User{
-		ID:        uuid.UUID{},
-		Firstname: "Hans",
-		Lastname:  "Nötig",
-		Email:     "a@gmail.com",
-	}
+	user := createUser()
 	compLessons := make(map[uuid.UUID]time.Time)
 	compLessons[user.ID] = time.Now().UTC().Add(-7*24*time.Hour + 5*time.Minute)
 	ctx.lessonRepo.EXPECT().GetLatestLessonCompletions().Return(compLessons, nil)
@@ -190,12 +180,7 @@ func TestShouldNotSendReminderWhenLessonWasCompletedAlmostOneWeekAgo(t *testing.
 func TestShouldNotSendReminderWhenLessonWasCompletedTwoWeeksAgoAndTwoRemindersWereSent(t *testing.T) {
 	// given
 	ctx := createReminderOrchestratorSut(t)
-	user := domain_model.User{
-		ID:        uuid.UUID{},
-		Firstname: "Hans",
-		Lastname:  "Nötig",
-		Email:     "a@gmail.com",
-	}
+	user := createUser()
 	compLessons := make(map[uuid.UUID]time.Time)
 	compLessons[user.ID] = time.Now().UTC().Add(-2 * 7 * 24 * time.Hour)
 	ctx.lessonRepo.EXPECT().GetLatestLessonCompletions().Return(compLessons, nil)
@@ -221,12 +206,7 @@ func TestShouldNotSendReminderWhenLessonWasCompletedTwoWeeksAgoAndTwoRemindersWe
 func TestShouldSendEmailWithNewTemplate(t *testing.T) {
 	// given
 	ctx := createReminderOrchestratorSut(t)
-	user := domain_model.User{
-		ID:        uuid.UUID{},
-		Firstname: "Hans",
-		Lastname:  "Nötig",
-		Email:     "a@gmail.com",
-	}
+	user := createUser()
 	compLessons := make(map[uuid.UUID]time.Time)
 	compLessons[user.ID] = time.Now().UTC().Add(-2 * 7 * 24 * time.Hour)
 	ctx.lessonRepo.EXPECT().GetLatestLessonCompletions().Return(compLessons, nil)
@@ -239,7 +219,8 @@ func TestShouldSendEmailWithNewTemplate(t *testing.T) {
 		TemplateFk: 1,
 	}
 	ctx.reminderRepo.EXPECT().GetAll().Return([]domain_model.Reminder{reminder}, nil)
-	templ := mockTemplate(ctx.templateRepo)
+	// mocks two templates
+	templ := mockTemplates(ctx.templateRepo)
 	ctx.reminderRepo.EXPECT().SaveOrUpdate(gomock.Any()).Return(nil)
 
 	// when
@@ -254,12 +235,7 @@ func TestShouldSendEmailWithNewTemplate(t *testing.T) {
 func TestShouldNotSendEmailWhenReminderWasSentAlmostOneWeekAgo(t *testing.T) {
 	// given
 	ctx := createReminderOrchestratorSut(t)
-	user := domain_model.User{
-		ID:        uuid.UUID{},
-		Firstname: "Hans",
-		Lastname:  "Nötig",
-		Email:     "a@gmail.com",
-	}
+	user := createUser()
 	compLessons := make(map[uuid.UUID]time.Time)
 	compLessons[user.ID] = time.Now().UTC().Add(-2 * 7 * 24 * time.Hour)
 	ctx.lessonRepo.EXPECT().GetLatestLessonCompletions().Return(compLessons, nil)
@@ -280,4 +256,13 @@ func TestShouldNotSendEmailWhenReminderWasSentAlmostOneWeekAgo(t *testing.T) {
 	// then
 	sentMail := ctx.emailSender.sentEmail
 	assert.Nil(t, sentMail)
+}
+
+func createUser() domain_model.User {
+	return domain_model.User{
+		ID:        uuid.UUID{},
+		Firstname: "Hans",
+		Lastname:  "Nötig",
+		Email:     "a@gmail.com",
+	}
 }
