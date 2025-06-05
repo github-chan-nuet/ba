@@ -1,6 +1,6 @@
 package utils
 
-func Combinations[T comparable](elements []T, maxSize int) [][]T {
+func Combinations[T any](elements []T, maxSize int) [][]T {
 	var result [][]T
 	var comb []T
 
