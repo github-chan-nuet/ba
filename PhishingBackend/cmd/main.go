@@ -9,8 +9,8 @@ import (
 
 func main() {
 	d := adapters.ResolveDependencies()
-	go presentation.SetupHttpServer(d)
 	go startReminderJob(d)
+	presentation.SetupHttpServer(d)
 }
 
 func startReminderJob(d *adapters.Dependencies) {

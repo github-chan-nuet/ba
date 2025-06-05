@@ -61,23 +61,24 @@ func (r *ReminderOrchestratorImpl) executeReminderJob() {
 		return
 	}
 	toExclude := r.getUsersThatHaveReceived2Reminders(&reminders)
-	remindersToSend := make([]userReminderToPrepare, 0)
+	toPrepares := make([]userReminderToPrepare, 0)
 	now := time.Now().UTC()
 	for _, user := range *users {
 		if _, shouldExclude := toExclude[user.ID]; !shouldExclude {
 			last, ok := lasts[user.ID]
 			if !ok {
-				remindersToSend = append(remindersToSend, userReminderToPrepare{user: user})
+				toPrepares = append(toPrepares, userReminderToPrepare{user: user})
 				continue
 			}
 			reminder := userReminderMap[user.ID]
 			oneWeekAgo := now.Add(-1 * time.Hour * 24 * 7)
 			if last.Before(oneWeekAgo) && reminder.SentTime.Before(oneWeekAgo) {
 				toPrepare := userReminderToPrepare{user: user, reminder: userReminderMap[user.ID]}
-				remindersToSend = append(remindersToSend, toPrepare)
+				toPrepares = append(toPrepares, toPrepare)
 			}
 		}
 	}
+	r.prepareAndSendReminders(&toPrepares)
 }
 
 type userReminderToPrepare struct {
@@ -91,7 +92,11 @@ func (r *ReminderOrchestratorImpl) prepareAndSendReminders(toPrepares *[]userRem
 		slog.Error("Skipping reminder job as templates could not be retrieved")
 		return
 	}
-	idToActualTemplate := r.prepareTemplates(templates)
+	idToActualTemplate, err := r.prepareTemplates(templates)
+	if err != nil {
+		slog.Error("Skipping reminder job as a template could not be created")
+		return
+	}
 	for _, toPrepare := range *toPrepares {
 		var reminder domain_model.Reminder
 		if toPrepare.reminder == nil {
@@ -115,7 +120,7 @@ func (r *ReminderOrchestratorImpl) prepareAndSendReminders(toPrepares *[]userRem
 	}
 }
 
-func (r *ReminderOrchestratorImpl) prepareTemplates(ts *[]domain_model.ReminderEmailTemplate) map[int]*template.Template {
+func (r *ReminderOrchestratorImpl) prepareTemplates(ts *[]domain_model.ReminderEmailTemplate) (map[int]*template.Template, error) {
 	templates := make(map[int]*template.Template, len(*ts))
 	for _, t := range *ts {
 		tmpl, err := template.
@@ -123,11 +128,11 @@ func (r *ReminderOrchestratorImpl) prepareTemplates(ts *[]domain_model.ReminderE
 			Parse(t.Template)
 		if err != nil {
 			slog.Error("Template could not be parsed", "id", t.Id, "template", t.Template, "error", err)
-			panic("Template could not be parsed: " + t.Template)
+			return nil, err
 		}
 		templates[t.Id] = tmpl
 	}
-	return templates
+	return templates, nil
 }
 
 func (r *ReminderOrchestratorImpl) getNewRandomTemplate(templates *[]domain_model.ReminderEmailTemplate, toExclude int) *domain_model.ReminderEmailTemplate {
@@ -154,7 +159,7 @@ func (r *ReminderOrchestratorImpl) sendAndSaveReminder(reminder *domain_model.Re
 	err := t.Execute(&sb, usrTmpl)
 	if err != nil {
 		slog.Error("Template could not be executed", "template name", t.Name(), "error", err)
-		panic("Template could not be executed")
+		return
 	}
 	mail := domain_model.Email{
 		Content:   sb.String(),
