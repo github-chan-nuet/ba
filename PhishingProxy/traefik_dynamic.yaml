@@ -1,7 +1,7 @@
 http:
   routers:
     phishingBackend:
-      rule: "Path(`/api`) || PathPrefix(`/api/`)"
+      rule: "Host(`securaware.ch`) && (Path(`/api`) || PathPrefix(`/api/`))"
       service: phishingBackend
       entrypoints:
         - websecure
@@ -21,6 +21,15 @@ http:
         domains:
           - main: "securaware.ch"
         certResolver: myresolver
+
+    phishingDomains:
+      rule: "HostRegexp(`{host:.+}`) && !Host(`securaware.ch`)"
+      entrypoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-phishing-domains-to-securaware
+      service: phishingEducator  # Not actually used, but required by traefik
   
   services:
     phishingBackend:
@@ -32,3 +41,10 @@ http:
       loadBalancer:
         servers:
           - url: "http://phishing_educator:80"
+
+  middlewares:
+    redirect-phishing-domains-to-securaware:
+      redirectRegex:
+        regex: "^(https?)://(?!securaware\\.ch)([^/]+)(/.*)?"
+        replacement: "https://securaware.ch/phishing-simulation?${query}"
+        permanent: true
