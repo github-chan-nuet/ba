@@ -33,6 +33,7 @@ http:
         domains:
           - main: "bamk-of-switzerland.ch"
           - main: "bank-of-switzerland.ch"
+        certResolver: myresolver
       service: phishingEducator  # Not actually used, but required by traefik
   
   services:
