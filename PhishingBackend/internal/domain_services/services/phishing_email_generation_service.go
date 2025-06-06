@@ -4,7 +4,6 @@ import (
 	"errors"
 	"log/slog"
 	"phishing_backend/internal/domain_model"
-	"phishing_backend/internal/utils"
 	"regexp"
 	"strings"
 )
@@ -19,6 +18,12 @@ type PhishingEmailGenerationServiceImpl struct {
 }
 
 func (s *PhishingEmailGenerationServiceImpl) GenerateEmail(run *domain_model.PhishingSimulationRun) *domain_model.Email {
+	domainValue := getRecognitionFeatureValueToApply("Domain", run)
+	if domainValue == nil {
+		slog.Error("Missing Feature Value for Feature: Domain")
+		return nil
+	}
+
 	subject, err := parseTemplate(run.Template.Subject, run)
 	if err != nil {
 		slog.Error("Failed to parse subject")
@@ -32,7 +37,7 @@ func (s *PhishingEmailGenerationServiceImpl) GenerateEmail(run *domain_model.Phi
 	}
 
 	email := domain_model.Email{
-		Sender:    "Securaware Phishing Simulation <info@securaware.ch>",
+		Sender:    "info@" + domainValue.Value,
 		Recipient: run.User.Email,
 		Subject:   subject,
 		Content:   content,
@@ -114,21 +119,26 @@ var placeholderHandlers = map[string]PlaceholderHandler{
 }
 
 func handleRecognitionFeature(arg string, run *domain_model.PhishingSimulationRun) (string, error) {
-	for _, fv := range run.RecognitionFeatureValues {
-		if fv.RecognitionFeature.Name == arg {
-			return fv.Value, nil
-		}
+	recognitionFeatureValue := getRecognitionFeatureValueToApply(arg, run)
+	if recognitionFeatureValue != nil {
+		return recognitionFeatureValue.Value, nil
 	}
 	return "", errors.New("Missing Feature Value for Feature: " + arg)
 }
 
 func handleEducationLink(arg string, run *domain_model.PhishingSimulationRun) (string, error) {
-	domainFeatureValue := utils.Find(run.RecognitionFeatureValues, func(featureValue domain_model.PhishingSimulationRecognitionFeatureValue) bool {
-		return featureValue.RecognitionFeature.Name == "Domain"
-	})
-	if domainFeatureValue == nil {
-		return "", errors.New("Missing Feature Value for Feature: Domain")
+	domainFeatureValue := getRecognitionFeatureValueToApply("Domain", run)
+	if domainFeatureValue != nil {
+		return "https://www." + domainFeatureValue.Value + "?r=" + run.ID.String(), nil
 	}
+	return "", errors.New("Missing Feature Value for Feature: Domain")
+}
 
-	return "https://www." + domainFeatureValue.Value + "?r=" + run.ID.String(), nil
+func getRecognitionFeatureValueToApply(recognitionFeatureName string, run *domain_model.PhishingSimulationRun) *domain_model.PhishingSimulationRecognitionFeatureValue {
+	for _, fv := range run.RecognitionFeatureValues {
+		if fv.RecognitionFeature.Name == recognitionFeatureName {
+			return &fv
+		}
+	}
+	return nil
 }
