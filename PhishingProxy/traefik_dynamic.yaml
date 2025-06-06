@@ -5,6 +5,8 @@ http:
       service: phishingBackend
       entrypoints:
         - websecure
+      middlewares:
+        - redirect-root-to-www
       priority: 10
       tls:
         domains:
@@ -18,6 +20,8 @@ http:
       service: phishingEducator
       entrypoints:
         - websecure
+      middlewares:
+        - redirect-root-to-www
       priority: 1
       tls:
         domains:
@@ -56,6 +60,12 @@ http:
           - url: "http://phishing_educator:80"
 
   middlewares:
+    redirect-root-to-www:
+      redirectRegex:
+        regex: '^https?:\/\/([a-z0-9-]+)\.([a-z{2,}])(/.*|$)'
+        replacement: "https://www.${1}.${2}${3}"
+        permanent: true
+
     redirect-phishing-domains-to-securaware:
       redirectRegex:
         regex: '^(http[s]?:\/\/[^\/?#]+)?(\/[^?#]*)?(\?[^#]*)?$'
