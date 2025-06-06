@@ -50,5 +50,5 @@ http:
     redirect-phishing-domains-to-securaware:
       redirectRegex:
         regex: '^(http[s]?:\/\/[^\/?#]+)?(\/[^?#]*)?(\?[^#]*)?$'
-        replacement: 'https://securaware.ch/phishing-simulation$${3}'
+        replacement: "https://securaware.ch/phishing-simulation${3}"
         permanent: true
