@@ -23,7 +23,7 @@ http:
         certResolver: myresolver
 
     phishingDomains:
-      rule: "HostRegexp(`{host:.+}`) && !Host(`securaware.ch`)"
+      rule: "!Host(`securaware.ch`)"
       entrypoints:
         - web
         - websecure
