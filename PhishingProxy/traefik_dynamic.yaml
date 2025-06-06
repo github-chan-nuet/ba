@@ -29,6 +29,10 @@ http:
         - websecure
       middlewares:
         - redirect-phishing-domains-to-securaware
+      tls:
+        domains:
+          - main: "bamk-of-switzerland.ch"
+          - main: "bank-of-switzerland.ch"
       service: phishingEducator  # Not actually used, but required by traefik
   
   services:
