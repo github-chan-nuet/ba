@@ -19,14 +19,13 @@ type LessonCompletionRepositoryImpl struct {
 
 func (c *LessonCompletionRepositoryImpl) GetLatestLessonCompletions() (map[uuid.UUID]time.Time, error) {
 	rows, err := db.Table("lesson_completion").
-		Select("userfk as user, max(time) as last_completion_time").
-		Group("userfk").
+		Select("user_fk as user, max(time) as last_completion_time").
+		Group("user_fk").
 		Rows()
 	if err != nil {
 		slog.Error("Could not get all the latest lesson completions", "err", err)
 		return nil, err
 	}
-
 	lasts := make(map[uuid.UUID]time.Time)
 	for rows.Next() {
 		var userId uuid.UUID

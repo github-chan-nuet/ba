@@ -29,10 +29,10 @@ type ReminderOrchestratorImpl struct {
 }
 
 func (r *ReminderOrchestratorImpl) ExecuteReminderJobAfterDurationEachDay() {
-	ExecuteEachDayAfterDuration(r.StartEachDayAfter, r.executeReminderJob)
+	ExecuteEachDayAfterDuration(r.StartEachDayAfter, r.ExecuteReminderJob)
 }
 
-func (r *ReminderOrchestratorImpl) executeReminderJob() {
+func (r *ReminderOrchestratorImpl) ExecuteReminderJob() {
 	lasts, err := r.LessonCompletionRepository.GetLatestLessonCompletions()
 	if err != nil {
 		slog.Error("Skipping reminder job as lesson completions could not be get")
