@@ -62,7 +62,7 @@ http:
   middlewares:
     redirect-root-to-www:
       redirectRegex:
-        regex: '^https?:\/\/([a-z0-9-]+)\.([a-z{2,}])(/.*|$)'
+        regex: '^https?:\/\/([a-z0-9-]+)\.([a-z]{2,})(/.*|$)'
         replacement: "https://www.${1}.${2}${3}"
         permanent: true
 
