@@ -1,7 +1,7 @@
 http:
   routers:
     phishingBackend:
-      rule: "Host(`securaware.ch`) && (Path(`/api`) || PathPrefix(`/api/`))"
+      rule: "(Host(`www.securaware.ch`) || Host(`securaware.ch`)) && (Path(`/api`) || PathPrefix(`/api/`))"
       service: phishingBackend
       entrypoints:
         - websecure
@@ -9,10 +9,11 @@ http:
       tls:
         domains:
           - main: "securaware.ch"
+          - main: "www.securaware.ch"
         certResolver: myresolver
 
     phishingEducator:
-      rule: "Host(`securaware.ch`)"
+      rule: "Host(`www.securaware.ch`) || Host(`securaware.ch`)"
       service: phishingEducator
       entrypoints:
         - websecure
@@ -20,10 +21,11 @@ http:
       tls:
         domains:
           - main: "securaware.ch"
+          - main: "www.securaware.ch"
         certResolver: myresolver
 
     phishingDomains:
-      rule: "!Host(`securaware.ch`)"
+      rule: "!Host(`www.securaware.ch`) && !Host(`securaware.ch`)"
       entrypoints:
         - web
         - websecure
@@ -32,7 +34,9 @@ http:
       tls:
         domains:
           - main: "bamk-of-switzerland.ch"
+          - main: "www.bamk-of-switzerland.ch"
           - main: "bank-of-switzerland.ch"
+          - main: "www.bank-of-switzerland.ch"
         certResolver: myresolver
       service: phishingEducator  # Not actually used, but required by traefik
   
@@ -51,5 +55,5 @@ http:
     redirect-phishing-domains-to-securaware:
       redirectRegex:
         regex: '^(http[s]?:\/\/[^\/?#]+)?(\/[^?#]*)?(\?[^#]*)?$'
-        replacement: "https://securaware.ch/phishing-simulation${3}"
+        replacement: "https://www.securaware.ch/phishing-simulation${3}"
         permanent: true
