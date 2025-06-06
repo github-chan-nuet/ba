@@ -9,7 +9,8 @@ http:
       tls:
         domains:
           - main: "securaware.ch"
-          - main: "www.securaware.ch"
+            sans:
+              - "www.securaware.ch"
         certResolver: myresolver
 
     phishingEducator:
@@ -21,7 +22,8 @@ http:
       tls:
         domains:
           - main: "securaware.ch"
-          - main: "www.securaware.ch"
+            sans:
+              - "www.securaware.ch"
         certResolver: myresolver
 
     phishingDomains:
@@ -34,9 +36,11 @@ http:
       tls:
         domains:
           - main: "bamk-of-switzerland.ch"
-          - main: "www.bamk-of-switzerland.ch"
+            sans:
+              - "www.bamk-of-switzerland.ch"
           - main: "bank-of-switzerland.ch"
-          - main: "www.bank-of-switzerland.ch"
+            sans:
+              - "www.bank-of-switzerland.ch"
         certResolver: myresolver
       service: phishingEducator  # Not actually used, but required by traefik
   
