@@ -29,12 +29,11 @@ type EmailSenderImpl struct {
 func (e *EmailSenderImpl) Send(email *domain_model.Email) error {
 	var msg bytes.Buffer
 
-	from := "info@securaware.ch"
 	to := []string{email.Recipient}
 
 	encodedSubject := mime.QEncoding.Encode("utf-8", email.Subject)
 
-	msg.WriteString("From: " + from + newLine)
+	msg.WriteString("From: " + email.Sender + newLine)
 	msg.WriteString("To: " + email.Recipient + newLine)
 	msg.WriteString("Subject: " + encodedSubject + newLine)
 	msg.WriteString("MIME-Version: 1.0" + newLine)
@@ -48,6 +47,6 @@ func (e *EmailSenderImpl) Send(email *domain_model.Email) error {
 
 	auth := smtp.PlainAuth("", e.SmtpUser, e.SmtpPw, e.SmtpHost)
 
-	err := smtp.SendMail(e.SmtpAddr, auth, from, to, msg.Bytes())
+	err := smtp.SendMail(e.SmtpAddr, auth, email.Sender, to, msg.Bytes())
 	return err
 }
