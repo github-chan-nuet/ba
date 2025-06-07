@@ -601,13 +601,13 @@ components:
         phishingSimulationRunId:
           type: string
           format: uuid
-        recognitionValues:
+        recognitionFeatureValues:
           type: array
           items:
             $ref: "#/components/schemas/PhishingSimulationRecognitionFeatureValue"
       required:
         - phishingSimulationRunId
-        - recognitionValues
+        - recognitionFeatureValues
     
     PhishingSimulationRecognitionFeatureValue:
       type: object
