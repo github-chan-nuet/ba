@@ -29,7 +29,9 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      '@styles': path.resolve(__dirname, 'app/styles')
+      '@styles': path.resolve(__dirname, 'app/styles'),
+      '@components': path.resolve(__dirname, 'app/components'),
+      '@assets': path.resolve(__dirname, 'app/assets')
     }
   }
 });
