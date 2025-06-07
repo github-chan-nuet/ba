@@ -4,6 +4,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"phishing_backend/internal/adapters/communication"
 	"phishing_backend/internal/adapters/persistence"
 	"phishing_backend/internal/adapters/presentation/controllers"
 	"phishing_backend/internal/adapters/presentation/error_handling"
@@ -29,8 +30,10 @@ func NewSecurawareServeMux() *http.ServeMux {
 	lessonCompletionRepository := persistence.LessonCompletionRepositoryImpl{}
 	examRepo := persistence.ExamRepositoryImpl{}
 	examCompRepo := persistence.ExamCompletionRepositoryImpl{}
+	phishingSimRepo := persistence.PhishingSimulationRepositoryImpl{}
 
 	// services
+	emailSender := communication.EmailSenderImpl{}
 	expService := services.ExperienceServiceImpl{
 		LessonCompRepo: &lessonCompletionRepository,
 		ExamCompRepo:   &examCompRepo,
@@ -39,6 +42,12 @@ func NewSecurawareServeMux() *http.ServeMux {
 		ExamRepo:          &examRepo,
 		ExamCompRepo:      &examCompRepo,
 		ExperienceService: &expService,
+	}
+	phishingEmailGenService := services.PhishingEmailGenerationServiceImpl{}
+	phishingRunService := services.PhishingRunServiceImpl{
+		EmailSender:                    &emailSender,
+		PhishingSimulationRepository:   &phishingSimRepo,
+		PhishingEmailGenerationService: &phishingEmailGenService,
 	}
 	authenticator := services.AuthenticatorImpl{
 		UserRepository: &userRepository,
@@ -67,6 +76,10 @@ func NewSecurawareServeMux() *http.ServeMux {
 		ExamCompRepo:          &examCompRepo,
 		ExamCompletionService: &examCompService,
 	}
+	phishingSimController := controllers.PhishingSimulationController{
+		PhishingRunService:           &phishingRunService,
+		PhishingSimulationRepository: &phishingSimRepo,
+	}
 
 	routes := NewSmuxCreator()
 
@@ -94,6 +107,10 @@ func NewSecurawareServeMux() *http.ServeMux {
 
 	routes.Add("/api/exams/{examId}/completions", http.MethodGet, examController.GetCompletedExam)
 	routes.Add("/api/exams/{examId}/completions", http.MethodPost, examController.CompleteExam)
+
+	// phishing simulation
+	routes.Add("/api/phishing-simulation/runs/{phishingSimulationRunId}", http.MethodGet, phishingSimController.GetRun)
+
 	return routes.BuildWithOptionEndpoints()
 }
 
