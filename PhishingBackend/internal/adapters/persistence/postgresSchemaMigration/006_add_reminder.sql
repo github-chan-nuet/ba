@@ -24,46 +24,20 @@ E'Hallo {{ .Firstname }}\r\n\r\nCyberkriminelle schlafen nicht – und Phishing 
 
 
 INSERT INTO reminder_email_template
-VALUES (1, 'Phishing wird immer cleverer. Und du?', 'Hallo {{ .Firstname }} \r\n \r\n
-Phishing-Angriffe sind heute kaum noch zu erkennen – ausser du bist vorbereitet. \r\n
-Komm zurück und hol dir die aktuellsten Tipps auf securaware.ch. \r\n \r\n
-
-Schütze dich mit Wissen. \r\n \r\n
-
-Dein Securaware-Team');
+VALUES (1, 'Phishing wird immer cleverer. Und du?',
+        E'Hallo {{ .Firstname }}\r\n\r\nPhishing-Angriffe sind heute kaum noch zu erkennen – ausser du bist vorbereitet.\r\nKomm zurück und hol dir die aktuellsten Tipps auf securaware.ch.\r\n\r\nSchütze dich mit Wissen.\r\n\r\nDein Securaware-Team');
 
 
 INSERT INTO reminder_email_template
-VALUES (2, 'Securaware vermisst dich', 'Hallo {{ .Firstname }} \r\n \r\n
-Es dauert nur wenige Minuten, um dich wieder fit gegen Phishing zu machen. \r\n
-Komm zurück zu securaware.ch. \r\n \r\n
-
-Lerne, wie du gefährliche Mails erkennst – bevor es zu spät ist. \r\n \r\n
-
-Wir freuen uns auf dich! \r\n
-Dein Securaware-Team');
+VALUES (2, 'Securaware vermisst dich',
+        E'Hallo {{ .Firstname }}\r\n\r\nEs dauert nur wenige Minuten, um dich wieder fit gegen Phishing zu machen. \r\nKomm zurück zu securaware.ch.\r\n\r\nLerne, wie du gefährliche Mails erkennst – bevor es zu spät ist.\r\n \r\nWir freuen uns auf dich!\r\nDein Securaware-Team');
 
 
 INSERT INTO reminder_email_template
-VALUES (3, 'Ein Klick kann den Unterschied machen', 'Hallo {{ .Firstname }} \r\n \r\n
-Phishing kann jeden treffen. Aber nicht jeden muss es erwischen. \r\n
-- Hol dir das nötige Wissen auf securaware.ch \r\n \r\n
-- Erkenne gefährliche E-Mails
-- Vermeide teure Fehler \r\n \r\n
-Mach den Unterschied mit einem Klick.! \r\n \r\n
-
-Sicher bleiben. \r\n
-Dein Securaware-Team');
+VALUES (3, 'Ein Klick kann den Unterschied machen',
+        E'Hallo {{ .Firstname }}\r\n\r\nPhishing kann jeden treffen. Aber nicht jeden muss es erwischen.\r\n- Hol dir das nötige Wissen auf securaware.ch\r\n- Erkenne gefährliche E-Mails\r\n- Vermeide teure Fehler\r\n\r\nMach den Unterschied mit einem Klick.!\r\n\r\nSicher bleiben.\r\nDein Securaware-Team');
 
 
 INSERT INTO reminder_email_template
-VALUES (4, 'Phishing? Hoffen reicht nicht', 'Hallo {{ .Firstname }} \r\n \r\n
-Phishing erkennen ist kein Zufall, sondern eine Frage des Wissens. \r\n \r\n
-Komm jetzt zurück auf securaware.ch und lerne, wie du dich und deine Daten zuverlässig schützt. \r\n \r\n
-
-Wir zeigen dir, wie’s geht – einfach und kostenlos! \r\n \r\n
-
-Dein Securaware-Team');
-
-INSERT INTO reminder_email_template
-VALUES (4, '', $$fsdfsd$$);
+VALUES (4, 'Phishing? Hoffen reicht nicht',
+        E'Hallo {{ .Firstname }}\r\n\r\nPhishing erkennen ist kein Zufall, sondern eine Frage des Wissens.\r\n \r\nKomm jetzt zurück auf securaware.ch und lerne, wie du dich und deine Daten zuverlässig schützt.\r\n\r\nWir zeigen dir, wie’s geht – einfach und kostenlos!\r\n\r\nDein Securaware-Team');
