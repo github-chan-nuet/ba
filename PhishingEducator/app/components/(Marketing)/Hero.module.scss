@@ -1,0 +1,73 @@
+@use '@styles/mixins' as *;
+
+.Hero {
+  max-width: 70rem;
+  text-align: center;
+  margin: 5rem auto 0 auto;
+  min-height: 80vh;
+
+  @include responsive(sm) {
+    color: red;
+  }
+
+  @include responsive(lg) {
+    color: green;
+  }
+
+  &__Title {
+    font-weight: bold;
+    background: linear-gradient(to left, #3762c5, #48d5ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: block;
+    font-size: 10rem;
+    margin-bottom: 1rem;
+
+    @media (orientation: portrait) {
+      font-size: 4rem;
+    }
+  }
+
+  &__Line {
+    height: 0.2rem;
+    width: 35rem;
+    background-color: black;
+    color: black;
+    margin-bottom: 4rem;
+
+    @media (orientation: portrait) {
+      width: 10rem;
+    }
+  }
+
+  &__Display {
+    line-height: 1.1;
+    font-size: 7.6dvh;
+  }
+}
+
+.ShinyBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -10;
+  height: 100vh;
+  width: 100%;
+  background-color: oklch(0.985 0.002 247.839);
+
+  &__Shine {
+    position: absolute;
+    bottom: auto;
+    left: auto;
+    right: 0;
+    top: 0;
+    height: 31rem;
+    width: 31rem;
+    transform: translate(-70%, 25%);
+    border-radius: 9999px;
+    background-color: rgba(0, 120, 212, 0.5);
+    opacity: 0.5;
+    filter: blur(80px);
+  }
+}
