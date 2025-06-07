@@ -104,7 +104,7 @@ func TestShouldSendReminderWhenNoReminderWasSentAndNoLessonCompleted(t *testing.
 	ctx.reminderRepo.EXPECT().SaveOrUpdate(gomock.Any()).Return(nil)
 
 	// when
-	ctx.sut.executeReminderJob()
+	ctx.sut.ExecuteReminderJob()
 
 	// then
 	sentMail := ctx.emailSender.sentEmail
@@ -125,7 +125,7 @@ func TestShouldSendReminderWhenLessonWasCompletedOneWeekAgo(t *testing.T) {
 	ctx.reminderRepo.EXPECT().SaveOrUpdate(gomock.Any()).Return(nil)
 
 	// when
-	ctx.sut.executeReminderJob()
+	ctx.sut.ExecuteReminderJob()
 
 	// then
 	sentMail := ctx.emailSender.sentEmail
@@ -151,7 +151,7 @@ func TestShouldNotSendReminderWhen2RemindersWereSent(t *testing.T) {
 	mockTemplate(ctx.templateRepo)
 
 	// when
-	ctx.sut.executeReminderJob()
+	ctx.sut.ExecuteReminderJob()
 
 	// then
 	sentMail := ctx.emailSender.sentEmail
@@ -170,7 +170,7 @@ func TestShouldNotSendReminderWhenLessonWasCompletedAlmostOneWeekAgo(t *testing.
 	mockTemplate(ctx.templateRepo)
 
 	// when
-	ctx.sut.executeReminderJob()
+	ctx.sut.ExecuteReminderJob()
 
 	// then
 	sentMail := ctx.emailSender.sentEmail
@@ -196,7 +196,7 @@ func TestShouldNotSendReminderWhenLessonWasCompletedTwoWeeksAgoAndTwoRemindersWe
 	mockTemplate(ctx.templateRepo)
 
 	// when
-	ctx.sut.executeReminderJob()
+	ctx.sut.ExecuteReminderJob()
 
 	// then
 	sentMail := ctx.emailSender.sentEmail
@@ -224,7 +224,7 @@ func TestShouldSendEmailWithNewTemplate(t *testing.T) {
 	ctx.reminderRepo.EXPECT().SaveOrUpdate(gomock.Any()).Return(nil)
 
 	// when
-	ctx.sut.executeReminderJob()
+	ctx.sut.ExecuteReminderJob()
 
 	// then
 	sentMail := ctx.emailSender.sentEmail
@@ -251,7 +251,7 @@ func TestShouldNotSendEmailWhenReminderWasSentAlmostOneWeekAgo(t *testing.T) {
 	mockTemplate(ctx.templateRepo)
 
 	// when
-	ctx.sut.executeReminderJob()
+	ctx.sut.ExecuteReminderJob()
 
 	// then
 	sentMail := ctx.emailSender.sentEmail
