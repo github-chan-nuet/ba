@@ -1,12 +1,12 @@
-import {Body1Stronger, Button, Display, ToggleButton, tokens} from "@fluentui/react-components";
+import {Button, tokens} from "@fluentui/react-components";
 import MarketingStyles from "../../styles/Marketing.module.scss";
 import lines from '../../assets/images/lines.svg';
 import { FoodFish24Filled, Mail48Filled, Pen48Filled, ShieldTask28Filled, Trophy28Filled } from "@fluentui/react-icons";
 import React, {useRef, useEffect, useState, type ReactElement} from 'react';
 import {Chart, CategoryScale, LinearScale, BarElement, type ChartOptions,} from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import AuthDrawer from "../../components/AuthDrawer";
-import logo from "../../assets/images/securaware.png";
+import Hero from "../../components/(Marketing)/Hero";
+import { useOutletContext } from "react-router";
 
 export function meta() {
     return [
@@ -22,69 +22,16 @@ export function meta() {
     ]
 }
 
-export default function MarketingLayout() {
-    const [isAuthDrawerOpen, setIsAuthDrawerOpen] = useState(false);
-    return (
-        <div className={MarketingStyles.Marketing}>
-            <div className={MarketingStyles.Marketing__container}>
-                <AuthDrawer isOpen={isAuthDrawerOpen} setIsOpen={setIsAuthDrawerOpen} />
-                <header style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                    marginLeft: "1rem",
-                    marginRight: "1rem",
-                    paddingBlock: 24
-                }}>
-                    <div style={{
-                        display: 'flex',
-                        gap: '0.5rem',
-                    }}>
-                        <img src={logo} alt="" width={20} />
-                        <Body1Stronger style={{ fontSize: '1.5rem' }}>
-                            Securaware
-                        </Body1Stronger>
-                    </div>
-                    <ToggleButton
-                        appearance="primary"
-                        onClick={() => setIsAuthDrawerOpen(!isAuthDrawerOpen)}
-                        checked={isAuthDrawerOpen}
-                    >
-                        Login
-                    </ToggleButton>
-                </header>
-                <Home setAuthOpen={() => setIsAuthDrawerOpen(true)} />
-            </div>
-        </div>
-    )
-}
+type HomeContext = {setAuthOpen: () => void};
+export default function Home() {
+    const context = useOutletContext<HomeContext>();
 
-type HomeProps = {setAuthOpen: () => void};
-function Home({setAuthOpen}: HomeProps) {
     return (
-        <main style={{display: "flex", flexDirection: "column", alignItems: "center", gap: "10rem", paddingBottom: "10rem"}}>
-            <section className={MarketingStyles.CircleBackground}>
-                <div className={MarketingStyles.CircleBackground__cirlce} />
-            </section>
-            <section
-                style={{
-                    maxWidth: "70rem",
-                    textAlign: "center",
-                    margin: "5rem auto 0 auto",
-                    height: "80vh",
-                }}
-            >
-                <h1 className={MarketingStyles.Title}>
-                    Securaware
-                </h1>
-                <div>
-                    <hr className={MarketingStyles.Line}/>
-                </div>
-                <Display style={{lineHeight: 1.1, fontSize: "2rem"}}>
-                    Gemeinsam gegen <strong>Phishing und Cyberbetrug </strong>
-                    für eine <strong>sichere digitale Zukunft</strong>
-                </Display>
-            </section>
+        <>
+            <Hero
+                title="Securaware"
+                display={<>Gemeinsam gegen <strong>Phishing und Cyberbetrug</strong> für eine <strong>sichere digitale Zukunft</strong></>}
+            />
 
             <section className={MarketingStyles.Section} style={{paddingTop: "3rem", backgroundColor: "#fff"}}>
                 <h2 style={{textAlign: "center", fontSize: "2rem"}}>Was bietet Securaware?</h2>
@@ -124,13 +71,13 @@ function Home({setAuthOpen}: HomeProps) {
                             appearance="primary"
                             icon={<ShieldTask28Filled/>}
                             style={{width: "15rem", height: "4rem"}}
-                            onClick={setAuthOpen}>
+                            onClick={context.setAuthOpen}>
                             Schütze dich jetzt
                         </Button>
                     </div>
                 </div>
             </section>
-        </main>
+        </>
     );
 }
 
