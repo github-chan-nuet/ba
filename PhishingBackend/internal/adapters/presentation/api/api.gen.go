@@ -89,6 +89,17 @@ type Lesson struct {
 	LessonId openapi_types.UUID `json:"lessonId"`
 }
 
+// PhishingSimulationRecognitionFeatureValue defines model for PhishingSimulationRecognitionFeatureValue.
+type PhishingSimulationRecognitionFeatureValue struct {
+	RecognitionFeatureValueId openapi_types.UUID `json:"recognitionFeatureValueId"`
+}
+
+// PhishingSimulationRun defines model for PhishingSimulationRun.
+type PhishingSimulationRun struct {
+	PhishingSimulationRunId  openapi_types.UUID                          `json:"phishingSimulationRunId"`
+	RecognitionFeatureValues []PhishingSimulationRecognitionFeatureValue `json:"recognitionFeatureValues"`
+}
+
 // ProblemDetail defines model for ProblemDetail.
 type ProblemDetail struct {
 	// Detail A human-readable explanation specific to this occurrence of the problem.
@@ -164,6 +175,9 @@ type CourseId = openapi_types.UUID
 
 // ExamId defines model for examId.
 type ExamId = openapi_types.UUID
+
+// PhishingSimulationRunId defines model for phishingSimulationRunId.
+type PhishingSimulationRunId = openapi_types.UUID
 
 // UserId defines model for userId.
 type UserId = openapi_types.UUID
