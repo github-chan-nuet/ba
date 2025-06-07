@@ -1,4 +1,4 @@
-import Hero from "../../components/(Marketing)/Hero"
+import Hero from "@components/(Marketing)/Hero"
 
 export function meta() {
   return [
