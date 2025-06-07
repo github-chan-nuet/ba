@@ -56,6 +56,24 @@ func (r *PhishingSimulationRepositoryImpl) Update(runPatch *domain_model.Phishin
 	return nil
 }
 
+func (r *PhishingSimulationRepositoryImpl) GetRun(runId uuid.UUID) (*domain_model.PhishingSimulationRun, error) {
+	var run domain_model.PhishingSimulationRun
+	result := db.Model(&domain_model.PhishingSimulationRun{}).
+		Preload("Template").
+		Preload("RecognitionFeatureValues").
+		Preload("RecognitionFeatureValues.RecognitionFeature").
+		Where("id = ?", runId).
+		First(&run)
+	if result.Error != nil {
+		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		slog.Error("Could not get run by id", "err", result.Error)
+		return nil, result.Error
+	}
+	return &run, nil
+}
+
 func (r *PhishingSimulationRepositoryImpl) GetLatestRun(userId uuid.UUID) (*domain_model.PhishingSimulationRun, error) {
 	var latestRun domain_model.PhishingSimulationRun
 	result := db.Model(&domain_model.PhishingSimulationRun{}).
