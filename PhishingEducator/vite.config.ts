@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import { reactRouter } from "@react-router/dev/vite";
 import { cjsInterop } from "vite-plugin-cjs-interop";
+import path from "path";
 
 export default defineConfig({
   plugins: [
@@ -14,12 +15,7 @@ export default defineConfig({
 
   optimizeDeps: {
     exclude: ["@griffel/react"],
-    include: ["@fluentui/react-components", "@fluentui/react-icons", "@hey-api/client-fetch", "framer-motion", 'react-chartjs-2']
-  },
-
-  // Required for Fluent UI icons in SSR
-  ssr: {
-    noExternal: ['@fluentui/react-icons', 'react-chartjs-2', 'chart.js'],
+    include: ["@fluentui/react-components", "@fluentui/react-icons", "@hey-api/client-fetch", "framer-motion", 'react-chartjs-2', 'chart.js']
   },
 
   server: {
@@ -30,4 +26,10 @@ export default defineConfig({
       usePolling: true, // Required for HMR in Docker on some OS
     },
   },
+
+  resolve: {
+    alias: {
+      '@styles': path.resolve(__dirname, 'app/styles')
+    }
+  }
 });
