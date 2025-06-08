@@ -2,6 +2,8 @@ package services
 
 import (
 	"errors"
+	"log/slog"
+	"math"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/email"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
@@ -14,6 +16,7 @@ var _ PhishingRunService = (*PhishingRunServiceImpl)(nil)
 
 type PhishingRunService interface {
 	GenerateRun(*domain_model.User) error
+	TrackRunClick(*domain_model.PhishingSimulationRun) error
 }
 
 type PhishingRunServiceImpl struct {
@@ -93,5 +96,57 @@ func (s *PhishingRunServiceImpl) sendRun(run *domain_model.PhishingSimulationRun
 		return err
 	}
 
+	return nil
+}
+
+func (s *PhishingRunServiceImpl) TrackRunClick(run *domain_model.PhishingSimulationRun) error {
+	if run.OpenedAt != nil {
+		return errors.New("Run Click already tracked")
+	}
+
+	now := time.Now().UTC()
+	runPatch := domain_model.PhishingSimulationRunPatch{
+		ID:       run.ID,
+		OpenedAt: &now,
+	}
+	err := s.PhishingSimulationRepository.Update(&runPatch)
+	if err != nil {
+		return err
+	}
+
+	vulnerabilities, err := s.PhishingSimulationRepository.GetUserVulnerabilities(run.User.ID)
+	if err != nil {
+		return errors.New("Error while fetching vulnerabilities")
+	}
+	for _, featVal := range run.RecognitionFeatureValues {
+		found := false
+		for _, vuln := range vulnerabilities {
+			if vuln.ContentCategory.ID == run.Template.ContentCategory.ID && vuln.RecognitionFeature.ID == featVal.RecognitionFeature.ID {
+				vulnPatch := &domain_model.PhishingSimulationUserVulnerabilityPatch{
+					ID:    vuln.ID,
+					Score: float32(math.Max(float64(vuln.Score)-0.5, 1)),
+				}
+				err := s.PhishingSimulationRepository.UpdateUserVulnerability(vulnPatch)
+				if err != nil {
+					slog.Error("Tracking Run Click for User Vulnerability with ID " + vuln.ID.String() + " failed")
+				}
+				found = true
+				break
+			}
+		}
+		if !found {
+			vuln := domain_model.PhishingSimulationUserVulnerability{
+				ID:                   uuid.New(),
+				Score:                1,
+				UserFk:               run.UserFk,
+				ContentCategoryFk:    run.Template.ContentCategoryFk,
+				RecognitionFeatureFk: featVal.RecognitionFeatureFk,
+			}
+			err := s.PhishingSimulationRepository.CreateUserVulnerability(&vuln)
+			if err != nil {
+				slog.Error("Tracking Run Click for New User Vulnerability failed")
+			}
+		}
+	}
 	return nil
 }
