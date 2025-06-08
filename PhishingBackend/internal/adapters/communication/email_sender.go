@@ -20,7 +20,7 @@ type EmailSenderImpl struct {
 
 func (e *EmailSenderImpl) Send(email *domain_model.Email) error {
 	from := "info@securaware.ch"
-	to := []string{email.Subject}
+	to := []string{email.Recipient}
 
 	msg := []byte(
 		"From: " + from + newLine +
