@@ -25,6 +25,9 @@ func (c *PhishingSimulationController) GetRun(w http.ResponseWriter, r *http.Req
 		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
+	if run.OpenedAt == nil {
+		c.PhishingRunService.TrackRunClick(run)
+	}
 	runDto := toApiPhishingSimulationRun(run)
 	writeJsonResponse(w, http.StatusOK, &runDto)
 }
