@@ -22,11 +22,13 @@ type Dependencies struct {
 	ReminderTemplateRepository repositories.ReminderEmailTemplateRepository
 
 	// services
-	EmailSender           email.EmailSender
-	ExperienceService     services.ExperienceService
-	ExamCompletionService services.ExamCompletionService
-	Authenticator         services.Authenticator
-	ReminderOrchestrator  services.ReminderOrchestrator
+	EmailSender             email.EmailSender
+	ExperienceService       services.ExperienceService
+	ExamCompletionService   services.ExamCompletionService
+	Authenticator           services.Authenticator
+	ReminderOrchestrator    services.ReminderOrchestrator
+	LessonCompletionService services.LessonCompletionService
+	UserService             services.UserService
 }
 
 func ResolveDependencies() *Dependencies {
@@ -56,6 +58,12 @@ func ResolveDependencies() *Dependencies {
 		ExperienceService: d.ExperienceService,
 	}
 	d.Authenticator = &services.AuthenticatorImpl{
+		UserRepository: d.UserRepository,
+	}
+	d.LessonCompletionService = &services.LessonCompletionServiceImpl{
+		Repo: d.LessonCompletionRepository,
+	}
+	d.UserService = &services.UserServiceImpl{
 		UserRepository: d.UserRepository,
 	}
 	setReminderOrchestrator(d)

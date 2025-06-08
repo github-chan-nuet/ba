@@ -7,7 +7,6 @@ import (
 	"phishing_backend/internal/adapters"
 	"phishing_backend/internal/adapters/presentation/controllers"
 	"phishing_backend/internal/adapters/presentation/error_handling"
-	"phishing_backend/internal/domain_services/services"
 	"runtime"
 	"strings"
 )
@@ -26,18 +25,14 @@ func SetupHttpServer(d *adapters.Dependencies) {
 func NewSecurawareServeMux(d *adapters.Dependencies) *http.ServeMux {
 	// controllers
 	userController := controllers.UserController{
-		Authenticator: d.Authenticator,
-		UserService: &services.UserServiceImpl{
-			UserRepository: d.UserRepository,
-		},
+		Authenticator:     d.Authenticator,
+		UserService:       d.UserService,
 		UserRepo:          d.UserRepository,
 		ExperienceService: d.ExperienceService,
 	}
 	lessonCompletionController := controllers.LessonCompletionController{
-		Authenticator: d.Authenticator,
-		LessonCompletionService: &services.LessonCompletionServiceImpl{
-			Repo: d.LessonCompletionRepository,
-		},
+		Authenticator:              d.Authenticator,
+		LessonCompletionService:    d.LessonCompletionService,
 		ExperienceService:          d.ExperienceService,
 		LessonCompletionRepository: d.LessonCompletionRepository,
 	}
