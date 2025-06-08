@@ -61,8 +61,6 @@ integration-test-phishingbackend:
     reports:
       junit: PhishingBackend/integration_tests/testResults.xml
 
-# TODO: Add tests for frontend
-
 publish:
   stage: publish
   rules:
