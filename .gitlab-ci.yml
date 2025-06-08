@@ -27,8 +27,8 @@ unit-test-phishingbackend:
   stage: test
   image: golang:1.24.1
   script:
-    - cd PhishingBackend
-    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./... | grep -vE '/integration_tests')
+    - cd PhishingBackend/internal
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml
   artifacts:
     when: always
     paths:
@@ -51,8 +51,8 @@ integration-test-phishingbackend:
     - source setup/integrationTests.env
     - PHBA_DB_HOST=postgres
     - set +a
-    - find ./reminder -type f -name '*.go' -exec head -n 5 {} \;
-    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list -tags integration ./...) -- -tags integration
+#    - find ./reminder -type f -name '*.go' -exec head -n 5 {} \;
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml -- -tags=integration ./...
   artifacts:
     when: always
     paths:
