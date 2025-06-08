@@ -1,4 +1,6 @@
 import Hero from "@components/(Marketing)/Hero"
+import type { Route } from "./+types/phishing-simulation"
+import { getPhishingSimulationRun } from "../../api"
 
 export function meta() {
   return [
@@ -6,7 +8,22 @@ export function meta() {
   ]
 }
 
-export default function PhishingSimulationEducation() {
+export async function clientLoader({ request }: Route.ClientLoaderArgs) {
+  const url = new URL(request.url)
+  const runIdQueryParam = url.searchParams.get('r');
+
+  const { data: phishingSimulationRun } = await getPhishingSimulationRun({
+    path: {
+      phishingSimulationRunId: runIdQueryParam ?? ''
+    }
+  });
+  return { phishingSimulationRun };
+}
+
+export default function PhishingSimulationEducation({ loaderData }: Route.ComponentProps) {
+  const { phishingSimulationRun } = loaderData;
+  console.log(phishingSimulationRun);
+
   return (
     <Hero
       title="Securaware"
