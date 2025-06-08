@@ -598,7 +598,7 @@ components:
     PhishingSimulationRun:
       type: object
       properties:
-        phishingSimulationRunId:
+        id:
           type: string
           format: uuid
         recognitionFeatureValues:
@@ -606,17 +606,26 @@ components:
           items:
             $ref: "#/components/schemas/PhishingSimulationRecognitionFeatureValue"
       required:
-        - phishingSimulationRunId
+        - id
         - recognitionFeatureValues
     
     PhishingSimulationRecognitionFeatureValue:
       type: object
       properties:
-        recognitionFeatureValueId:
+        id:
           type: string
           format: uuid
+        level:
+          type: integer
+        value:
+          type: string
+        educationalInstruction:
+          type: string
       required:
-        - recognitionFeatureValueId
+        - id
+        - level
+        - value
+        - educationalInstruction
 
     ProblemDetail:
       type: object

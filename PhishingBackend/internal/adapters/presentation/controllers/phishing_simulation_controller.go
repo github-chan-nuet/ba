@@ -34,12 +34,15 @@ func (c *PhishingSimulationController) GetRun(w http.ResponseWriter, r *http.Req
 
 func toApiPhishingSimulationRun(run *domain_model.PhishingSimulationRun) *api.PhishingSimulationRun {
 	dtoRun := api.PhishingSimulationRun{
-		PhishingSimulationRunId: (*run).ID,
+		Id: (*run).ID,
 	}
 	dtoRecognitionFeatureValues := make([]api.PhishingSimulationRecognitionFeatureValue, len((*run).RecognitionFeatureValues))
 	for i, recognitionFeatureValue := range run.RecognitionFeatureValues {
 		dtoRecognitionFeatureValue := api.PhishingSimulationRecognitionFeatureValue{
-			RecognitionFeatureValueId: recognitionFeatureValue.ID,
+			Id:                     recognitionFeatureValue.ID,
+			Level:                  recognitionFeatureValue.Level,
+			Value:                  recognitionFeatureValue.Value,
+			EducationalInstruction: recognitionFeatureValue.RecognitionFeature.UserInstruction,
 		}
 		dtoRecognitionFeatureValues[i] = dtoRecognitionFeatureValue
 	}
