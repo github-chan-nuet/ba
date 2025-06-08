@@ -10,7 +10,8 @@ import (
 var _ PhishingOrchestrator = (*PhishingOrchestratorImpl)(nil)
 
 type PhishingOrchestrator interface {
-	StartPhishingJob()
+	StartPhishingRunGenerationJob()
+	StartPhishingRunStregthDetectionJob()
 }
 
 type PhishingOrchestratorImpl struct {
@@ -19,9 +20,11 @@ type PhishingOrchestratorImpl struct {
 	PhishingRunService           PhishingRunService
 }
 
-func (p *PhishingOrchestratorImpl) StartPhishingJob() {
+func (p *PhishingOrchestratorImpl) StartPhishingRunGenerationJob() {
 	go StartRandomCronJob(15*time.Minute, 60*time.Minute, p.generatePhishingRuns)
 }
+
+func (p *PhishingOrchestratorImpl) StartPhishingRunStregthDetectionJob() {}
 
 func (p *PhishingOrchestratorImpl) generatePhishingRuns(currentTime time.Time) {
 	users, err := p.UserRepository.GetUsersForPhishingSimulation()

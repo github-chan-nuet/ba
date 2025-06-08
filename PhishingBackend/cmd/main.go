@@ -35,7 +35,7 @@ func main() {
 		PhishingSimulationRepository: &phishingSimulationRepository,
 		PhishingRunService:           &phishingRunService,
 	}
-	phishingOrchestrator.StartPhishingJob()
+	phishingOrchestrator.StartPhishingRunGenerationJob()
 
 	presentation.SetupHttpServer()
 }
