@@ -1,11 +1,12 @@
 import {Button, tokens} from "@fluentui/react-components";
 import MarketingStyles from "../../styles/Marketing.module.scss";
 import lines from '../../assets/images/lines.svg';
-import { FoodFish24Filled, Mail48Filled, Pen48Filled, ShieldTask28Filled, Trophy28Filled } from "@fluentui/react-icons";
-import React, {useRef, useEffect, useState, type ReactElement} from 'react';
+import { ShieldTask28Filled } from "@fluentui/react-icons";
+import {useRef, useEffect, useState} from 'react';
 import {Chart, CategoryScale, LinearScale, BarElement, type ChartOptions,} from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import Hero from "../../components/(Marketing)/Hero";
+import FeatureGrid from "../../components/(Marketing)/FeatureGrid";
 import { useOutletContext } from "react-router";
 
 export function meta() {
@@ -29,14 +30,12 @@ export default function Home() {
     return (
         <>
             <Hero
-                title="Securaware"
-                display={<>Gemeinsam gegen <strong>Phishing und Cyberbetrug</strong> für eine <strong>sichere digitale Zukunft</strong></>}
+                title={<>Gemeinsam gegen <strong>Phishing und Cyberbetrug</strong> für eine <strong>sichere digitale Zukunft</strong></>}
+                subtitle={<>Scrolle nach unten und erfahre mehr darüber, wie du dich effektiv vor Phishing schützen kannst!</>}
+                showScrollIcon={true}
             />
 
-            <section className={MarketingStyles.Section} style={{paddingTop: "3rem", backgroundColor: "#fff"}}>
-                <h2 style={{textAlign: "center", fontSize: "2rem"}}>Was bietet Securaware?</h2>
-                <FeatureGrid />
-            </section>
+            <FeatureGrid />
 
             <section className={MarketingStyles.Section + " " + MarketingStyles.PhishingAttacks}>
                 <div className={MarketingStyles.PhishingAttacks__text_container}>
@@ -81,68 +80,6 @@ export default function Home() {
     );
 }
 
-function FeatureGrid() {
-    const gridRef = useRef(null);
-    const [isInView, setIsInView] = useState(false);
-
-    useEffect(() => {
-        if (window.matchMedia("(orientation: portrait)").matches) {
-            setIsInView(true);
-        }
-    }, []);
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setIsInView(true);
-                    observer.disconnect();
-                }
-            },
-            { threshold: 0.9 }
-        );
-        if (gridRef.current) {
-            observer.observe(gridRef.current);
-        }
-        return () => observer.disconnect();
-    }, []);
-
-    const className = isInView ? MarketingStyles.FeatureGrid + " " + MarketingStyles.FeatureGrid__active : MarketingStyles.FeatureGrid;
-
-    return (
-        <div className={className} ref={gridRef}>
-            <FeatureCard title={"Online Kurse"}
-                         description={"Über Securawares online Kurse lernst du alles rund um Phishing!"}
-                         icon={<FoodFish24Filled />} />
-
-            <FeatureCard title={"Phishing Simulation"}
-                         description={"Identifiziere Phishing-E-Mails und vertiefe dein Wissen mit Hinweisen zu falsch identifizierten E-Mails"}
-                         icon={<Mail48Filled />} />
-
-            <FeatureCard title={"Teste dein Wissen"}
-                         description={"Teste dein Wissen mit fortlaufend neuen Tests und sammle XP dabei"}
-                         icon={<Pen48Filled />} />
-
-            <FeatureCard title={"Spilerischer Vergleich"}
-                         description={"Vergleiche dich mit Freunden und weiteren Benutzern über deine gesammelte XP"}
-                         icon={<Trophy28Filled />} />
-        </div>
-    )
-}
-
-type FeatureCardProps = {title: string, description: string, icon: ReactElement};
-function FeatureCard({title, description, icon}: FeatureCardProps) {
-    const styledIcon = React.cloneElement(icon, {className: MarketingStyles.Icon})
-    return (
-        <section className={MarketingStyles.FeatureCard}>
-            <div className={MarketingStyles.FeatureCard__icon}>
-                {styledIcon}
-            </div>
-            <h3 className={MarketingStyles.FeatureCard__title}>{title}</h3>
-            <p className={MarketingStyles.FeatureCard__text}>{description}</p>
-        </section>
-    );
-}
 
 Chart.register(CategoryScale, LinearScale, BarElement,);
 
