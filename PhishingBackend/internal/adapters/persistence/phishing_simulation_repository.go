@@ -7,10 +7,13 @@ import (
 	"phishing_backend/internal/domain_services/interfaces/repositories"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgconn"
 	"gorm.io/gorm"
 )
 
 var _ repositories.PhishingSimulationRepository = (*PhishingSimulationRepositoryImpl)(nil)
+
+const uniqueUserVulnerability = "unique_vulnerability_per_user"
 
 type PhishingSimulationRepositoryImpl struct {
 }
@@ -59,7 +62,9 @@ func (r *PhishingSimulationRepositoryImpl) Update(runPatch *domain_model.Phishin
 func (r *PhishingSimulationRepositoryImpl) GetRun(runId uuid.UUID) (*domain_model.PhishingSimulationRun, error) {
 	var run domain_model.PhishingSimulationRun
 	result := db.Model(&domain_model.PhishingSimulationRun{}).
+		Preload("User").
 		Preload("Template").
+		Preload("Template.ContentCategory").
 		Preload("RecognitionFeatureValues").
 		Preload("RecognitionFeatureValues.RecognitionFeature").
 		Where("id = ?", runId).
@@ -77,8 +82,11 @@ func (r *PhishingSimulationRepositoryImpl) GetRun(runId uuid.UUID) (*domain_mode
 func (r *PhishingSimulationRepositoryImpl) GetLatestRun(userId uuid.UUID) (*domain_model.PhishingSimulationRun, error) {
 	var latestRun domain_model.PhishingSimulationRun
 	result := db.Model(&domain_model.PhishingSimulationRun{}).
+		Preload("User").
 		Preload("Template").
+		Preload("Template.ContentCategory").
 		Preload("RecognitionFeatureValues").
+		Preload("RecongitionFeatureValues.RecognitionFeature").
 		Where("user_fk = ?", userId).
 		First(&latestRun)
 	if result.Error != nil {
@@ -103,6 +111,20 @@ func (r *PhishingSimulationRepositoryImpl) GetTemplates() ([]domain_model.Phishi
 	return templates, nil
 }
 
+func (r *PhishingSimulationRepositoryImpl) CreateUserVulnerability(vulnerability *domain_model.PhishingSimulationUserVulnerability) error {
+	result := db.Create(vulnerability)
+	if result.Error != nil {
+		var e *pgconn.PgError
+		if errors.As(result.Error, &e) {
+			if e.Code == "23505" && e.ConstraintName == uniqueUserVulnerability {
+				return repositories.ErrUserVulnAlreadyExists
+			}
+		}
+		slog.Error("Could not save user vulnerability", "err", result.Error)
+	}
+	return result.Error
+}
+
 func (r *PhishingSimulationRepositoryImpl) GetUserVulnerabilities(userId uuid.UUID) ([]domain_model.PhishingSimulationUserVulnerability, error) {
 	var vulnerabilities []domain_model.PhishingSimulationUserVulnerability
 	result := db.Model(&domain_model.PhishingSimulationUserVulnerability{}).
@@ -115,6 +137,17 @@ func (r *PhishingSimulationRepositoryImpl) GetUserVulnerabilities(userId uuid.UU
 		return nil, result.Error
 	}
 	return vulnerabilities, nil
+}
+
+func (r *PhishingSimulationRepositoryImpl) UpdateUserVulnerability(vulnPatch *domain_model.PhishingSimulationUserVulnerabilityPatch) error {
+	updates := make(map[string]interface{})
+	updates["score"] = vulnPatch.Score
+
+	result := db.Model(&domain_model.PhishingSimulationUserVulnerability{ID: vulnPatch.ID}).Updates(updates)
+	if result.Error != nil {
+		slog.Error("Could not update user vulnerability", "err", result.Error)
+	}
+	return result.Error
 }
 
 func (r *PhishingSimulationRepositoryImpl) GetRecognitionFeatures() ([]domain_model.PhishingSimulationRecognitionFeature, error) {
