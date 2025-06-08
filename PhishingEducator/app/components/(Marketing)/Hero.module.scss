@@ -1,49 +1,45 @@
+@use '@styles/definitions' as *;
 @use '@styles/mixins' as *;
+@use '@styles/typography' as *;
 
 .Hero {
-  max-width: 70rem;
+  max-width: $container-5xl;
+  margin-inline: auto;
+  padding-block: 8rem;
   text-align: center;
-  margin: 5rem auto 0 auto;
-  min-height: 80vh;
-
+  
   @include responsive(sm) {
-    color: red;
+    padding-block: 12rem;
   }
 
   @include responsive(lg) {
-    color: green;
+    padding-block: 14rem;
   }
 
   &__Title {
-    font-weight: bold;
-    background: linear-gradient(to left, #3762c5, #48d5ff);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    display: block;
-    font-size: 10rem;
-    margin-bottom: 1rem;
+    @include apply-text(5xl);
+    font-weight: $font-weight-semibold;
+    letter-spacing: -.025em;
 
-    @media (orientation: portrait) {
-      font-size: 4rem;
+    @include responsive(sm) {
+      @include apply-text(7xl);
     }
   }
 
-  &__Line {
-    height: 0.2rem;
-    width: 35rem;
-    background-color: black;
-    color: black;
-    margin-bottom: 4rem;
+  &__Subtitle {
+    margin-top: 2rem;
+    @include apply-text(lg);
+    font-weight: $font-weight-medium;
+    color: $color-gray-500;
 
-    @media (orientation: portrait) {
-      width: 10rem;
+    @include responsive(sm) {
+      @include apply-text(xl);
+      line-height: 2rem;
     }
   }
 
-  &__Display {
-    line-height: 1.1;
-    font-size: 7.6dvh;
+  &__Icon {
+    margin-top: 2rem;
   }
 }
 

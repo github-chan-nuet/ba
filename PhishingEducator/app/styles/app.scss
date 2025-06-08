@@ -1,3 +1,5 @@
+@use '@styles/definitions' as *;
+
 html, body {
   min-height: 100vh;
 }
@@ -13,6 +15,10 @@ a {
 
 .card-revert-padding {
   margin-inline: calc(-1 * var(--fui-Card--size));
+}
+
+.color-gray-500 {
+  color: $color-gray-500;
 }
 
 .Dashboard {

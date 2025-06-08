@@ -1,26 +1,48 @@
+@use '@styles/mixins' as *;
+
 .Marketing {
   position: relative;
-  z-index: 1;
+  overflow: hidden;
+
   background-color: oklch(0.985 0.002 247.839);
   color: oklch(0.278 0.033 256.848);
   font-Family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
   &__Container {
-    max-width: 120rem;
-    margin-inline: auto;
+    position: relative;
+    isolation: isolate;
+
+    padding-top: 3.5rem;
+    padding-inline: 1.5rem;
+    
+    @include responsive(lg) {
+      padding-inline: 2rem;
+    }
   }
 
   &__Header {
+    position: absolute;
+    top: 0;
+    inset-inline: 0;
+    z-index: 50;
+
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-inline: 16px;
-    padding-block: 24px;
+    padding: 1.5rem;
+
+    @include responsive(lg) {
+      padding-inline: 2rem;
+    }
   }
 
   &__LogoContainer {
     display: flex;
     gap: 0.5rem;
+
+    &:hover {
+      text-decoration: none;
+    }
   }
 
   &__LogoText {

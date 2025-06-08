@@ -1,21 +1,38 @@
-import { Display } from '@fluentui/react-components'
-import HeroStyles from './Hero.module.scss'
 import type { ReactElement } from 'react';
+import HeroStyles from './Hero.module.scss';
+import { ChevronCircleDown48Regular } from '@fluentui/react-icons';
+import { motion } from 'framer-motion';
 
 type HeroProps = {
-  title: string;
-  display: ReactElement;
+  title: ReactElement;
+  subtitle?: ReactElement;
+  showScrollIcon?: boolean;
 };
 
-export default function Hero({ title, display }: HeroProps) {
+export default function Hero({ title, subtitle, showScrollIcon = false }: HeroProps) {
   return (
     <section className={HeroStyles.Hero}>
       <div className={HeroStyles.ShinyBackground}>
         <div className={HeroStyles.ShinyBackground__Shine} />
       </div>
       <h1 className={HeroStyles.Hero__Title}>{ title }</h1>
-      <hr className={HeroStyles.Hero__Line} />
-      <Display className={HeroStyles.Hero__Display}>{ display }</Display>
+      { subtitle &&
+        <p className={HeroStyles.Hero__Subtitle}>{ subtitle }</p>
+      }
+      { showScrollIcon &&
+        <div className={HeroStyles.Hero__Icon}>
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            <ChevronCircleDown48Regular className="color-gray-500" />
+          </motion.div>
+        </div>
+      }
     </section>
   )
 }

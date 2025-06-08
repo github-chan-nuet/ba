@@ -9,21 +9,21 @@ export default function MarketingLayout() {
   const [isAuthDrawerOpen, setIsAuthDrawerOpen] = useState(false);
   return (
     <div className={MarketingStyles.Marketing}>
+      <AuthDrawer isOpen={isAuthDrawerOpen} setIsOpen={setIsAuthDrawerOpen} />
+      <header className={MarketingStyles.Marketing__Header}>
+        <Link to="/" className={MarketingStyles.Marketing__LogoContainer}>
+          <img src={logo} alt="" width={20} />
+          <Body1Stronger className={MarketingStyles.Marketing__LogoText}>Securaware</Body1Stronger>
+        </Link>
+        <ToggleButton
+          appearance="primary"
+          onClick={() => setIsAuthDrawerOpen(!isAuthDrawerOpen)}
+          checked={isAuthDrawerOpen}
+        >
+          Login
+        </ToggleButton>
+      </header>
       <div className={MarketingStyles.Marketing__Container}>
-        <AuthDrawer isOpen={isAuthDrawerOpen} setIsOpen={setIsAuthDrawerOpen} />
-        <header className={MarketingStyles.Marketing__Header}>
-          <Link to="/" className={MarketingStyles.Marketing__LogoContainer}>
-            <img src={logo} alt="" width={20} />
-            <Body1Stronger className={MarketingStyles.Marketing__LogoText}>Securaware</Body1Stronger>
-          </Link>
-          <ToggleButton
-            appearance="primary"
-            onClick={() => setIsAuthDrawerOpen(!isAuthDrawerOpen)}
-            checked={isAuthDrawerOpen}
-          >
-            Login
-          </ToggleButton>
-        </header>
         <main className={MarketingStyles.Marketing__Content}>
           <Outlet context={{ setAuthOpen: setIsAuthDrawerOpen }} />
         </main>
