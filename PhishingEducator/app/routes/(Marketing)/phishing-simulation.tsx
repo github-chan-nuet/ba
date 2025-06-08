@@ -1,6 +1,6 @@
-import Hero from "@components/(Marketing)/Hero"
 import type { Route } from "./+types/phishing-simulation"
 import { getPhishingSimulationRun } from "../../api"
+import HeaderSection from "@components/(Marketing)/HeaderSection"
 
 export function meta() {
   return [
@@ -25,9 +25,6 @@ export default function PhishingSimulationEducation({ loaderData }: Route.Compon
   console.log(phishingSimulationRun);
 
   return (
-    <Hero
-      title="Securaware"
-      display={<>Wir haben eine <strong>Schwachstelle</strong> von dir entdeckt!</>}
-    />
+    <HeaderSection />
   )
 }
