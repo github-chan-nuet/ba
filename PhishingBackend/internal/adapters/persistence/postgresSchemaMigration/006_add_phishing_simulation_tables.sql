@@ -64,7 +64,10 @@ CREATE TABLE phishing_simulation_user_vulnerability
   CONSTRAINT phishing_simulation_user_vulnerability_pkey PRIMARY KEY (id),
   CONSTRAINT fk_phishing_simulation_user_vulnerability_user FOREIGN KEY (user_fk) REFERENCES public.user (id),
   CONSTRAINT fk_phishing_simulation_user_vulnerability_content_category FOREIGN KEY (content_category_fk) REFERENCES public.phishing_simulation_content_category (id),
-  CONSTRAINT fk_phishing_simulation_user_vulnerability_recognition_feature FOREIGN KEY (recognition_feature_fk) REFERENCES public.phishing_simulation_recognition_feature (id)
+  CONSTRAINT fk_phishing_simulation_user_vulnerability_recognition_feature FOREIGN KEY (recognition_feature_fk) REFERENCES public.phishing_simulation_recognition_feature (id),
+
+  -- Composite Unique Constraint
+  CONSTRAINT unique_vulnerability_per_user UNIQUE (user_fk, content_category_fk, recognition_feature_fk)
 );
 
 CREATE TABLE phishing_simulation_run_recognition_feature_value
