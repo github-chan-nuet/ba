@@ -86,7 +86,7 @@ func (r *PhishingSimulationRepositoryImpl) GetLatestRun(userId uuid.UUID) (*doma
 		Preload("Template").
 		Preload("Template.ContentCategory").
 		Preload("RecognitionFeatureValues").
-		Preload("RecongitionFeatureValues.RecognitionFeature").
+		Preload("RecognitionFeatureValues.RecognitionFeature").
 		Where("user_fk = ?", userId).
 		First(&latestRun)
 	if result.Error != nil {
