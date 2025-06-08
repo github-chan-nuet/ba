@@ -25,6 +25,10 @@ export default function PhishingSimulationEducation({ loaderData }: Route.Compon
   console.log(phishingSimulationRun);
 
   return (
-    <HeaderSection />
+    <HeaderSection
+      eyebrow="Lerne wie du handeln solltest"
+      title="Gut aufgepasst!"
+      paragraph="Keine Sorge - das war nur eine Simulation! Diese Seite zeigt dir, woran du die gefälschte E-Mail hättest erkennen können. Achte das nächste Mal besser auf diese Aspekte."
+    />
   )
 }
