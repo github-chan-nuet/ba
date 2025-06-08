@@ -87,12 +87,15 @@ export type CourseCompletion = {
 };
 
 export type PhishingSimulationRun = {
-    phishingSimulationRunId: string;
+    id: string;
     recognitionFeatureValues: Array<PhishingSimulationRecognitionFeatureValue>;
 };
 
 export type PhishingSimulationRecognitionFeatureValue = {
-    recognitionFeatureValueId: string;
+    id: string;
+    level: number;
+    value: string;
+    educationalInstruction: string;
 };
 
 export type ProblemDetail = {
