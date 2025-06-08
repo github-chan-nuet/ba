@@ -14,5 +14,5 @@ set +a
 echo "starting integration tests..."
 go test -tags integration ./../reminder/... -v
 
-#echo "stopping docker database container"
-#docker compose -f ./compose.integration.yaml down
+echo "stopping docker database container"
+docker compose -f ./compose.integration.yaml down
