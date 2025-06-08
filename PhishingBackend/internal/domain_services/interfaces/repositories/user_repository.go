@@ -14,4 +14,5 @@ type UserRepository interface {
 	CreateUser(user *domain_model.User) error
 	GetUser(userId uuid.UUID) (*domain_model.User, error)
 	UpdateUser(*domain_model.UserPatch) error
+	GetAllUsers() (*[]domain_model.User, error)
 }

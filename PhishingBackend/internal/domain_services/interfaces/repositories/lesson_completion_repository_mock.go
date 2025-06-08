@@ -12,6 +12,7 @@ package repositories
 import (
 	domain_model "phishing_backend/internal/domain_model"
 	reflect "reflect"
+	time "time"
 
 	uuid "github.com/google/uuid"
 	gomock "go.uber.org/mock/gomock"
@@ -84,6 +85,21 @@ func (m *MockLessonCompletionRepository) GetAllCompletedLessonsInAllCourses(user
 func (mr *MockLessonCompletionRepositoryMockRecorder) GetAllCompletedLessonsInAllCourses(userId any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllCompletedLessonsInAllCourses", reflect.TypeOf((*MockLessonCompletionRepository)(nil).GetAllCompletedLessonsInAllCourses), userId)
+}
+
+// GetLatestLessonCompletions mocks base method.
+func (m *MockLessonCompletionRepository) GetLatestLessonCompletions() (map[uuid.UUID]time.Time, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetLatestLessonCompletions")
+	ret0, _ := ret[0].(map[uuid.UUID]time.Time)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetLatestLessonCompletions indicates an expected call of GetLatestLessonCompletions.
+func (mr *MockLessonCompletionRepositoryMockRecorder) GetLatestLessonCompletions() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetLatestLessonCompletions", reflect.TypeOf((*MockLessonCompletionRepository)(nil).GetLatestLessonCompletions))
 }
 
 // GetLessonCompletionsOfCourseAndUser mocks base method.
