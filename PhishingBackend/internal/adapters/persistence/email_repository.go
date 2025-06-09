@@ -32,14 +32,14 @@ func (r *EmailRepositoryImpl) Update(emailPatch *domain_model.EmailPatch) error 
 		if existing.SentAt != nil {
 			return errors.New("SentAt is already set")
 		}
-		updates["sent_at"] = emailPatch.SentAt
+		updates["sent_at"] = *emailPatch.SentAt
 	}
 
 	if emailPatch.ClickedAt != nil {
 		if existing.ClickedAt != nil {
 			return errors.New("ClickedAt is already set")
 		}
-		updates["clicked_at"] = emailPatch.ClickedAt
+		updates["clicked_at"] = *emailPatch.ClickedAt
 	}
 
 	if len(updates) > 0 {

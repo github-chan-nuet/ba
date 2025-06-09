@@ -60,9 +60,14 @@ func (s *PhishingRunServiceImpl) GenerateRun(user *domain_model.User) error {
 
 	email, err := s.sendRun(&run)
 	if err != nil {
-		run.EmailFk = &email.ID
+		return err
 	}
-	return err
+
+	runPatch := domain_model.PhishingSimulationRunPatch{
+		ID:      run.ID,
+		EmailFk: &email.ID,
+	}
+	return s.PhishingSimulationRepository.Update(&runPatch)
 }
 
 func (s *PhishingRunServiceImpl) getScoredTemplates(vulnerabilities []domain_model.PhishingSimulationUserVulnerability) []domain_model.ScoredTemplate {

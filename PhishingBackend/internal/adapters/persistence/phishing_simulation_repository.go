@@ -37,7 +37,7 @@ func (r *PhishingSimulationRepositoryImpl) Update(runPatch *domain_model.Phishin
 		if existing.EmailFk != nil {
 			return errors.New("EmailFk is already set")
 		}
-		updates["email_fk"] = runPatch.EmailFk
+		updates["email_fk"] = *runPatch.EmailFk
 	}
 
 	if len(updates) > 0 {
