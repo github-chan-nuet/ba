@@ -25,7 +25,7 @@ export async function clientLoader({ request }: Route.ClientLoaderArgs) {
 export default function PhishingSimulationEducation({ loaderData }: Route.ComponentProps) {
   const { phishingSimulationRun } = loaderData;
 
-  return phishingSimulationRun === undefined ? (
+  return !phishingSimulationRun ? (
     <Navigate to="/" replace />
   ) : (
     <>
