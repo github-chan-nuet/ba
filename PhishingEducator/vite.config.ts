@@ -31,7 +31,10 @@ export default defineConfig({
     alias: {
       '@styles': path.resolve(__dirname, 'app/styles'),
       '@components': path.resolve(__dirname, 'app/components'),
-      '@assets': path.resolve(__dirname, 'app/assets')
+      '@assets': path.resolve(__dirname, 'app/assets'),
+      '@api': path.resolve(__dirname, 'app/api'),
+      '@data': path.resolve(__dirname, 'app/data'),
+      '@utils': path.resolve(__dirname, 'app/utils'),
     }
   }
 });
