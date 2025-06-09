@@ -4,6 +4,7 @@ import AuthDrawer from "@components/AuthDrawer";
 import MarketingStyles from "@styles/Marketing.module.scss";
 import logo from "@assets/images/securaware.png";
 import { Body1Stronger, ToggleButton } from "@fluentui/react-components";
+import Footer from "@components/(Marketing)/Footer";
 
 export default function MarketingLayout() {
   const [isAuthDrawerOpen, setIsAuthDrawerOpen] = useState(false);
@@ -23,11 +24,10 @@ export default function MarketingLayout() {
           Login
         </ToggleButton>
       </header>
-      <div className={MarketingStyles.Marketing__Container}>
-        <main className={MarketingStyles.Marketing__Content}>
-          <Outlet context={{ setAuthOpen: setIsAuthDrawerOpen }} />
-        </main>
-      </div>
+      <main className={MarketingStyles.Marketing__Container}>
+        <Outlet context={{ setAuthOpen: setIsAuthDrawerOpen }} />
+      </main>
+      <Footer />
     </div>
   )
 }
