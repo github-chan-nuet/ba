@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import useAuth from "../../../utils/auth/useAuth";
-import { getCourses, type CourseRecord } from "../../../data/courses";
+import useAuth from "@utils/auth/useAuth";
+import { getCourses, type CourseRecord } from "@data/courses";
 import { Body1, Button, Card, CardFooter, CardHeader, ProgressBar, Subtitle1 } from "@fluentui/react-components";
 import { ArrowRight20Regular, Rocket20Regular } from "@fluentui/react-icons";
 
 import type { Route } from "./+types";
-import { getAllLessonCompletionsOfUser, type CourseCompletion } from "../../../api";
+import { getAllLessonCompletionsOfUser, type CourseCompletion } from "@api/index";
 
 export function meta() {
   return [

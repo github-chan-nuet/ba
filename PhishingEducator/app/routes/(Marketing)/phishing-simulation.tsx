@@ -1,5 +1,5 @@
+import { getPhishingSimulationRun } from "@api/index"
 import type { Route } from "./+types/phishing-simulation"
-import { getPhishingSimulationRun } from "../../api"
 import HeaderSection from "@components/(Marketing)/HeaderSection"
 import VulnerabilityEducator from "@components/(Marketing)/VulnerabilityEducator"
 import { Navigate } from "react-router"

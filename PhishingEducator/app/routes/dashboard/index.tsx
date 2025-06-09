@@ -1,6 +1,6 @@
 import { Title1, tokens } from "@fluentui/react-components";
-import useAuth from "../../utils/auth/useAuth"
-import WelcomeBanner from "../../components/WelcomeBanner";
+import useAuth from "@utils/auth/useAuth"
+import WelcomeBanner from "@components/WelcomeBanner";
 
 export function meta() {
   return [

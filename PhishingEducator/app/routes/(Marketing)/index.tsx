@@ -1,12 +1,12 @@
 import {Button, tokens} from "@fluentui/react-components";
-import MarketingStyles from "../../styles/Marketing.module.scss";
-import lines from '../../assets/images/lines.svg';
+import MarketingStyles from "@styles/Marketing.module.scss";
+import lines from '@assets/images/lines.svg';
 import { ShieldTask28Filled } from "@fluentui/react-icons";
 import {useRef, useEffect, useState} from 'react';
 import {Chart, CategoryScale, LinearScale, BarElement, type ChartOptions,} from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import Hero from "../../components/(Marketing)/Hero";
-import FeatureGrid from "../../components/(Marketing)/FeatureGrid";
+import Hero from "@components/(Marketing)/Hero";
+import FeatureGrid from "@components/(Marketing)/FeatureGrid";
 import { useOutletContext } from "react-router";
 
 export function meta() {

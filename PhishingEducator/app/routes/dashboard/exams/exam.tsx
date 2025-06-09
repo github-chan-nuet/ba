@@ -1,13 +1,13 @@
 import { Body1, Title1, Title3, tokens } from "@fluentui/react-components";
-import { completeExam, getCompletedExam, getExamsByExamId, type Answer, type CompletedExam, type Question } from "../../../api";
+import { completeExam, getCompletedExam, getExamsByExamId, type Answer, type CompletedExam, type Question } from "@api/index";
 import type { Route } from "./+types/exam";
 import { useState } from "react";
-import useAuth from "../../../utils/auth/useAuth";
+import useAuth from "@utils/auth/useAuth";
 import { CheckmarkStarburst24Filled, DismissCircle24Filled } from "@fluentui/react-icons";
-import ExamProgress from "../../../components/ExamProgress";
-import ExamResults from "../../../components/ExamResults";
+import ExamProgress from "@components/ExamProgress";
+import ExamResults from "@components/ExamResults";
 
-import ExamStyles from "../../../styles/Exam.module.scss";
+import ExamStyles from "@styles/Exam.module.scss";
 
 type UserAnswer = {
   questionId: string;

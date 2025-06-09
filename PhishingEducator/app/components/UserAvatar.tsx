@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Avatar, Popover, PopoverSurface, PopoverTrigger } from "@fluentui/react-components";
 import { AnimatePresence } from "framer-motion";
 import AvatarXPTooltip from "./AvatarXPTooltip";
-import useAuth from "../utils/auth/useAuth";
+import useAuth from "@utils/auth/useAuth";
 import UserPopover from "./UserPopover";
 
 export default function UserAvatar() {

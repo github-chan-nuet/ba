@@ -1,10 +1,10 @@
 import { Button, Divider, Subtitle1, Subtitle2, Title1, tokens } from "@fluentui/react-components";
 import { Link } from "react-router";
 import { DismissCircle28Regular, Sparkle28Filled } from "@fluentui/react-icons";
-import { getAchievedXP, getTotalAchievableXP, getWrongAnswerCount } from "../utils/exam";
+import { getAchievedXP, getTotalAchievableXP, getWrongAnswerCount } from "@utils/exam";
 
-import ExamStyles from "../styles/Exam.module.scss";
-import type { CompletedExam } from "../api";
+import ExamStyles from "@styles/Exam.module.scss";
+import type { CompletedExam } from "@api/index";
 
 type ExamProgressProps = {
   completedExam: CompletedExam;

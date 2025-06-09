@@ -1,5 +1,5 @@
 import { createContext } from "react"
-import type { User, UserPatchModel } from "../../api";
+import type { User, UserPatchModel } from "@api/index";
 
 export default createContext<{
   token: string,

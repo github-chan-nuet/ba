@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import useAuth from "../../../utils/auth/useAuth";
+import useAuth from "@utils/auth/useAuth";
 import { useNavigate } from "react-router";
-import { createLessonCompletion, getLessonCompletionsOfCourseAndUser } from "../../../api";
-import { getCourse } from "../../../data/courses";
+import { createLessonCompletion, getLessonCompletionsOfCourseAndUser } from "@api/index";
+import { getCourse } from "@data/courses";
 import { Button, Title1 } from "@fluentui/react-components";
-import CourseProgress from "../../../components/CourseProgress";
+import CourseProgress from "@components/CourseProgress";
 import type { Route } from "./+types/lesson";
 
-import CourseLessonStyles from '../../../styles/CourseLesson.module.scss';
+import CourseLessonStyles from '@styles/CourseLesson.module.scss';
 
 export const handle = async ({ params }: Route.LoaderArgs) => {
   const course = await getCourse(params.courseHandle);
