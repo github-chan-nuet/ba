@@ -1,0 +1,79 @@
+@use '@styles/definitions' as *;
+@use '@styles/mixins' as *;
+@use '@styles/typography' as *;
+
+.MailDetailMock {
+  --ring-color: oklab(21% -.00316127 -.0338527 / .1);
+  --ring-shadow: 0 0 0 1px var(--ring-color);
+  --inset-shadow: 0 0 #0000;
+  --inset-ring-shadow: 0 0 #0000;
+  --ring-offset-shadow: 0 0 #0000;
+  --shadow: 0 25px 50px -12px #00000040;
+  box-shadow: var(--inset-shadow), var(--inset-ring-shadow), var(--ring-offset-shadow), var(--ring-shadow), var(--shadow);
+  border-radius: .75rem;
+  margin-bottom: -12%;
+  overflow: hidden;
+  background-color: #F5F5F5;
+
+  &__WindowHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    gap: 2rem;
+    background-color: #EDF6F5;
+  }
+
+  &__WindowHeadTitle {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__WindowActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1.25rem;
+  }
+
+  &__WindowBody {
+    padding: .5rem;
+    @include apply-text(base);
+    font-weight: $font-weight-semibold;
+
+    &>:not(:first-child) {
+      margin-top: .5rem;
+    }
+    &>:last-child {
+      margin-bottom: 16%;
+    }
+  }
+
+  &__MailHeader {
+    display: flex;
+    gap: 1rem;
+    @include apply-text(sm);
+    line-height: 1.1;
+  }
+  &__MailHeaderDetails {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  &__MailHeaderRow {
+    width: 100%;
+    display: flex;
+    gap: 2rem;
+    justify-content: space-between;
+  }
+  &__MailBody {
+    margin-top: 1rem;
+    @include apply-text(sm);
+
+    a {
+      color: blue;
+      text-decoration: underline;
+    }
+  }
+}
