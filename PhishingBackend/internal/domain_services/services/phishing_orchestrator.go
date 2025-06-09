@@ -21,9 +21,7 @@ type PhishingOrchestratorImpl struct {
 }
 
 func (p *PhishingOrchestratorImpl) StartPhishingRunGenerationJob() {
-	// go StartRandomCronJob(15*time.Minute, 60*time.Minute, p.generatePhishingRuns)
-	p.generatePhishingRuns(time.Now().UTC())
-	go StartRandomCronJob(0*time.Minute, 2*time.Minute, p.generatePhishingRuns)
+	go StartRandomCronJob(15*time.Minute, 60*time.Minute, p.generatePhishingRuns)
 }
 
 func (p *PhishingOrchestratorImpl) StartPhishingRunStregthDetectionJob() {}
