@@ -62,8 +62,8 @@ CREATE TABLE phishing_simulation_run
 
   CONSTRAINT phishing_simulation_run_pkey PRIMARY KEY (id),
   CONSTRAINT fk_phishing_simulation_run_user FOREIGN KEY (user_fk) REFERENCES public.user (id),
-  CONSTRAINT fk_phishing_simulation_run_template FOREIGN KEY (template_fk) REFERENCES public.phishing_simulation_content_template (id)
-  CONSTRAINT fk_phishing_simulation_run_email FOREIGN KEY (email_fk) REFERNECES public.email (id)
+  CONSTRAINT fk_phishing_simulation_run_template FOREIGN KEY (template_fk) REFERENCES public.phishing_simulation_content_template (id),
+  CONSTRAINT fk_phishing_simulation_run_email FOREIGN KEY (email_fk) REFERENCES public.email (id)
 );
 
 CREATE TABLE phishing_simulation_user_vulnerability
