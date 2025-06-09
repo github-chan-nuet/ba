@@ -14,7 +14,7 @@ BEGIN
 
   -- Insert Recognition Features
   INSERT INTO phishing_simulation_recognition_feature (id, "name", is_always_applicable, title, user_instruction)
-  VALUES (feat1_id, 'Domain', true, 'URL', '');
+  VALUES (feat1_id, 'Domain', true, 'URL', 'Beim Umgang mit E-Mails sollte man Links stets mit Vorsicht behandeln, da Phishing-Versuche oft über täuschend echte URLs erfolgen. Auch wenn eine E-Mail seriös wirkt, kann sich hinter einem Link eine manipulierte Adresse verbergen. Schon kleine Abweichungen oder ungewöhnliche Domains sind Warnzeichen. Das Schloss-Symbol oder „https“ bieten keine Garantie für Sicherheit, da auch betrügerische Seiten verschlüsselt sein können. Geben Sie persönliche Daten niemals über einen Link in einer E-Mail ein. Im Zweifel ist es sicherer, die Webadresse selbst im Browser einzugeben.');
 
   -- Insert Recognition Feature Values
   INSERT INTO phishing_simulation_recognition_feature_value (id, "value", "level", recognition_feature_fk, content_category_fk)
