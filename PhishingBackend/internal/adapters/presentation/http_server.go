@@ -26,6 +26,7 @@ func SetupHttpServer() {
 
 func NewSecurawareServeMux() *http.ServeMux {
 	// repositories
+	emailRepository := persistence.EmailRepositoryImpl{}
 	userRepository := persistence.UserRepositoryImpl{}
 	lessonCompletionRepository := persistence.LessonCompletionRepositoryImpl{}
 	examRepo := persistence.ExamRepositoryImpl{}
@@ -45,6 +46,7 @@ func NewSecurawareServeMux() *http.ServeMux {
 	}
 	phishingEmailGenService := services.PhishingEmailGenerationServiceImpl{}
 	phishingRunService := services.PhishingRunServiceImpl{
+		EmailRepository:                &emailRepository,
 		EmailSender:                    &emailSender,
 		PhishingSimulationRepository:   &phishingSimRepo,
 		PhishingEmailGenerationService: &phishingEmailGenService,

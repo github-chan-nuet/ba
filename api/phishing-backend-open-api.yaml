@@ -601,6 +601,15 @@ components:
         id:
           type: string
           format: uuid
+        sentAt:
+          type: string
+          format: date-time
+        sender:
+          type: string
+        subject:
+          type: string
+        content:
+          type: string
         recognitionFeatureValues:
           type: array
           items:
@@ -615,16 +624,20 @@ components:
         id:
           type: string
           format: uuid
-        level:
-          type: integer
+        difficulty:
+          type: number
+          format: float
         value:
+          type: string
+        title:
           type: string
         educationalInstruction:
           type: string
       required:
         - id
-        - level
+        - difficulty
         - value
+        - title
         - educationalInstruction
 
     ProblemDetail:

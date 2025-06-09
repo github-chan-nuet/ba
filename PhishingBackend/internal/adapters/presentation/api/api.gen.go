@@ -4,6 +4,8 @@
 package api
 
 import (
+	"time"
+
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
@@ -91,16 +93,21 @@ type Lesson struct {
 
 // PhishingSimulationRecognitionFeatureValue defines model for PhishingSimulationRecognitionFeatureValue.
 type PhishingSimulationRecognitionFeatureValue struct {
+	Difficulty             float32            `json:"difficulty"`
 	EducationalInstruction string             `json:"educationalInstruction"`
 	Id                     openapi_types.UUID `json:"id"`
-	Level                  int                `json:"level"`
+	Title                  string             `json:"title"`
 	Value                  string             `json:"value"`
 }
 
 // PhishingSimulationRun defines model for PhishingSimulationRun.
 type PhishingSimulationRun struct {
+	Content                  *string                                     `json:"content,omitempty"`
 	Id                       openapi_types.UUID                          `json:"id"`
 	RecognitionFeatureValues []PhishingSimulationRecognitionFeatureValue `json:"recognitionFeatureValues"`
+	Sender                   *string                                     `json:"sender,omitempty"`
+	SentAt                   *time.Time                                  `json:"sentAt,omitempty"`
+	Subject                  *string                                     `json:"subject,omitempty"`
 }
 
 // ProblemDetail defines model for ProblemDetail.

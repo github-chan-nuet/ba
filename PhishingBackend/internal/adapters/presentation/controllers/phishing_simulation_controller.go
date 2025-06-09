@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"math/rand/v2"
 	"net/http"
 	"phishing_backend/internal/adapters/presentation/api"
 	"phishing_backend/internal/adapters/presentation/error_handling"
@@ -25,7 +26,7 @@ func (c *PhishingSimulationController) GetRun(w http.ResponseWriter, r *http.Req
 		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
-	if run.Email.ClickedAt == nil {
+	if run != nil && run.Email != nil && run.Email.ClickedAt == nil {
 		c.PhishingRunService.TrackRunClick(run)
 	}
 	runDto := toApiPhishingSimulationRun(run)
@@ -33,15 +34,27 @@ func (c *PhishingSimulationController) GetRun(w http.ResponseWriter, r *http.Req
 }
 
 func toApiPhishingSimulationRun(run *domain_model.PhishingSimulationRun) *api.PhishingSimulationRun {
-	dtoRun := api.PhishingSimulationRun{
-		Id: (*run).ID,
+	if run == nil {
+		return nil
 	}
+
+	dtoRun := api.PhishingSimulationRun{
+		Id: run.ID,
+	}
+	if run.Email != nil {
+		dtoRun.SentAt = run.Email.SentAt
+		dtoRun.Sender = &run.Email.Sender
+		dtoRun.Subject = &run.Email.Subject
+		dtoRun.Content = &run.Email.Content
+	}
+
 	dtoRecognitionFeatureValues := make([]api.PhishingSimulationRecognitionFeatureValue, len((*run).RecognitionFeatureValues))
 	for i, recognitionFeatureValue := range run.RecognitionFeatureValues {
 		dtoRecognitionFeatureValue := api.PhishingSimulationRecognitionFeatureValue{
 			Id:                     recognitionFeatureValue.ID,
-			Level:                  recognitionFeatureValue.Level,
+			Difficulty:             rand.Float32(), // TODO: Implement Logic
 			Value:                  recognitionFeatureValue.Value,
+			Title:                  recognitionFeatureValue.RecognitionFeature.Title,
 			EducationalInstruction: recognitionFeatureValue.RecognitionFeature.UserInstruction,
 		}
 		dtoRecognitionFeatureValues[i] = dtoRecognitionFeatureValue

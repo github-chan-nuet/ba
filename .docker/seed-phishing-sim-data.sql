@@ -13,8 +13,8 @@ BEGIN
   VALUES (cc_id, 'Suspicous-E-Banking-Access');
 
   -- Insert Recognition Features
-  INSERT INTO phishing_simulation_recognition_feature (id, "name", is_always_applicable, user_instruction)
-  VALUES (feat1_id, 'Domain', true, '');
+  INSERT INTO phishing_simulation_recognition_feature (id, "name", is_always_applicable, title, user_instruction)
+  VALUES (feat1_id, 'Domain', true, 'URL', '');
 
   -- Insert Recognition Feature Values
   INSERT INTO phishing_simulation_recognition_feature_value (id, "value", "level", recognition_feature_fk, content_category_fk)
