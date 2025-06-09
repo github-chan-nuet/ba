@@ -27,8 +27,9 @@ unit-test-phishingbackend:
   stage: test
   image: golang:1.24.1
   script:
-    - cd PhishingBackend
-    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list ./... | grep -vE '/integration_tests')
+    # cd into internal folder to skip integration tests
+    - cd PhishingBackend/internal
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml
   artifacts:
     when: always
     paths:
@@ -51,15 +52,14 @@ integration-test-phishingbackend:
     - source setup/integrationTests.env
     - PHBA_DB_HOST=postgres
     - set +a
-    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml --packages $(go list -tags integration ./...) -- -tags integration
+    # https://pkg.go.dev/gotest.tools/gotestsum#readme-custom-go-test-command
+    - go run gotest.tools/gotestsum@latest --junitfile testResults.xml -- -tags=integration ./...
   artifacts:
     when: always
     paths:
       - PhishingBackend/integration_tests/testResults.xml
     reports:
       junit: PhishingBackend/integration_tests/testResults.xml
-
-# TODO: Add tests for frontend
 
 publish:
   stage: publish

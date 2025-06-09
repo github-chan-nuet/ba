@@ -1,18 +1,12 @@
-import { useEffect } from "react";
 import useAuth from "../../utils/auth/useAuth";
-import { Outlet, useNavigate } from "react-router";
+import { Navigate, Outlet } from "react-router";
 
 export default function ProtectedRoute() {
   const { token } = useAuth();
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!token) {
-      navigate("/");
-    }
-  }, [navigate, token])
+  if (!token) {
+    return <Navigate to="/" replace />
+  }
 
-  return token && (
-    <Outlet />
-  )
+  return <Outlet />
 }

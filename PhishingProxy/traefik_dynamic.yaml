@@ -1,26 +1,52 @@
 http:
   routers:
     phishingBackend:
-      rule: "Path(`/api`) || PathPrefix(`/api/`)"
+      rule: "(Host(`www.securaware.ch`) || Host(`securaware.ch`)) && (Path(`/api`) || PathPrefix(`/api/`))"
       service: phishingBackend
       entrypoints:
         - websecure
+      middlewares:
+        - redirect-root-to-www
       priority: 10
       tls:
         domains:
           - main: "securaware.ch"
+            sans:
+              - "www.securaware.ch"
         certResolver: myresolver
 
     phishingEducator:
-      rule: "Host(`securaware.ch`)"
+      rule: "Host(`www.securaware.ch`) || Host(`securaware.ch`)"
       service: phishingEducator
       entrypoints:
         - websecure
+      middlewares:
+        - redirect-root-to-www
       priority: 1
       tls:
         domains:
           - main: "securaware.ch"
+            sans:
+              - "www.securaware.ch"
         certResolver: myresolver
+
+    phishingDomains:
+      rule: "!Host(`www.securaware.ch`) && !Host(`securaware.ch`)"
+      entrypoints:
+        - web
+        - websecure
+      middlewares:
+        - redirect-phishing-domains-to-securaware
+      tls:
+        domains:
+          - main: "bamk-of-switzerland.ch"
+            sans:
+              - "www.bamk-of-switzerland.ch"
+          - main: "bank-of-switzerland.ch"
+            sans:
+              - "www.bank-of-switzerland.ch"
+        certResolver: myresolver
+      service: phishingEducator  # Not actually used, but required by traefik
   
   services:
     phishingBackend:
@@ -34,7 +60,14 @@ http:
           - url: "http://phishing_educator:80"
 
   middlewares:
-    traefik-auth:
-      basicAuth:
-        users:
-          - "mib:$apr1$8Bm2OTIW$VNSGdjh2wfNmgMMbnKLw60"
+    redirect-root-to-www:
+      redirectRegex:
+        regex: '^https?:\/\/([a-z0-9-]+)\.([a-z]{2,})(\/.*|$)'
+        replacement: "https://www.${1}.${2}${3}"
+        permanent: true
+
+    redirect-phishing-domains-to-securaware:
+      redirectRegex:
+        regex: '^https?:\/\/[^?#]+(\?[^#]*)?$'
+        replacement: "https://www.securaware.ch/phishing-simulation${1}"
+        permanent: true

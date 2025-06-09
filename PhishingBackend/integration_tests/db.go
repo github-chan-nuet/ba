@@ -19,16 +19,16 @@ var gormDb *gorm.DB
 
 func getUser(email string) *domain_model.User {
 	user := &domain_model.User{}
-	getDb().Where("email = ?", email).First(user)
+	GetDb().Where("email = ?", email).First(user)
 	return user
 }
 
 func createExam(t *testing.T, exam *domain_model.Exam) {
-	result := getDb().Create(exam)
+	result := GetDb().Create(exam)
 	require.Nil(t, result.Error)
 }
 
-func getDb() *gorm.DB {
+func GetDb() *gorm.DB {
 	if gormDb == nil {
 		gormDb = initGormAndDatabaseConnection()
 	}

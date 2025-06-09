@@ -3,11 +3,18 @@ package main
 import (
 	"log/slog"
 	"os"
+	"phishing_backend/internal/adapters"
 	"phishing_backend/internal/adapters/presentation"
 )
 
 func main() {
-	presentation.SetupHttpServer()
+	d := adapters.ResolveDependencies()
+	go startReminderJob(d)
+	presentation.SetupHttpServer(d)
+}
+
+func startReminderJob(d *adapters.Dependencies) {
+	d.ReminderOrchestrator.ExecuteReminderJobAfterDurationEachDay()
 }
 
 func init() {

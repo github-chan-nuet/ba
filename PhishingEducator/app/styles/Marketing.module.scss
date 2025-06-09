@@ -7,7 +7,192 @@
 
   &__container {
     max-width: 120rem;
-    padding-inline: 1.5rem;
     margin-inline: auto;
   }
+}
+
+.Title {
+  font-weight: bold;
+  background: linear-gradient(to left, #3762c5, #48d5ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: block;
+  font-size: 10rem;
+  margin-bottom: 1rem;
+}
+
+.Section {
+  padding: 2rem;
+  width: 90%;
+  border-radius: 2rem;
+  box-shadow: rgba(0, 0, 0, 0.16) 0 0 4px;
+
+  &__title {
+    font-size: 2rem;
+  }
+
+  &__text {
+    font-size: 1.5rem;
+    line-height: 2.5rem;
+  }
+
+}
+
+.Icon {
+  width: 10rem;
+  height: 10rem;
+  color: #3762c5;
+}
+
+.FeatureGrid {
+  display: grid;
+  gap: 3rem;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  grid-auto-flow: row;
+  justify-items: center;
+  margin: 3rem;
+
+  :nth-child(1) { animation-delay: 0.5s; }
+  :nth-child(2) { animation-delay: 0.7s; }
+  :nth-child(3) { animation-delay: 0.9s; }
+  :nth-child(4) { animation-delay: 1.1s; }
+
+  &__active > * {
+    animation: spinIn 1s ease-out forwards;
+  }
+}
+
+.FeatureCard {
+  width: 100%;
+  height: 35rem;
+  border-radius: 1.5rem;
+  background-color: oklch(0.985 0.002 247.839);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: rgba(0, 0, 0, 0.16) 0 0 4px;
+  opacity: 0;
+
+  &__icon {
+    background-color: white;
+    width: 15rem;
+    height: 15rem;
+    border-radius: 9999rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1.5rem;
+    box-shadow: rgba(0, 0, 0, 0.16) 0 0 4px;
+  }
+
+  &__title {
+    margin-top: 1.3rem;
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  &__text {
+    margin: 1.7rem 1rem;
+    font-size: 1.4rem;
+    line-height: 2rem;
+  }
+
+}
+
+@keyframes spinIn {
+  from {
+    transform: rotateY(90deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes blendIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+.CircleBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -10;
+  height: 100vh;
+  width: 100%;
+  background-color: oklch(0.985 0.002 247.839);
+
+  &__cirlce {
+    position: absolute;
+    bottom: auto;
+    left: auto;
+    right: 0;
+    top: 0;
+    height: 31rem;
+    width: 31rem;
+    transform: translate(-70%, 25%);
+    border-radius: 9999px;
+    background-color: rgba(0, 120, 212, 0.5); // "rgba(173, 109, 244, 0.5)",
+    opacity: 0.5;
+    filter: blur(80px);
+  }
+}
+
+.Line {
+  height: 0.2rem;
+  width: 35rem;
+  background-color: black;
+  color: black;
+  margin-bottom: 4rem;
+}
+
+.SecurawareSolution {
+  height: 80vh;
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  grid-template-rows: 1fr;
+  gap: 2rem;
+  align-content: space-around;
+}
+
+.PhishingAttacks {
+  background-color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  grid-template-rows: 1fr;
+  gap: 2rem;
+  align-content: space-around;
+  min-height: 90vh;
+  max-width: 100%;
+
+  &__text_container {
+    text-align: center;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+  }
+}
+
+@media (orientation: portrait) {
+  .Section, .FeatureGrid {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  .Title {
+    font-size: 4rem;
+  }
+
+  .Line {
+    width: 10rem;
+  }
+
+  .FeatureGrid {
+    margin: 3rem 1rem 1rem 1rem;
+  }
+
 }
