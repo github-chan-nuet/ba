@@ -14,10 +14,6 @@
   &__items {
     display: flex;
     flex-direction: column;
-
-    &:hover .NavBar__itemLabel {
-      text-decoration-line: underline;
-    }
   }
 
   &__item {
