@@ -87,7 +87,7 @@ deploy:
     - echo CI_COMMIT_SHA=${CI_COMMIT_SHA} >> ./.docker/.env
   script:
     - eval $(ssh-agent -s)
-    - echo "$CD_PRIVATE_KEY" | tr -d '\r' | ssh-add
+    - echo "$CD_PRIVATE_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - scp -o StrictHostKeyChecking=no ./.docker/compose.yaml ./.docker/compose.prod.yaml ./.docker/.env ./.docker/create-extension.sql "$CD_USERNAME"@"$CD_HOST":/home/$CD_USERNAME/securaware/.docker
