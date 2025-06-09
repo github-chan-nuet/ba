@@ -6,6 +6,8 @@ import (
 	"phishing_backend/internal/domain_model"
 	"regexp"
 	"strings"
+
+	"github.com/google/uuid"
 )
 
 var _ PhishingEmailGenerationService = (*PhishingEmailGenerationServiceImpl)(nil)
@@ -37,6 +39,7 @@ func (s *PhishingEmailGenerationServiceImpl) GenerateEmail(run *domain_model.Phi
 	}
 
 	email := domain_model.Email{
+		ID:        uuid.New(),
 		Sender:    "info@" + domainValue.Value,
 		Recipient: run.User.Email,
 		Subject:   subject,

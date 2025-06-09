@@ -1,3 +1,16 @@
+CREATE TABLE email
+(
+  id         uuid NOT NULL,
+  sender     text NOT NULL,
+  recipient  text NOT NULL,
+  "subject"  text NOT NULL,
+  content    text NOT NULL,
+  sent_at    timestamptz NULL,
+  clicked_at timestamptz NULL,
+
+  CONSTRAINT email_pkey PRIMARY KEY (id)
+);
+
 CREATE TABLE phishing_simulation_content_category
 (
   id     uuid NOT NULL,
@@ -45,12 +58,12 @@ CREATE TABLE phishing_simulation_run
   id          uuid NOT NULL,
   user_fk     uuid NOT NULL,
   template_fk uuid NOT NULL,
-  sent_at     timestamptz NULL,
-  opened_at   timestamptz NULL,
+  email_fk    uuid NULL,
 
   CONSTRAINT phishing_simulation_run_pkey PRIMARY KEY (id),
   CONSTRAINT fk_phishing_simulation_run_user FOREIGN KEY (user_fk) REFERENCES public.user (id),
   CONSTRAINT fk_phishing_simulation_run_template FOREIGN KEY (template_fk) REFERENCES public.phishing_simulation_content_template (id)
+  CONSTRAINT fk_phishing_simulation_run_email FOREIGN KEY (email_fk) REFERNECES public.email (id)
 );
 
 CREATE TABLE phishing_simulation_user_vulnerability

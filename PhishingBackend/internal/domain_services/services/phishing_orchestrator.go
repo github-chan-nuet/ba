@@ -45,8 +45,8 @@ func (p *PhishingOrchestratorImpl) generatePhishingRuns(currentTime time.Time) {
 		}
 
 		if latestRun == nil ||
-			latestRun.SentAt == nil ||
-			latestRun.SentAt.Add(periodUntilNextRun).UTC().Before(currentTime) {
+			latestRun.Email.SentAt == nil ||
+			latestRun.Email.SentAt.Add(periodUntilNextRun).UTC().Before(currentTime) {
 			err = p.PhishingRunService.GenerateRun(&user)
 			if err != nil {
 				slog.Error("Generate Run Failed", "error", err)

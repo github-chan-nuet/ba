@@ -20,6 +20,7 @@ type PhishingRunService interface {
 }
 
 type PhishingRunServiceImpl struct {
+	EmailRepository                repositories.EmailRepository
 	EmailSender                    email.EmailSender
 	PhishingSimulationRepository   repositories.PhishingSimulationRepository
 	PhishingEmailGenerationService PhishingEmailGenerationService
@@ -57,7 +58,11 @@ func (s *PhishingRunServiceImpl) GenerateRun(user *domain_model.User) error {
 		return err
 	}
 
-	return s.sendRun(&run)
+	email, err := s.sendRun(&run)
+	if err != nil {
+		run.EmailFk = &email.ID
+	}
+	return err
 }
 
 func (s *PhishingRunServiceImpl) getScoredTemplates(vulnerabilities []domain_model.PhishingSimulationUserVulnerability) []domain_model.ScoredTemplate {
@@ -75,41 +80,48 @@ func (s *PhishingRunServiceImpl) getScoredTemplates(vulnerabilities []domain_mod
 	return scoredTemplatesTotal
 }
 
-func (s *PhishingRunServiceImpl) sendRun(run *domain_model.PhishingSimulationRun) error {
+func (s *PhishingRunServiceImpl) sendRun(run *domain_model.PhishingSimulationRun) (*domain_model.Email, error) {
 	email := s.PhishingEmailGenerationService.GenerateEmail(run)
 	if email == nil {
-		return errors.New("Email could not be generated")
+		return email, errors.New("Email could not be generated")
 	}
 
-	err := s.EmailSender.Send(email)
+	err := s.EmailRepository.Create(email)
 	if err != nil {
-		return err
+		return email, err
+	}
+
+	err = s.EmailSender.Send(email)
+	if err != nil {
+		return email, err
 	}
 
 	now := time.Now().UTC()
-	runPatch := domain_model.PhishingSimulationRunPatch{
-		ID:     run.ID,
+	emailPatch := domain_model.EmailPatch{
+		ID:     email.ID,
 		SentAt: &now,
 	}
-	err = s.PhishingSimulationRepository.Update(&runPatch)
+	email.SentAt = &now
+
+	err = s.EmailRepository.Update(&emailPatch)
 	if err != nil {
-		return err
+		return email, err
 	}
 
-	return nil
+	return email, nil
 }
 
 func (s *PhishingRunServiceImpl) TrackRunClick(run *domain_model.PhishingSimulationRun) error {
-	if run.OpenedAt != nil {
+	if run.Email.ClickedAt != nil {
 		return errors.New("Run Click already tracked")
 	}
 
 	now := time.Now().UTC()
-	runPatch := domain_model.PhishingSimulationRunPatch{
-		ID:       run.ID,
-		OpenedAt: &now,
+	emailPatch := domain_model.EmailPatch{
+		ID:        run.Email.ID,
+		ClickedAt: &now,
 	}
-	err := s.PhishingSimulationRepository.Update(&runPatch)
+	err := s.EmailRepository.Update(&emailPatch)
 	if err != nil {
 		return err
 	}

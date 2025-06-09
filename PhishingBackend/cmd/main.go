@@ -21,10 +21,12 @@ func main() {
 		SmtpAddr: smtpAddr,
 		SmtpHost: smtpHost,
 	}
+	emailRepository := persistence.EmailRepositoryImpl{}
 	userRepository := persistence.UserRepositoryImpl{}
 	phishingSimulationRepository := persistence.PhishingSimulationRepositoryImpl{}
 	phishingEmailGenerationService := services.PhishingEmailGenerationServiceImpl{}
 	phishingRunService := services.PhishingRunServiceImpl{
+		EmailRepository:                &emailRepository,
 		EmailSender:                    &emailSender,
 		PhishingSimulationRepository:   &phishingSimulationRepository,
 		PhishingEmailGenerationService: &phishingEmailGenerationService,

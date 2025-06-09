@@ -1,8 +1,6 @@
 package domain_model
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 )
 
@@ -13,12 +11,11 @@ type PhishingSimulationRun struct {
 	TemplateFk               uuid.UUID
 	Template                 *PhishingSimulationContentTemplate          `gorm:"foreignKey:TemplateFk"`
 	RecognitionFeatureValues []PhishingSimulationRecognitionFeatureValue `gorm:"many2many:phishing_simulation_run_recognition_feature_value;"`
-	SentAt                   *time.Time                                  `gorm:"type:timestamptz"`
-	OpenedAt                 *time.Time                                  `gorm:"type:timestamptz"`
+	EmailFk                  *uuid.UUID
+	Email                    *Email `gorm:"foreignKey:EmailFk"`
 }
 
 type PhishingSimulationRunPatch struct {
-	ID       uuid.UUID
-	SentAt   *time.Time
-	OpenedAt *time.Time
+	ID      uuid.UUID
+	EmailFk *uuid.UUID
 }

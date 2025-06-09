@@ -33,19 +33,11 @@ func (r *PhishingSimulationRepositoryImpl) Update(runPatch *domain_model.Phishin
 	}
 
 	updates := map[string]interface{}{}
-
-	if runPatch.SentAt != nil {
-		if existing.SentAt != nil {
-			return errors.New("SentAt is already set")
+	if runPatch.EmailFk != nil {
+		if existing.EmailFk != nil {
+			return errors.New("EmailFk is already set")
 		}
-		updates["sent_at"] = *runPatch.SentAt
-	}
-
-	if runPatch.OpenedAt != nil {
-		if existing.OpenedAt != nil {
-			return errors.New("OpenedAt is already set")
-		}
-		updates["opened_at"] = *runPatch.OpenedAt
+		updates["email_fk"] = runPatch.EmailFk
 	}
 
 	if len(updates) > 0 {
@@ -67,6 +59,7 @@ func (r *PhishingSimulationRepositoryImpl) GetRun(runId uuid.UUID) (*domain_mode
 		Preload("Template.ContentCategory").
 		Preload("RecognitionFeatureValues").
 		Preload("RecognitionFeatureValues.RecognitionFeature").
+		Preload("Email").
 		Where("id = ?", runId).
 		First(&run)
 	if result.Error != nil {
@@ -87,6 +80,7 @@ func (r *PhishingSimulationRepositoryImpl) GetLatestRun(userId uuid.UUID) (*doma
 		Preload("Template.ContentCategory").
 		Preload("RecognitionFeatureValues").
 		Preload("RecognitionFeatureValues.RecognitionFeature").
+		Preload("Email").
 		Where("user_fk = ?", userId).
 		First(&latestRun)
 	if result.Error != nil {
