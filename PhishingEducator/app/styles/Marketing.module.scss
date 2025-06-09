@@ -1,6 +1,8 @@
 @use '@styles/mixins' as *;
 
 .Marketing {
+  min-height: 100dvh;
+
   position: relative;
   overflow: hidden;
 
