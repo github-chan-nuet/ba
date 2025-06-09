@@ -14,10 +14,12 @@ export default function WelcomeBanner() {
       </Body2>
       <div className={WelcomeBannerStyles.WelcomeBanner__illustrationContainer}>
         <img
+          alt=""
           src={"/blob.svg"}
           className={WelcomeBannerStyles.WelcomeBanner__blob}
         />
         <img
+          alt=""
           src={"/illustration_1.svg"}
           className={WelcomeBannerStyles.WelcomeBanner__ilustration}
         />
