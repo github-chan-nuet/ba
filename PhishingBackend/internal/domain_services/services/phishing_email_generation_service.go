@@ -26,13 +26,13 @@ func (s *PhishingEmailGenerationServiceImpl) GenerateEmail(run *domain_model.Phi
 		return nil
 	}
 
-	subject, err := parseTemplate(run.Template.Subject, run)
+	subject, err := s.parseTemplate(run.Template.Subject, run)
 	if err != nil {
 		slog.Error("Failed to parse subject")
 		return nil
 	}
 
-	content, err := parseTemplate(run.Template.Content, run)
+	content, err := s.parseTemplate(run.Template.Content, run)
 	if err != nil {
 		slog.Error("Failed to parse content")
 		return nil
@@ -49,7 +49,7 @@ func (s *PhishingEmailGenerationServiceImpl) GenerateEmail(run *domain_model.Phi
 	return &email
 }
 
-func parseTemplate(input string, run *domain_model.PhishingSimulationRun) (string, error) {
+func (s *PhishingEmailGenerationServiceImpl) parseTemplate(input string, run *domain_model.PhishingSimulationRun) (string, error) {
 	// Find outermost {{...}} block
 	re := regexp.MustCompile(`{{(.*?)}}`)
 	for {
@@ -83,7 +83,7 @@ func parseTemplate(input string, run *domain_model.PhishingSimulationRun) (strin
 			}
 
 			// Case 2: Nested Placeholder
-			resolvedInner, err := parseTemplate(body, run)
+			resolvedInner, err := s.parseTemplate(body, run)
 			if err != nil {
 				return "", err
 			}
