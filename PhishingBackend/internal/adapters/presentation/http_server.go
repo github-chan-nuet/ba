@@ -3,14 +3,10 @@ package presentation
 import (
 	"log/slog"
 	"net/http"
-	"net/smtp"
 	"os"
 	"phishing_backend/internal/adapters"
-	"phishing_backend/internal/adapters/communication"
-	"phishing_backend/internal/adapters/persistence"
 	"phishing_backend/internal/adapters/presentation/controllers"
 	"phishing_backend/internal/adapters/presentation/error_handling"
-	"phishing_backend/internal/domain_services/services"
 	"runtime"
 	"strings"
 )
@@ -27,20 +23,6 @@ func SetupHttpServer(d *adapters.Dependencies) {
 }
 
 func NewSecurawareServeMux(d *adapters.Dependencies) *http.ServeMux {
-	// repositories
-	emailRepository := persistence.EmailRepositoryImpl{}
-	phishingSimRepo := persistence.PhishingSimulationRepositoryImpl{}
-
-	// services
-	emailSender := communication.EmailSenderImpl{SendMailFn: smtp.SendMail}
-	phishingEmailGenService := services.PhishingEmailGenerationServiceImpl{}
-	phishingRunService := services.PhishingRunServiceImpl{
-		EmailRepository:                &emailRepository,
-		EmailSender:                    &emailSender,
-		PhishingSimulationRepository:   &phishingSimRepo,
-		PhishingEmailGenerationService: &phishingEmailGenService,
-	}
-
 	// controllers
 	userController := controllers.UserController{
 		Authenticator:     d.Authenticator,
@@ -61,8 +43,8 @@ func NewSecurawareServeMux(d *adapters.Dependencies) *http.ServeMux {
 		ExamCompletionService: d.ExamCompletionService,
 	}
 	phishingSimController := controllers.PhishingSimulationController{
-		PhishingRunService:           &phishingRunService,
-		PhishingSimulationRepository: &phishingSimRepo,
+		PhishingRunService:           d.PhishingRunService,
+		PhishingSimulationRepository: d.PhishingSimulationRepository,
 	}
 
 	routes := NewSmuxCreator()

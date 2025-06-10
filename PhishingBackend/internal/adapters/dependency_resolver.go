@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"log/slog"
+	"net/smtp"
 	"os"
 	"phishing_backend/internal/adapters/communication"
 	"phishing_backend/internal/adapters/persistence"
@@ -14,21 +15,26 @@ import (
 
 type Dependencies struct {
 	// repositories
-	UserRepository             repositories.UserRepository
-	LessonCompletionRepository repositories.LessonCompletionRepository
-	ExamRepository             repositories.ExamRepository
-	ExamCompletionRepository   repositories.ExamCompletionRepository
-	ReminderRepository         repositories.ReminderRepository
-	ReminderTemplateRepository repositories.ReminderEmailTemplateRepository
+	UserRepository               repositories.UserRepository
+	LessonCompletionRepository   repositories.LessonCompletionRepository
+	ExamRepository               repositories.ExamRepository
+	ExamCompletionRepository     repositories.ExamCompletionRepository
+	ReminderRepository           repositories.ReminderRepository
+	ReminderTemplateRepository   repositories.ReminderEmailTemplateRepository
+	EmailRepository              repositories.EmailRepository
+	PhishingSimulationRepository repositories.PhishingSimulationRepository
 
 	// services
-	EmailSender             email.EmailSender
-	ExperienceService       services.ExperienceService
-	ExamCompletionService   services.ExamCompletionService
-	Authenticator           services.Authenticator
-	ReminderOrchestrator    services.ReminderOrchestrator
-	LessonCompletionService services.LessonCompletionService
-	UserService             services.UserService
+	EmailSender                    email.EmailSender
+	ExperienceService              services.ExperienceService
+	ExamCompletionService          services.ExamCompletionService
+	Authenticator                  services.Authenticator
+	ReminderOrchestrator           services.ReminderOrchestrator
+	LessonCompletionService        services.LessonCompletionService
+	UserService                    services.UserService
+	PhishingEmailGenerationService services.PhishingEmailGenerationService
+	PhishingRunService             services.PhishingRunService
+	PhishingOrchestrator           services.PhishingOrchestrator
 }
 
 func ResolveDependencies() *Dependencies {
@@ -40,13 +46,16 @@ func ResolveDependencies() *Dependencies {
 	d.ExamCompletionRepository = &persistence.ExamCompletionRepositoryImpl{}
 	d.ReminderRepository = &persistence.ReminderRepositoryImpl{}
 	d.ReminderTemplateRepository = &persistence.ReminderEmailTemplateRepositoryImpl{}
+	d.EmailRepository = &persistence.EmailRepositoryImpl{}
+	d.PhishingSimulationRepository = &persistence.PhishingSimulationRepositoryImpl{}
 
 	// services
 	d.EmailSender = &communication.EmailSenderImpl{
-		SmtpUser: os.Getenv("PHBA_SMTP_USER"),
-		SmtpPw:   os.Getenv("PHBA_SMTP_PASSWORD"),
-		SmtpAddr: os.Getenv("PHBA_SMTP_ADDR"),
-		SmtpHost: os.Getenv("PHBA_SMTP_HOST"),
+		SmtpUser:   os.Getenv("PHBA_SMTP_USER"),
+		SmtpPw:     os.Getenv("PHBA_SMTP_PASSWORD"),
+		SmtpAddr:   os.Getenv("PHBA_SMTP_ADDR"),
+		SmtpHost:   os.Getenv("PHBA_SMTP_HOST"),
+		SendMailFn: smtp.SendMail,
 	}
 	d.ExperienceService = &services.ExperienceServiceImpl{
 		LessonCompRepo: d.LessonCompletionRepository,
@@ -66,7 +75,15 @@ func ResolveDependencies() *Dependencies {
 	d.UserService = &services.UserServiceImpl{
 		UserRepository: d.UserRepository,
 	}
+	d.PhishingEmailGenerationService = &services.PhishingEmailGenerationServiceImpl{}
+	d.PhishingRunService = &services.PhishingRunServiceImpl{
+		EmailRepository:                d.EmailRepository,
+		EmailSender:                    d.EmailSender,
+		PhishingSimulationRepository:   d.PhishingSimulationRepository,
+		PhishingEmailGenerationService: d.PhishingEmailGenerationService,
+	}
 	setReminderOrchestrator(d)
+	setPhishingOrchestrator(d)
 	return d
 }
 
@@ -85,5 +102,13 @@ func setReminderOrchestrator(d *Dependencies) {
 		ReminderRepository:         d.ReminderRepository,
 		UserRepository:             d.UserRepository,
 		TemplateRepository:         d.ReminderTemplateRepository,
+	}
+}
+
+func setPhishingOrchestrator(d *Dependencies) {
+	d.PhishingOrchestrator = &services.PhishingOrchestratorImpl{
+		UserRepository:               d.UserRepository,
+		PhishingSimulationRepository: d.PhishingSimulationRepository,
+		PhishingRunService:           d.PhishingRunService,
 	}
 }

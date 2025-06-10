@@ -46,13 +46,6 @@ func StartRandomCronJob(min, max time.Duration, fn func(utc time.Time)) {
 	}
 }
 
-func ExecuteFunctionIn(d time.Duration, fn func(utc time.Time)) {
-	ticker := time.NewTicker(d)
-	now := <-ticker.C
-	ticker.Stop()
-	go fn(now.UTC())
-}
-
 func ExecuteEachDayAfterDuration(d time.Duration, fn func()) {
 	for {
 		nextInvocation := time.Now().Truncate(time.Hour * 24).Add(time.Hour*24 + d)
