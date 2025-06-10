@@ -19,7 +19,7 @@ export default function FeatureGrid() {
           <Feature
             icon={<MailRegular />}
             title="Phishing Simulation"
-            description="Identifiziere Phishing E-Mails anhand praxisnahen Simulationen und vertiefe dein Wissen mit Tipps rund um die Erkennungsmerkmale."
+            description="Identifiziere Phishing E-Mails anhand praxisnaher Simulationen und vertiefe dein Wissen mit Tipps rund um die Erkennungsmerkmale."
           />
           <Feature
             icon={<PenRegular />}
