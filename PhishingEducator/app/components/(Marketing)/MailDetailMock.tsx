@@ -1,6 +1,6 @@
 import { DismissRegular, SquareMultipleRegular, SubtractRegular } from '@fluentui/react-icons';
 import MailDetailMockStyles from './MailDetailMock.module.scss';
-import { Avatar, Card, Popover, PopoverSurface, PopoverTrigger, tokens } from '@fluentui/react-components';
+import { Avatar, Card, Popover, PopoverSurface, PopoverTrigger } from '@fluentui/react-components';
 import parse, { domToReact } from 'html-react-parser';
 import type { DOMNode } from 'html-dom-parser';
 import type { PhishingSimulationRecognitionFeatureValue } from '@api/index';
@@ -51,24 +51,14 @@ export default function MailDetailMock({ sentAt, sender, subject, content, recog
           <Avatar color="colorful" name={sender} size={36} />
           <div className={MailDetailMockStyles.MailDetailMock__MailHeaderDetails}>
             <div className={MailDetailMockStyles.MailDetailMock__MailHeaderRow}>
-              <p
-                className={MailDetailMockStyles.MailDetailMock__MailSenderName}
-                style={{
-                  color: tokens.colorBrandForeground1
-                }}
-              >
+              <p className={MailDetailMockStyles.MailDetailMock__MailSenderName}>
                 { sender }
               </p>
               <div className={MailDetailMockStyles.MailDetailMock__MailHeaderActions}>
 
               </div>
             </div>
-            <div
-              className={MailDetailMockStyles.MailDetailMock__MailHeaderRow}
-              style={{
-                color: tokens.colorNeutralForeground3
-              }}
-            >
+            <div className={MailDetailMockStyles.MailDetailMock__MailHeaderRow}>
               <p className={MailDetailMockStyles.MailDetailMock__MailRecipientText}>An: Sie</p>
               <p>
                 { sentAtFormatter.format(sentDateTime) }

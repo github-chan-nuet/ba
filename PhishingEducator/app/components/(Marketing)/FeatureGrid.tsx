@@ -52,12 +52,7 @@ function Feature({ icon, title, description }: FeatureProps) {
   return (
     <div>
         <dt className={FeatureGridStyles.Feature__Top}>
-          <div
-            className={FeatureGridStyles.Feature__Icon}
-            style={{
-              backgroundColor: tokens.colorBrandBackground
-            }}
-          >
+          <div className={FeatureGridStyles.Feature__Icon}>
             { coloredIcon }
           </div>
           { title }

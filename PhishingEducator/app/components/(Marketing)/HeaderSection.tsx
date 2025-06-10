@@ -1,4 +1,3 @@
-import { tokens } from '@fluentui/react-components';
 import HeaderSectionStyles from './HeaderSection.module.scss';
 
 type HeaderSectionProps = {
@@ -11,12 +10,7 @@ export default function HeaderSection({ eyebrow, title, paragraph }: HeaderSecti
   return (
     <section className={HeaderSectionStyles.HeaderSection}>
       { eyebrow &&
-        <p
-          className={HeaderSectionStyles.HeaderSection__Eyebrow}
-          style={{
-            color: tokens.colorBrandForeground1
-          }}
-        >
+        <p className={HeaderSectionStyles.HeaderSection__Eyebrow}>
           { eyebrow }
         </p>
       }

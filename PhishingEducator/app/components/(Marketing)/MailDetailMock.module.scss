@@ -66,6 +66,11 @@
     display: flex;
     gap: 2rem;
     justify-content: space-between;
+
+    color: var(--colorNeutralForeground3);
+  }
+  &__MailSenderName {
+    color: var(--colorBrandForeground1);
   }
   &__MailBody {
     margin-top: 1rem;
