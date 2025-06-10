@@ -25,17 +25,17 @@ CREATE TABLE reminder
 --
 -- INSERT INTO reminder_email_template
 -- VALUES (1, 'Phishing wird immer cleverer. Und du?',
---         E'Hallo {{ .Firstname }}\r\n\r\nPhishing-Angriffe sind heute kaum noch zu erkennen – ausser du bist vorbereitet.\r\nKomm zurück und hol dir die aktuellsten Tipps auf securaware.ch.\r\n\r\nSchütze dich mit Wissen.\r\n\r\nDein Securaware-Team');
+--         E'Hallo {{ .Firstname }}\r\n\r\nPhishing-Angriffe sind heute kaum noch zu erkennen – ausser du bist vorbereitet.\r\nKomm zurück und hol dir die aktuellsten Tipps auf securaware.ch.\r\n\r\nSchütze dich mit Wissen.\r\nDein Securaware-Team');
 --
 --
 -- INSERT INTO reminder_email_template
 -- VALUES (2, 'Securaware vermisst dich',
---         E'Hallo {{ .Firstname }}\r\n\r\nEs dauert nur wenige Minuten, um dich wieder fit gegen Phishing zu machen. \r\nKomm zurück zu securaware.ch.\r\n\r\nLerne, wie du gefährliche Mails erkennst – bevor es zu spät ist.\r\n\r\nWir freuen uns auf dich!\r\nDein Securaware-Team');
+--         E'Hallo {{ .Firstname }}\r\n\r\nEs dauert nur wenige Minuten, um dich wieder fit gegen Phishing zu machen.\r\nKomm zurück zu securaware.ch.\r\n\r\nLerne, wie du gefährliche Mails erkennst – bevor es zu spät ist.\r\n\r\nWir freuen uns auf dich!\r\nDein Securaware-Team');
 --
 --
 -- INSERT INTO reminder_email_template
 -- VALUES (3, 'Ein Klick kann den Unterschied machen',
---         E'Hallo {{ .Firstname }}\r\n\r\nPhishing kann jeden treffen. Aber nicht jeden muss es erwischen.\r\n- Hol dir das nötige Wissen auf securaware.ch\r\n- Erkenne gefährliche E-Mails\r\n- Vermeide teure Fehler\r\n\r\nMach den Unterschied mit einem Klick.!\r\n\r\nSicher bleiben.\r\nDein Securaware-Team');
+--         E'Hallo {{ .Firstname }}\r\n\r\nPhishing kann jeden treffen. Aber nicht jeden muss es erwischen.\r\n- Hol dir das nötige Wissen auf securaware.ch\r\n- Erkenne gefährliche E-Mails\r\n- Vermeide teure Fehler\r\n\r\nMach den Unterschied mit einem Klick!\r\n\r\nSicher bleiben.\r\nDein Securaware-Team');
 --
 --
 -- INSERT INTO reminder_email_template

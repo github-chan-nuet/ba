@@ -1,7 +1,7 @@
 import { Button, Field, Input } from "@fluentui/react-components";
-import useAuth from "../utils/auth/useAuth";
+import useAuth from "@utils/auth/useAuth";
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { useToaster } from "../utils/toaster/useToaster";
+import { useToaster } from "@utils/toaster/useToaster";
 import ErrorToast from "./ErrorToast";
 
 type LoginFormProps = {

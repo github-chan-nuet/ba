@@ -4,6 +4,8 @@
 package api
 
 import (
+	"time"
+
 	openapi_types "github.com/oapi-codegen/runtime/types"
 )
 
@@ -89,6 +91,25 @@ type Lesson struct {
 	LessonId openapi_types.UUID `json:"lessonId"`
 }
 
+// PhishingSimulationRecognitionFeatureValue defines model for PhishingSimulationRecognitionFeatureValue.
+type PhishingSimulationRecognitionFeatureValue struct {
+	EducationalInstruction        *string            `json:"educationalInstruction,omitempty"`
+	GeneralEducationalInstruction string             `json:"generalEducationalInstruction"`
+	Id                            openapi_types.UUID `json:"id"`
+	Title                         string             `json:"title"`
+	Value                         string             `json:"value"`
+}
+
+// PhishingSimulationRun defines model for PhishingSimulationRun.
+type PhishingSimulationRun struct {
+	Content                  *string                                     `json:"content,omitempty"`
+	Id                       openapi_types.UUID                          `json:"id"`
+	RecognitionFeatureValues []PhishingSimulationRecognitionFeatureValue `json:"recognitionFeatureValues"`
+	Sender                   *string                                     `json:"sender,omitempty"`
+	SentAt                   *time.Time                                  `json:"sentAt,omitempty"`
+	Subject                  *string                                     `json:"subject,omitempty"`
+}
+
 // ProblemDetail defines model for ProblemDetail.
 type ProblemDetail struct {
 	// Detail A human-readable explanation specific to this occurrence of the problem.
@@ -164,6 +185,9 @@ type CourseId = openapi_types.UUID
 
 // ExamId defines model for examId.
 type ExamId = openapi_types.UUID
+
+// PhishingSimulationRunId defines model for phishingSimulationRunId.
+type PhishingSimulationRunId = openapi_types.UUID
 
 // UserId defines model for userId.
 type UserId = openapi_types.UUID

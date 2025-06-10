@@ -9,12 +9,18 @@ import (
 
 func main() {
 	d := adapters.ResolveDependencies()
-	go startReminderJob(d)
+	startReminderJob(d)
+	startPhishingJobs(d)
 	presentation.SetupHttpServer(d)
 }
 
 func startReminderJob(d *adapters.Dependencies) {
-	d.ReminderOrchestrator.ExecuteReminderJobAfterDurationEachDay()
+	go d.ReminderOrchestrator.ExecuteReminderJobAfterDurationEachDay()
+}
+
+func startPhishingJobs(d *adapters.Dependencies) {
+	go d.PhishingOrchestrator.StartPhishingRunGenerationJob()
+	go d.PhishingOrchestrator.StartPhishingRunStregthDetectionJob()
 }
 
 func init() {

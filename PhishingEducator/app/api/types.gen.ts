@@ -86,6 +86,23 @@ export type CourseCompletion = {
     completedLessons: Array<string>;
 };
 
+export type PhishingSimulationRun = {
+    id: string;
+    sentAt?: string;
+    sender?: string;
+    subject?: string;
+    content?: string;
+    recognitionFeatureValues: Array<PhishingSimulationRecognitionFeatureValue>;
+};
+
+export type PhishingSimulationRecognitionFeatureValue = {
+    id: string;
+    value: string;
+    title: string;
+    generalEducationalInstruction: string;
+    educationalInstruction?: string;
+};
+
 export type ProblemDetail = {
     /**
      * A URI reference that identifies the problem type
@@ -129,6 +146,11 @@ export type ExamId = string;
  * Id of the user
  */
 export type UserId = string;
+
+/**
+ * Id of the phishing simulation run
+ */
+export type PhishingSimulationRunId = string;
 
 export type CreateUserData = {
     body?: UserPostModel;
@@ -545,6 +567,48 @@ export type CompleteExamResponses = {
 };
 
 export type CompleteExamResponse = CompleteExamResponses[keyof CompleteExamResponses];
+
+export type GetPhishingSimulationRunData = {
+    body?: never;
+    path: {
+        /**
+         * Id of the phishing simulation run
+         */
+        phishingSimulationRunId: string;
+    };
+    query?: never;
+    url: '/phishing-simulation/runs/{phishingSimulationRunId}';
+};
+
+export type GetPhishingSimulationRunErrors = {
+    /**
+     * An RFC 9457 problem object
+     */
+    400: ProblemDetail;
+    /**
+     * An RFC 9457 problem object
+     */
+    401: ProblemDetail;
+    /**
+     * An RFC 9457 problem object
+     */
+    403: ProblemDetail;
+    /**
+     * An RFC 9457 problem object
+     */
+    500: ProblemDetail;
+};
+
+export type GetPhishingSimulationRunError = GetPhishingSimulationRunErrors[keyof GetPhishingSimulationRunErrors];
+
+export type GetPhishingSimulationRunResponses = {
+    /**
+     * TODO
+     */
+    200: PhishingSimulationRun;
+};
+
+export type GetPhishingSimulationRunResponse = GetPhishingSimulationRunResponses[keyof GetPhishingSimulationRunResponses];
 
 export type ClientOptions = {
     baseUrl: `${string}://${string}/api` | (string & {});

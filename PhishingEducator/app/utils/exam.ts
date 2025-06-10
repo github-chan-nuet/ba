@@ -1,4 +1,4 @@
-import type { CompletedExam, CompletedQuestion } from "../api";
+import type { CompletedExam, CompletedQuestion } from "@api/index";
 
 export const getWrongAnswerCountForQuestion = (question: CompletedQuestion): number => {
   const userSet = new Set(question.userAnswers);

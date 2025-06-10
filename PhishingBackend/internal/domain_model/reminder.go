@@ -1,8 +1,9 @@
 package domain_model
 
 import (
-	"github.com/google/uuid"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 type Reminder struct {
@@ -13,8 +14,4 @@ type Reminder struct {
 	Count         int
 	TemplateFk    int
 	EmailTemplate *ReminderEmailTemplate `gorm:"foreignKey:TemplateFk"`
-}
-
-type Email struct {
-	Content, Recipient, Subject string
 }

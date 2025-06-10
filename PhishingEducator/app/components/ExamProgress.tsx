@@ -1,9 +1,9 @@
 import { Button, Divider, Spinner, Subtitle1, tokens } from "@fluentui/react-components";
 import { Link } from "react-router";
 import CircularProgress from "./CircularProgress";
-import type { Exam } from "../api";
+import type { Exam } from "@api/index";
 
-import ExamStyles from "../styles/Exam.module.scss";
+import ExamStyles from "@styles/Exam.module.scss";
 
 type UserAnswer = {
   questionId: string;

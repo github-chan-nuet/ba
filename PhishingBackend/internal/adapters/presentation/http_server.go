@@ -42,6 +42,10 @@ func NewSecurawareServeMux(d *adapters.Dependencies) *http.ServeMux {
 		ExamCompRepo:          d.ExamCompletionRepository,
 		ExamCompletionService: d.ExamCompletionService,
 	}
+	phishingSimController := controllers.PhishingSimulationController{
+		PhishingRunService:           d.PhishingRunService,
+		PhishingSimulationRepository: d.PhishingSimulationRepository,
+	}
 
 	routes := NewSmuxCreator()
 
@@ -69,6 +73,10 @@ func NewSecurawareServeMux(d *adapters.Dependencies) *http.ServeMux {
 
 	routes.Add("/api/exams/{examId}/completions", http.MethodGet, examController.GetCompletedExam)
 	routes.Add("/api/exams/{examId}/completions", http.MethodPost, examController.CompleteExam)
+
+	// phishing simulation
+	routes.Add("/api/phishing-simulation/runs/{phishingSimulationRunId}", http.MethodGet, phishingSimController.GetRun)
+
 	return routes.BuildWithOptionEndpoints()
 }
 

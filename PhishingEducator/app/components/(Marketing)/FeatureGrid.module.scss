@@ -1,0 +1,83 @@
+@use '@styles/definitions' as *;
+@use '@styles/mixins' as *;
+@use '@styles/typography' as *;
+
+.FeatureGrid {
+  padding-block: 6rem;
+  max-width: $container-7xl;
+  margin-inline: auto;
+
+  @include responsive(sm) {
+    padding-block: 8rem;
+  }
+
+  &__Grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 4rem;
+    margin-inline: auto;
+    max-width: $container-2xl;
+
+    @include responsive(sm) {
+      row-gap: 5rem;
+    }
+
+    @include responsive(lg) {
+      max-width: none;
+      margin-inline: 0;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+  }
+
+  &__Title {
+    grid-column: span 2 / span 2;
+
+    @include apply-text(4xl);
+    letter-spacing: -.025em;
+    font-weight: $font-weight-semibold;
+
+    @include responsive(sm) {
+      @include apply-text(5xl);
+    }
+  }
+
+  &__Features {
+    grid-column: span 4 / span 4;
+
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    row-gap: 4rem;
+    column-gap: 2rem;
+
+    @include responsive(sm) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+}
+
+.Feature {
+  &__Top {
+    @include apply-text(lg);
+    font-weight: $font-weight-bold;
+  }
+
+  &__Icon {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: .75rem;
+
+    margin-bottom: 1.5rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__Content {
+    color: $color-gray-600;
+    @include apply-text(base);
+    line-height: 1.75rem;
+
+    margin-top: .25rem;
+  }
+}

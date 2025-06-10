@@ -19,6 +19,14 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "paths": {
+      "@styles/*": ["app/styles/*"],
+      "@components/*": ["app/components/*"],
+      "@assets/*": ["app/assets/*"],
+      "@api/*": ["app/api/*"],
+      "@data/*": ["app/data/*"],
+      "@utils/*": ["app/utils/*"],
+    }
   }
 }

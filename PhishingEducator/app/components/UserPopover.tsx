@@ -1,6 +1,6 @@
 import { Button, ProgressBar, tokens } from "@fluentui/react-components";
 import { SettingsCogMultiple24Regular } from "@fluentui/react-icons";
-import useAuth from "../utils/auth/useAuth";
+import useAuth from "@utils/auth/useAuth";
 import ProfileDrawer from "./ProfileDrawer";
 import { useState } from "react";
 

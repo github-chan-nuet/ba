@@ -1,7 +1,7 @@
 import { Button, Field, Input } from "@fluentui/react-components";
-import { createUser } from "../api";
-import useAuth from "../utils/auth/useAuth";
-import { useToaster } from "../utils/toaster/useToaster";
+import { createUser } from "@api/index";
+import useAuth from "@utils/auth/useAuth";
+import { useToaster } from "@utils/toaster/useToaster";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import ErrorToast from "./ErrorToast";
 

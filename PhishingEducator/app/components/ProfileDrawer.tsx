@@ -1,8 +1,8 @@
 import { Button, Checkbox, Divider, Drawer, DrawerBody, DrawerHeader, DrawerHeaderTitle, Field, Input, Spinner, Toast, ToastBody, ToastTitle } from "@fluentui/react-components";
 import { Dismiss24Regular } from "@fluentui/react-icons";
-import useAuth from "../utils/auth/useAuth";
+import useAuth from "@utils/auth/useAuth";
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { useToaster } from "../utils/toaster/useToaster";
+import { useToaster } from "@utils/toaster/useToaster";
 
 type ProfileDrawerProps = {
   isOpen: boolean;

@@ -301,6 +301,30 @@ paths:
           $ref: "#/components/responses/ProblemDetail"
         '500':
           $ref: "#/components/responses/ProblemDetail"
+  "/phishing-simulation/runs/{phishingSimulationRunId}":
+    get:
+      summary: TODO
+      tags:
+        - Phishing Simulation
+      operationId: getPhishingSimulationRun
+      description: TODO
+      parameters:
+        - $ref: "#/components/parameters/phishingSimulationRunId"
+      responses:
+        '200':
+          description: TODO
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PhishingSimulationRun"
+        '400':
+          $ref: "#/components/responses/ProblemDetail"
+        '401':
+          $ref: "#/components/responses/ProblemDetail"
+        '403':
+          $ref: "#/components/responses/ProblemDetail"
+        '500':
+          $ref: "#/components/responses/ProblemDetail"
 
 components:
   securitySchemes:
@@ -344,6 +368,15 @@ components:
         format: uuid
       required: true
       description: Id of the user
+    
+    phishingSimulationRunId:
+      in: path
+      name: phishingSimulationRunId
+      schema:
+        type: string
+        format: uuid
+      required: true
+      description: Id of the phishing simulation run
 
   schemas:
     Lesson:
@@ -561,6 +594,50 @@ components:
       required:
         - courseId
         - completedLessons
+
+    PhishingSimulationRun:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        sentAt:
+          type: string
+          format: date-time
+        sender:
+          type: string
+        subject:
+          type: string
+        content:
+          type: string
+        recognitionFeatureValues:
+          type: array
+          items:
+            $ref: "#/components/schemas/PhishingSimulationRecognitionFeatureValue"
+      required:
+        - id
+        - recognitionFeatureValues
+    
+    PhishingSimulationRecognitionFeatureValue:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        value:
+          type: string
+        title:
+          type: string
+        generalEducationalInstruction:
+          type: string
+        educationalInstruction:
+          type: string
+      required:
+        - id
+        - difficulty
+        - value
+        - title
+        - generalEducationalInstruction
 
     ProblemDetail:
       type: object

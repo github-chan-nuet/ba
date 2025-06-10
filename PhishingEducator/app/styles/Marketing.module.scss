@@ -1,24 +1,55 @@
+@use '@styles/mixins' as *;
+
 .Marketing {
+  min-height: 100dvh;
+
   position: relative;
-  z-index: 1;
+  overflow: hidden;
+
   background-color: oklch(0.985 0.002 247.839);
   color: oklch(0.278 0.033 256.848);
   font-Family: ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
-  &__container {
-    max-width: 120rem;
-    margin-inline: auto;
-  }
-}
+  &__Container {
+    position: relative;
+    isolation: isolate;
 
-.Title {
-  font-weight: bold;
-  background: linear-gradient(to left, #3762c5, #48d5ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: block;
-  font-size: 10rem;
-  margin-bottom: 1rem;
+    padding-top: 3.5rem;
+    padding-inline: 1.5rem;
+    
+    @include responsive(lg) {
+      padding-inline: 2rem;
+    }
+  }
+
+  &__Header {
+    position: absolute;
+    top: 0;
+    inset-inline: 0;
+    z-index: 50;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+
+    @include responsive(lg) {
+      padding-inline: 2rem;
+    }
+  }
+
+  &__LogoContainer {
+    display: flex;
+    gap: 0.5rem;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  &__LogoText {
+    font-size: 1.5rem;
+  }
 }
 
 .Section {
@@ -116,39 +147,6 @@
   to {opacity: 1;}
 }
 
-.CircleBackground {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -10;
-  height: 100vh;
-  width: 100%;
-  background-color: oklch(0.985 0.002 247.839);
-
-  &__cirlce {
-    position: absolute;
-    bottom: auto;
-    left: auto;
-    right: 0;
-    top: 0;
-    height: 31rem;
-    width: 31rem;
-    transform: translate(-70%, 25%);
-    border-radius: 9999px;
-    background-color: rgba(0, 120, 212, 0.5); // "rgba(173, 109, 244, 0.5)",
-    opacity: 0.5;
-    filter: blur(80px);
-  }
-}
-
-.Line {
-  height: 0.2rem;
-  width: 35rem;
-  background-color: black;
-  color: black;
-  margin-bottom: 4rem;
-}
-
 .SecurawareSolution {
   height: 80vh;
   background-color: #fff;
@@ -181,14 +179,6 @@
   .Section, .FeatureGrid {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
-  }
-
-  .Title {
-    font-size: 4rem;
-  }
-
-  .Line {
-    width: 10rem;
   }
 
   .FeatureGrid {

@@ -33,7 +33,7 @@ Desktop: C:\Users\psche\GolandProjects\securaware\PhishingBackend\integration_te
 
 # Create mocks for unit tests
 ```bash
-mockgen -source="lesson_completion_repository.go" -destination="lesson_completion_repository_mock.go" -package=repositories
+mockgen -source="phishing_simulation_repository.go" -destination="phishing_simulation_repository_mock.go" -package=repositories
 ```
 
 # Get licenses

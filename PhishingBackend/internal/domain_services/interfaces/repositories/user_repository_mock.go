@@ -100,6 +100,21 @@ func (mr *MockUserRepositoryMockRecorder) GetUser(userId any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockUserRepository)(nil).GetUser), userId)
 }
 
+// GetUsersForPhishingSimulation mocks base method.
+func (m *MockUserRepository) GetUsersForPhishingSimulation() ([]domain_model.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUsersForPhishingSimulation")
+	ret0, _ := ret[0].([]domain_model.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUsersForPhishingSimulation indicates an expected call of GetUsersForPhishingSimulation.
+func (mr *MockUserRepositoryMockRecorder) GetUsersForPhishingSimulation() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUsersForPhishingSimulation", reflect.TypeOf((*MockUserRepository)(nil).GetUsersForPhishingSimulation))
+}
+
 // UpdateUser mocks base method.
 func (m *MockUserRepository) UpdateUser(arg0 *domain_model.UserPatch) error {
 	m.ctrl.T.Helper()

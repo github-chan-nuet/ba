@@ -1,7 +1,7 @@
 import { Body2, Title2 } from "@fluentui/react-components";
-import useAuth from "../utils/auth/useAuth";
+import useAuth from "@utils/auth/useAuth";
 
-import WelcomeBannerStyles from "../styles/WelcomeBanner.module.scss";
+import WelcomeBannerStyles from "@styles/WelcomeBanner.module.scss";
 
 export default function WelcomeBanner() {
   const { user } = useAuth();
@@ -14,10 +14,12 @@ export default function WelcomeBanner() {
       </Body2>
       <div className={WelcomeBannerStyles.WelcomeBanner__illustrationContainer}>
         <img
+          alt=""
           src={"/blob.svg"}
           className={WelcomeBannerStyles.WelcomeBanner__blob}
         />
         <img
+          alt=""
           src={"/illustration_1.svg"}
           className={WelcomeBannerStyles.WelcomeBanner__ilustration}
         />

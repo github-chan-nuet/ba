@@ -1,0 +1,20 @@
+@use "sass:map";
+
+$breakpoints: (
+  sm:  40rem,
+  md:  48rem,
+  lg:  64rem,
+  xl:  80rem,
+  2xl: 96rem
+);
+
+@mixin responsive($breakpoint) {
+  $value: map.get($breakpoints, $breakpoint);
+  @if $value {
+    @media (min-width: $value) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint #{breakpoint} not found in \$breakpoints map.";
+  }
+}

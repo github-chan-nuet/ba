@@ -1,0 +1,43 @@
+@use '@styles/definitions' as *;
+@use '@styles/mixins' as *;
+@use '@styles/typography' as *;
+
+.HeaderSection {
+  max-width: $container-2xl;
+  margin-inline: auto;
+  text-align: center;
+  padding-block: 6rem;
+
+  @include responsive(sm) {
+    padding-block: 8rem;
+  }
+
+  &__Eyebrow {
+    font-weight: $font-weight-semibold;
+    @include apply-text(base);
+  }
+
+  &__Title {
+    margin-top: .5rem;
+
+    @include apply-text(5xl);
+    letter-spacing: -.025em;
+    font-weight: $font-weight-semibold;
+
+    @include responsive(sm) {
+      @include apply-text(7xl);
+    }
+  }
+
+  &__Paragraph {
+    margin-top: 2rem;
+
+    @include apply-text(lg);
+    color: $color-gray-500;
+    font-weight: $font-weight-medium;
+
+    @include responsive(sm) {
+      @include apply-text(xl);
+    }
+  }
+}

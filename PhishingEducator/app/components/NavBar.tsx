@@ -1,7 +1,7 @@
-import useAuth from "../utils/auth/useAuth";
+import useAuth from "@utils/auth/useAuth";
 import * as FluentIcons from "@fluentui/react-icons";
 
-import NavBarStyles from "../styles/NavBar.module.scss";
+import NavBarStyles from "@styles/NavBar.module.scss";
 import { NavLink } from "react-router";
 import { createFocusOutlineStyle, makeStyles, tokens } from "@fluentui/react-components";
 

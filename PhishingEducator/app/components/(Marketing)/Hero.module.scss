@@ -1,0 +1,69 @@
+@use '@styles/definitions' as *;
+@use '@styles/mixins' as *;
+@use '@styles/typography' as *;
+
+.Hero {
+  max-width: $container-5xl;
+  margin-inline: auto;
+  padding-block: 8rem;
+  text-align: center;
+  
+  @include responsive(sm) {
+    padding-block: 12rem;
+  }
+
+  @include responsive(lg) {
+    padding-block: 14rem;
+  }
+
+  &__Title {
+    @include apply-text(5xl);
+    font-weight: $font-weight-semibold;
+    letter-spacing: -.025em;
+
+    @include responsive(sm) {
+      @include apply-text(7xl);
+    }
+  }
+
+  &__Subtitle {
+    margin-top: 2rem;
+    @include apply-text(lg);
+    font-weight: $font-weight-medium;
+    color: $color-gray-500;
+
+    @include responsive(sm) {
+      @include apply-text(xl);
+      line-height: 2rem;
+    }
+  }
+
+  &__Icon {
+    margin-top: 2rem;
+  }
+}
+
+.ShinyBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -10;
+  height: 100vh;
+  width: 100%;
+  background-color: oklch(0.985 0.002 247.839);
+
+  &__Shine {
+    position: absolute;
+    bottom: auto;
+    left: auto;
+    right: 0;
+    top: 0;
+    height: 31rem;
+    width: 31rem;
+    transform: translate(-70%, 25%);
+    border-radius: 9999px;
+    background-color: rgba(0, 120, 212, 0.5);
+    opacity: 0.5;
+    filter: blur(80px);
+  }
+}
