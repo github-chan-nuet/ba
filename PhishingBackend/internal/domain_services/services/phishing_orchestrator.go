@@ -59,10 +59,10 @@ func (p *PhishingOrchestratorImpl) generatePhishingRuns(currentTime time.Time) {
 }
 
 func (p *PhishingOrchestratorImpl) detectUserStrengths(currentTime time.Time) {
-	// day := 24 * time.Hour
+	day := 24 * time.Hour
 
 	unprocessedRuns, _ := p.PhishingSimulationRepository.GetUnprocessedRuns()
-	toBeProcessedAfter := 5 * time.Minute // 4 * day
+	toBeProcessedAfter := 4 * day
 	for _, run := range unprocessedRuns {
 		if run.ProcessedAt == nil &&
 			run.Email != nil &&
