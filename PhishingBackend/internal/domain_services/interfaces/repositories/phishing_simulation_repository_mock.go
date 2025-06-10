@@ -129,6 +129,21 @@ func (mr *MockPhishingSimulationRepositoryMockRecorder) GetTemplates() *gomock.C
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTemplates", reflect.TypeOf((*MockPhishingSimulationRepository)(nil).GetTemplates))
 }
 
+// GetUnprocessedRuns mocks base method.
+func (m *MockPhishingSimulationRepository) GetUnprocessedRuns() ([]domain_model.PhishingSimulationRun, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUnprocessedRuns")
+	ret0, _ := ret[0].([]domain_model.PhishingSimulationRun)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetUnprocessedRuns indicates an expected call of GetUnprocessedRuns.
+func (mr *MockPhishingSimulationRepositoryMockRecorder) GetUnprocessedRuns() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUnprocessedRuns", reflect.TypeOf((*MockPhishingSimulationRepository)(nil).GetUnprocessedRuns))
+}
+
 // GetUserVulnerabilities mocks base method.
 func (m *MockPhishingSimulationRepository) GetUserVulnerabilities(userId uuid.UUID) ([]domain_model.PhishingSimulationUserVulnerability, error) {
 	m.ctrl.T.Helper()

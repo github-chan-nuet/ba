@@ -26,7 +26,7 @@ func (c *PhishingSimulationController) GetRun(w http.ResponseWriter, r *http.Req
 		error_handling.WriteErrorDetailResponse(w, err)
 		return
 	}
-	if run != nil && run.Email != nil && run.Email.ClickedAt == nil {
+	if run != nil && run.ProcessedAt == nil {
 		c.PhishingRunService.TrackRunClick(run)
 	}
 	runDto := toApiPhishingSimulationRun(run)

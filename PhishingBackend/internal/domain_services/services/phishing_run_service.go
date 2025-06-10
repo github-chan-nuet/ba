@@ -17,6 +17,7 @@ var _ PhishingRunService = (*PhishingRunServiceImpl)(nil)
 type PhishingRunService interface {
 	GenerateRun(*domain_model.User) error
 	TrackRunClick(*domain_model.PhishingSimulationRun) error
+	ProcessUnclickedRun(*domain_model.PhishingSimulationRun) error
 }
 
 type PhishingRunServiceImpl struct {
@@ -141,7 +142,7 @@ func (s *PhishingRunServiceImpl) TrackRunClick(run *domain_model.PhishingSimulat
 			if vuln.ContentCategory.ID == run.Template.ContentCategory.ID && vuln.RecognitionFeature.ID == featVal.RecognitionFeature.ID {
 				vulnPatch := &domain_model.PhishingSimulationUserVulnerabilityPatch{
 					ID:    vuln.ID,
-					Score: float32(math.Max(float64(vuln.Score)-0.5, 1)),
+					Score: float32(math.Min(math.Max(float64(vuln.Score)-0.5, 1), 5)),
 				}
 				err := s.PhishingSimulationRepository.UpdateUserVulnerability(vulnPatch)
 				if err != nil {
@@ -164,6 +165,61 @@ func (s *PhishingRunServiceImpl) TrackRunClick(run *domain_model.PhishingSimulat
 				slog.Error("Tracking Run Click for New User Vulnerability failed")
 			}
 		}
+	}
+	runPatch := domain_model.PhishingSimulationRunPatch{
+		ID:          run.ID,
+		ProcessedAt: &now,
+	}
+	err = s.PhishingSimulationRepository.Update(&runPatch)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *PhishingRunServiceImpl) ProcessUnclickedRun(run *domain_model.PhishingSimulationRun) error {
+	now := time.Now().UTC()
+	vulnerabilities, err := s.PhishingSimulationRepository.GetUserVulnerabilities(run.User.ID)
+	if err != nil {
+		return errors.New("Error while fetching vulnerabilities")
+	}
+	for _, featVal := range run.RecognitionFeatureValues {
+		found := false
+		for _, vuln := range vulnerabilities {
+			if vuln.ContentCategory.ID == run.Template.ContentCategory.ID && vuln.RecognitionFeature.ID == featVal.RecognitionFeature.ID {
+				vulnPatch := &domain_model.PhishingSimulationUserVulnerabilityPatch{
+					ID:    vuln.ID,
+					Score: float32(math.Min(math.Max(float64(vuln.Score)+0.3, 1), 5)),
+				}
+				err := s.PhishingSimulationRepository.UpdateUserVulnerability(vulnPatch)
+				if err != nil {
+					slog.Error("Processing Unclicked Run for User Vulnerability with ID " + vuln.ID.String() + " failed")
+				}
+				found = true
+				break
+			}
+		}
+		if !found {
+			vuln := domain_model.PhishingSimulationUserVulnerability{
+				ID:                   uuid.New(),
+				Score:                1.3,
+				UserFk:               run.UserFk,
+				ContentCategoryFk:    run.Template.ContentCategoryFk,
+				RecognitionFeatureFk: featVal.RecognitionFeatureFk,
+			}
+			err := s.PhishingSimulationRepository.CreateUserVulnerability(&vuln)
+			if err != nil {
+				slog.Error("Processing Unclicked Run for New User Vulnerability failed")
+			}
+		}
+	}
+	runPatch := domain_model.PhishingSimulationRunPatch{
+		ID:          run.ID,
+		ProcessedAt: &now,
+	}
+	err = s.PhishingSimulationRepository.Update(&runPatch)
+	if err != nil {
+		return err
 	}
 	return nil
 }

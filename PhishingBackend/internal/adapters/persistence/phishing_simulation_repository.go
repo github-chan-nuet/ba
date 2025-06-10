@@ -39,6 +39,12 @@ func (r *PhishingSimulationRepositoryImpl) Update(runPatch *domain_model.Phishin
 		}
 		updates["email_fk"] = *runPatch.EmailFk
 	}
+	if runPatch.ProcessedAt != nil {
+		if existing.ProcessedAt != nil {
+			return errors.New("ProcessedAt is already set")
+		}
+		updates["processed_at"] = *runPatch.ProcessedAt
+	}
 
 	if len(updates) > 0 {
 		if err := db.Model(&domain_model.PhishingSimulationRun{}).
@@ -91,6 +97,24 @@ func (r *PhishingSimulationRepositoryImpl) GetLatestRun(userId uuid.UUID) (*doma
 		return nil, result.Error
 	}
 	return &latestRun, nil
+}
+
+func (r *PhishingSimulationRepositoryImpl) GetUnprocessedRuns() ([]domain_model.PhishingSimulationRun, error) {
+	var runs []domain_model.PhishingSimulationRun
+	result := db.Model(&domain_model.PhishingSimulationRun{}).
+		Where("processed_at IS NULL").
+		Preload("User").
+		Preload("Template").
+		Preload("Template.ContentCategory").
+		Preload("RecognitionFeatureValues").
+		Preload("RecognitionFeatureValues.RecognitionFeature").
+		Preload("Email").
+		Find(&runs)
+	if result.Error != nil {
+		slog.Error("Could not fetch unprocessed phishing simulation runs")
+		return nil, result.Error
+	}
+	return runs, nil
 }
 
 func (r *PhishingSimulationRepositoryImpl) GetTemplates() ([]domain_model.PhishingSimulationContentTemplate, error) {

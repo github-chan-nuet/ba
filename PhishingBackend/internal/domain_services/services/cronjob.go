@@ -4,6 +4,8 @@ import (
 	"log/slog"
 	"math/rand"
 	"time"
+
+	"github.com/robfig/cron/v3"
 )
 
 func StartCronJob(d time.Duration, fn func(utc time.Time)) {
@@ -13,6 +15,21 @@ func StartCronJob(d time.Duration, fn func(utc time.Time)) {
 		now := <-ticker.C
 		fn(now.UTC())
 	}
+}
+
+func StartCronStyleJob(cronExpr string, fn func(utc time.Time)) (*cron.Cron, cron.EntryID, error) {
+	c := cron.New()
+
+	entryID, err := c.AddFunc(cronExpr, func() {
+		now := time.Now().UTC()
+		fn(now)
+	})
+	if err != nil {
+		return nil, 0, err
+	}
+
+	c.Start()
+	return c, entryID, nil
 }
 
 func StartRandomCronJob(min, max time.Duration, fn func(utc time.Time)) {

@@ -54,6 +54,20 @@ func (mr *MockPhishingRunServiceMockRecorder) GenerateRun(arg0 any) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GenerateRun", reflect.TypeOf((*MockPhishingRunService)(nil).GenerateRun), arg0)
 }
 
+// ProcessUnclickedRun mocks base method.
+func (m *MockPhishingRunService) ProcessUnclickedRun(arg0 *domain_model.PhishingSimulationRun) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ProcessUnclickedRun", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// ProcessUnclickedRun indicates an expected call of ProcessUnclickedRun.
+func (mr *MockPhishingRunServiceMockRecorder) ProcessUnclickedRun(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ProcessUnclickedRun", reflect.TypeOf((*MockPhishingRunService)(nil).ProcessUnclickedRun), arg0)
+}
+
 // TrackRunClick mocks base method.
 func (m *MockPhishingRunService) TrackRunClick(arg0 *domain_model.PhishingSimulationRun) error {
 	m.ctrl.T.Helper()

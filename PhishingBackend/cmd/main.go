@@ -38,6 +38,7 @@ func main() {
 		PhishingRunService:           &phishingRunService,
 	}
 	phishingOrchestrator.StartPhishingRunGenerationJob()
+	phishingOrchestrator.StartPhishingRunStregthDetectionJob()
 
 	presentation.SetupHttpServer()
 }

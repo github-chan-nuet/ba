@@ -57,10 +57,11 @@ CREATE TABLE phishing_simulation_content_template
 
 CREATE TABLE phishing_simulation_run
 (
-  id          uuid NOT NULL,
-  user_fk     uuid NOT NULL,
-  template_fk uuid NOT NULL,
-  email_fk    uuid NULL,
+  id           uuid NOT NULL,
+  user_fk      uuid NOT NULL,
+  template_fk  uuid NOT NULL,
+  email_fk     uuid NULL,
+  processed_at timestamptz NULL,
 
   CONSTRAINT phishing_simulation_run_pkey PRIMARY KEY (id),
   CONSTRAINT fk_phishing_simulation_run_user FOREIGN KEY (user_fk) REFERENCES public.user (id),
