@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/smtp"
 	"os"
+	"phishing_backend/internal/adapters"
 	"phishing_backend/internal/adapters/communication"
 	"phishing_backend/internal/adapters/persistence"
 	"phishing_backend/internal/adapters/presentation/controllers"
@@ -14,8 +15,8 @@ import (
 	"strings"
 )
 
-func SetupHttpServer() {
-	sMux := NewSecurawareServeMux()
+func SetupHttpServer(d *adapters.Dependencies) {
+	sMux := NewSecurawareServeMux(d)
 	cors := CorsMiddleware{Handler: sMux}
 	panicRec := PanicRecoveryMiddleware{Handler: &cors}
 	addr := os.Getenv("PHBA_WEBSERVER_ADDR")
@@ -25,26 +26,13 @@ func SetupHttpServer() {
 	os.Exit(1)
 }
 
-func NewSecurawareServeMux() *http.ServeMux {
+func NewSecurawareServeMux(d *adapters.Dependencies) *http.ServeMux {
 	// repositories
 	emailRepository := persistence.EmailRepositoryImpl{}
-	userRepository := persistence.UserRepositoryImpl{}
-	lessonCompletionRepository := persistence.LessonCompletionRepositoryImpl{}
-	examRepo := persistence.ExamRepositoryImpl{}
-	examCompRepo := persistence.ExamCompletionRepositoryImpl{}
 	phishingSimRepo := persistence.PhishingSimulationRepositoryImpl{}
 
 	// services
 	emailSender := communication.EmailSenderImpl{SendMailFn: smtp.SendMail}
-	expService := services.ExperienceServiceImpl{
-		LessonCompRepo: &lessonCompletionRepository,
-		ExamCompRepo:   &examCompRepo,
-	}
-	examCompService := services.ExamCompletionServiceImpl{
-		ExamRepo:          &examRepo,
-		ExamCompRepo:      &examCompRepo,
-		ExperienceService: &expService,
-	}
 	phishingEmailGenService := services.PhishingEmailGenerationServiceImpl{}
 	phishingRunService := services.PhishingRunServiceImpl{
 		EmailRepository:                &emailRepository,
@@ -52,32 +40,25 @@ func NewSecurawareServeMux() *http.ServeMux {
 		PhishingSimulationRepository:   &phishingSimRepo,
 		PhishingEmailGenerationService: &phishingEmailGenService,
 	}
-	authenticator := services.AuthenticatorImpl{
-		UserRepository: &userRepository,
-	}
 
 	// controllers
 	userController := controllers.UserController{
-		Authenticator: &authenticator,
-		UserService: &services.UserServiceImpl{
-			UserRepository: &userRepository,
-		},
-		UserRepo:          &userRepository,
-		ExperienceService: &expService,
+		Authenticator:     d.Authenticator,
+		UserService:       d.UserService,
+		UserRepo:          d.UserRepository,
+		ExperienceService: d.ExperienceService,
 	}
 	lessonCompletionController := controllers.LessonCompletionController{
-		Authenticator: &authenticator,
-		LessonCompletionService: &services.LessonCompletionServiceImpl{
-			Repo: &lessonCompletionRepository,
-		},
-		ExperienceService:          &expService,
-		LessonCompletionRepository: &lessonCompletionRepository,
+		Authenticator:              d.Authenticator,
+		LessonCompletionService:    d.LessonCompletionService,
+		ExperienceService:          d.ExperienceService,
+		LessonCompletionRepository: d.LessonCompletionRepository,
 	}
 	examController := controllers.ExamController{
-		Authenticator:         &authenticator,
-		ExamRepository:        &examRepo,
-		ExamCompRepo:          &examCompRepo,
-		ExamCompletionService: &examCompService,
+		Authenticator:         d.Authenticator,
+		ExamRepository:        d.ExamRepository,
+		ExamCompRepo:          d.ExamCompletionRepository,
+		ExamCompletionService: d.ExamCompletionService,
 	}
 	phishingSimController := controllers.PhishingSimulationController{
 		PhishingRunService:           &phishingRunService,

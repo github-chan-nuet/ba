@@ -3,6 +3,7 @@ package services
 import (
 	"log/slog"
 	"math/rand"
+	"sync"
 	"time"
 
 	"github.com/robfig/cron/v3"
@@ -50,4 +51,18 @@ func ExecuteFunctionIn(d time.Duration, fn func(utc time.Time)) {
 	now := <-ticker.C
 	ticker.Stop()
 	go fn(now.UTC())
+}
+
+func ExecuteEachDayAfterDuration(d time.Duration, fn func()) {
+	for {
+		nextInvocation := time.Now().Truncate(time.Hour * 24).Add(time.Hour*24 + d)
+		timeTillNext := nextInvocation.Sub(time.Now())
+		var wg sync.WaitGroup
+		wg.Add(1)
+		time.AfterFunc(timeTillNext, func() {
+			fn()
+			wg.Done()
+		})
+		wg.Wait()
+	}
 }

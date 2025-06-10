@@ -12,7 +12,7 @@ import (
 	"go.uber.org/mock/gomock"
 )
 
-// ----- Update -----
+// ----- SaveOrUpdate -----
 func TestUpdateReturnsValidationErrors(t *testing.T) {
 	// given
 	sut := UserServiceImpl{}

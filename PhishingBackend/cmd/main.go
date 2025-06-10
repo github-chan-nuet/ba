@@ -4,6 +4,7 @@ import (
 	"log/slog"
 	"net/smtp"
 	"os"
+	"phishing_backend/internal/adapters"
 	"phishing_backend/internal/adapters/communication"
 	"phishing_backend/internal/adapters/persistence"
 	"phishing_backend/internal/adapters/presentation"
@@ -42,7 +43,13 @@ func main() {
 	phishingOrchestrator.StartPhishingRunGenerationJob()
 	phishingOrchestrator.StartPhishingRunStregthDetectionJob()
 
-	presentation.SetupHttpServer()
+	d := adapters.ResolveDependencies()
+	go startReminderJob(d)
+	presentation.SetupHttpServer(d)
+}
+
+func startReminderJob(d *adapters.Dependencies) {
+	d.ReminderOrchestrator.ExecuteReminderJobAfterDurationEachDay()
 }
 
 func init() {

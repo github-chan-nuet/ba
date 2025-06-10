@@ -5,6 +5,7 @@ package integration_tests
 import (
 	"fmt"
 	"net/http/httptest"
+	"phishing_backend/internal/adapters"
 	"phishing_backend/internal/adapters/presentation"
 	"testing"
 )
@@ -17,7 +18,8 @@ func TestMain(m *testing.M) {
 	//loadEnvVariables()
 	//startTestDB()
 	//defer stopTestDB()
-	ts = httptest.NewServer(presentation.NewSecurawareServeMux())
+	d := adapters.ResolveDependencies()
+	ts = httptest.NewServer(presentation.NewSecurawareServeMux(d))
 	defer ts.Close()
 	//getDb().Exec("TRUNCATE TABLE users CASCADE")
 

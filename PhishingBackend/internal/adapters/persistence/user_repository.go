@@ -92,3 +92,13 @@ func (u *UserRepositoryImpl) GetUsersForPhishingSimulation() ([]domain_model.Use
 	}
 	return users, nil
 }
+
+func (u *UserRepositoryImpl) GetAllUsers() (*[]domain_model.User, error) {
+	var users []domain_model.User
+	result := db.Find(&users)
+	if result.Error != nil {
+		slog.Error("Could not get all users", "err", result.Error)
+		return nil, result.Error
+	}
+	return &users, nil
+}
