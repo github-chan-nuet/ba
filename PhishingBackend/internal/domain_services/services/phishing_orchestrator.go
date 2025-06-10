@@ -21,7 +21,7 @@ type PhishingOrchestratorImpl struct {
 }
 
 func (p *PhishingOrchestratorImpl) StartPhishingRunGenerationJob() {
-	go StartRandomCronJob(15*time.Minute, 60*time.Minute, p.generatePhishingRuns)
+	go StartRandomCronJob(2*time.Hour, 3*time.Hour, p.generatePhishingRuns)
 }
 
 func (p *PhishingOrchestratorImpl) StartPhishingRunStregthDetectionJob() {
@@ -36,8 +36,8 @@ func (p *PhishingOrchestratorImpl) generatePhishingRuns(currentTime time.Time) {
 
 	day := 24 * time.Hour
 
-	minPeriod := 2 * day
-	maxPeriod := 10 * day
+	minPeriod := 5 * day
+	maxPeriod := 14 * day
 	for _, user := range users {
 		periodUntilNextRun := minPeriod + time.Duration(rand.Int63n(int64(maxPeriod-minPeriod)))
 
