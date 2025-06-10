@@ -25,7 +25,7 @@ BEGIN
 
   -- Insert Content Templates
   INSERT INTO phishing_simulation_content_template (id, "subject", content, content_category_fk)
-  VALUES (template1_id, 'Verdächtige Aktivitäten in deinem E-Banking-Zugang erkannt!', '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /></head><body>Hallo,<br /><br />Wir haben verdächtige Aktivitäten in Ihrem E-Banking-Konto festgestellt. Klicken Sie <a href="{{EducationLink}}">hier</a> um Ihr Konto zu schützen!</body></html>', cc_id);
+  VALUES (template1_id, 'Verdächtige Aktivitäten in deinem E-Banking-Zugang erkannt!', '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /></head><body>Hallo,<br /><br />Wir haben verdächtige Aktivitäten in Ihrem E-Banking-Konto festgestellt. Klicken Sie {{EducationLink hier}} um Ihr Konto zu schützen!</body></html>', cc_id);
 
 END
 $$;
