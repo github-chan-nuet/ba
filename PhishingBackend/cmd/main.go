@@ -2,6 +2,7 @@ package main
 
 import (
 	"log/slog"
+	"net/smtp"
 	"os"
 	"phishing_backend/internal/adapters/communication"
 	"phishing_backend/internal/adapters/persistence"
@@ -16,10 +17,11 @@ func main() {
 	smtpHost := os.Getenv("PHBA_SMTP_HOST")
 
 	emailSender := communication.EmailSenderImpl{
-		SmtpUser: smtpUser,
-		SmtpPw:   smtpPw,
-		SmtpAddr: smtpAddr,
-		SmtpHost: smtpHost,
+		SmtpUser:   smtpUser,
+		SmtpPw:     smtpPw,
+		SmtpAddr:   smtpAddr,
+		SmtpHost:   smtpHost,
+		SendMailFn: smtp.SendMail,
 	}
 	emailRepository := persistence.EmailRepositoryImpl{}
 	userRepository := persistence.UserRepositoryImpl{}

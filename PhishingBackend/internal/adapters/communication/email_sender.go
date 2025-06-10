@@ -13,19 +13,14 @@ var _ email.EmailSender = (*EmailSenderImpl)(nil)
 
 const newLine = "\r\n"
 
-//smtpUser                   = os.Getenv("PHBA_SMTP_USER")
-//smtpPw                     = os.Getenv("PHBA_SMTP_PASSWORD")
-//smtpAddr                   = os.Getenv("PHBA_SMTP_ADDR")
-//smtpHost                   = os.Getenv("PHBA_SMTP_HOST")
-
 type EmailSenderImpl struct {
-	SmtpUser string
-	SmtpPw   string
-	SmtpAddr string
-	SmtpHost string
+	SmtpUser   string
+	SmtpPw     string
+	SmtpAddr   string
+	SmtpHost   string
+	SendMailFn func(addr string, a smtp.Auth, from string, to []string, msg []byte) error
 }
 
-// https://zetcode.com/golang/email-smtp/
 func (e *EmailSenderImpl) Send(email *domain_model.Email) error {
 	var msg bytes.Buffer
 
@@ -47,6 +42,6 @@ func (e *EmailSenderImpl) Send(email *domain_model.Email) error {
 
 	auth := smtp.PlainAuth("", e.SmtpUser, e.SmtpPw, e.SmtpHost)
 
-	err := smtp.SendMail(e.SmtpAddr, auth, email.Sender, to, msg.Bytes())
+	err := e.SendMailFn(e.SmtpAddr, auth, email.Sender, to, msg.Bytes())
 	return err
 }

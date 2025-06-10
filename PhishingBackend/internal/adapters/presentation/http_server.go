@@ -3,6 +3,7 @@ package presentation
 import (
 	"log/slog"
 	"net/http"
+	"net/smtp"
 	"os"
 	"phishing_backend/internal/adapters/communication"
 	"phishing_backend/internal/adapters/persistence"
@@ -34,7 +35,7 @@ func NewSecurawareServeMux() *http.ServeMux {
 	phishingSimRepo := persistence.PhishingSimulationRepositoryImpl{}
 
 	// services
-	emailSender := communication.EmailSenderImpl{}
+	emailSender := communication.EmailSenderImpl{SendMailFn: smtp.SendMail}
 	expService := services.ExperienceServiceImpl{
 		LessonCompRepo: &lessonCompletionRepository,
 		ExamCompRepo:   &examCompRepo,
