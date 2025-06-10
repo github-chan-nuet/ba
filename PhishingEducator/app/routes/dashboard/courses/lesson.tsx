@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { createLessonCompletion, getLessonCompletionsOfCourseAndUser } from "@api/index";
 import { getCourse } from "@data/courses";
 import { Button, Title1 } from "@fluentui/react-components";
-import CourseProgress from "@components/CourseProgress";
+import CourseProgress from "@components/(Dashboard)/CourseProgress";
 import type { Route } from "./+types/lesson";
 
 import CourseLessonStyles from '@styles/CourseLesson.module.scss';
@@ -90,13 +90,9 @@ export default function CourseLesson({ loaderData }: Route.ComponentProps) {
     <div>
       <Title1>{ course.label }</Title1>
       <div className={CourseLessonStyles.Container}>
-        <div style={{
-          maxWidth: 900
-        }}>
+        <div className={CourseLessonStyles.Content}>
           {lesson.contentElement}
-          <div style={{
-            marginTop: 24
-          }}>
+          <div className={CourseLessonStyles.Actions}>
             <Button appearance="primary" onClick={handleNextClick}>Weiter</Button>
           </div>
         </div>

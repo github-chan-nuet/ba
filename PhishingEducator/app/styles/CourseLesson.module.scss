@@ -1,5 +1,15 @@
+@use '@styles/definitions' as *;
+
 .Container {
   display: flex;
   justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.Content {
+  max-width: $container-4xl;
+}
+
+.Actions {
   margin-top: 1.5rem;
 }

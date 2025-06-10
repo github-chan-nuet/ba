@@ -1,0 +1,32 @@
+.CourseProgress {
+  max-width: 350px;
+  width: 100%;
+  padding: .5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+
+  &__Step {
+    display: flex;
+    gap: .5rem;
+  }
+
+  &__StepIndicators {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: .25rem;
+  }
+
+  &__Line {
+    width: 1px;
+    flex: 1;
+    background-color: #000;
+  }
+
+  &__StepTexts {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: .75rem;
+  }
+}
