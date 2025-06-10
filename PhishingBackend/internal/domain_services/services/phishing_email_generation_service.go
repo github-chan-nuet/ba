@@ -124,7 +124,10 @@ var placeholderHandlers = map[string]PlaceholderHandler{
 func handleRecognitionFeature(arg string, run *domain_model.PhishingSimulationRun) (string, error) {
 	recognitionFeatureValue := getRecognitionFeatureValueToApply(arg, run)
 	if recognitionFeatureValue != nil {
-		return recognitionFeatureValue.Value, nil
+		if recognitionFeatureValue.Level == 0 {
+			return recognitionFeatureValue.Value, nil
+		}
+		return "<span data-feature-value-id=\"" + recognitionFeatureValue.ID.String() + "\">" + recognitionFeatureValue.Value + "</span>", nil
 	}
 	return "", errors.New("Missing Feature Value for Feature: " + arg)
 }
@@ -132,7 +135,10 @@ func handleRecognitionFeature(arg string, run *domain_model.PhishingSimulationRu
 func handleEducationLink(arg string, run *domain_model.PhishingSimulationRun) (string, error) {
 	domainFeatureValue := getRecognitionFeatureValueToApply("Domain", run)
 	if domainFeatureValue != nil {
-		return "https://www." + domainFeatureValue.Value + "?r=" + run.ID.String(), nil
+		if domainFeatureValue.Level == 0 {
+			return "<a href=\"https://www." + domainFeatureValue.Value + "?r=" + run.ID.String() + "\">" + arg + "</a>", nil
+		}
+		return "<span data-feature-value-id=\"" + domainFeatureValue.ID.String() + "\"><a href=\"https://www." + domainFeatureValue.Value + "?r=" + run.ID.String() + "\">" + arg + "</a></span>", nil
 	}
 	return "", errors.New("Missing Feature Value for Feature: Domain")
 }

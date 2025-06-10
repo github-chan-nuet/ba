@@ -51,11 +51,14 @@ func toApiPhishingSimulationRun(run *domain_model.PhishingSimulationRun) *api.Ph
 	dtoRecognitionFeatureValues := make([]api.PhishingSimulationRecognitionFeatureValue, len((*run).RecognitionFeatureValues))
 	for i, recognitionFeatureValue := range run.RecognitionFeatureValues {
 		dtoRecognitionFeatureValue := api.PhishingSimulationRecognitionFeatureValue{
-			Id:                     recognitionFeatureValue.ID,
-			Difficulty:             rand.Float32(), // TODO: Implement Logic
-			Value:                  recognitionFeatureValue.Value,
-			Title:                  recognitionFeatureValue.RecognitionFeature.Title,
-			EducationalInstruction: recognitionFeatureValue.RecognitionFeature.UserInstruction,
+			Id:                            recognitionFeatureValue.ID,
+			Difficulty:                    rand.Float32(), // TODO: Implement Logic
+			Value:                         recognitionFeatureValue.Value,
+			Title:                         recognitionFeatureValue.RecognitionFeature.Title,
+			GeneralEducationalInstruction: recognitionFeatureValue.RecognitionFeature.UserInstruction,
+		}
+		if recognitionFeatureValue.UserInstruction != "" {
+			dtoRecognitionFeatureValue.EducationalInstruction = &recognitionFeatureValue.UserInstruction
 		}
 		dtoRecognitionFeatureValues[i] = dtoRecognitionFeatureValue
 	}

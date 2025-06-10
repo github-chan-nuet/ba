@@ -3,15 +3,17 @@ import MailDetailMockStyles from './MailDetailMock.module.scss';
 import { Avatar, Card, Popover, PopoverSurface, PopoverTrigger, tokens } from '@fluentui/react-components';
 import parse, { domToReact } from 'html-react-parser';
 import type { DOMNode } from 'html-dom-parser';
+import type { PhishingSimulationRecognitionFeatureValue } from '@api/index';
 
 type MailDetailMockProps = {
   sentAt: string;
   sender: string;
   subject: string;
   content: string;
+  recognitionFeatures: Array<PhishingSimulationRecognitionFeatureValue>;
 }
 
-export default function MailDetailMock({ sentAt, sender, subject, content }: MailDetailMockProps) {
+export default function MailDetailMock({ sentAt, sender, subject, content, recognitionFeatures }: MailDetailMockProps) {
   const userLocale = navigator.language || 'de-DE';
   const sentAtFormatter = new Intl.DateTimeFormat(userLocale, {
     weekday: 'short',
@@ -23,6 +25,10 @@ export default function MailDetailMock({ sentAt, sender, subject, content }: Mai
     hour12: false
   });
   const sentDateTime = new Date(sentAt);
+
+  const popoverValueDict: PopoverValueDict = {};
+  recognitionFeatures.forEach(el => popoverValueDict[el.id] = (el.educationalInstruction ?? el.generalEducationalInstruction));
+  
   
   return (
     <div className={MailDetailMockStyles.MailDetailMock}>
@@ -77,7 +83,7 @@ export default function MailDetailMock({ sentAt, sender, subject, content }: Mai
             event.stopPropagation();
           }}
         >
-          <HTMLWithPopovers htmlString={content} />
+          <HTMLWithPopovers htmlString={content} popoverValueDict={popoverValueDict} />
         </div>
       </Card>
     </div>
@@ -85,11 +91,16 @@ export default function MailDetailMock({ sentAt, sender, subject, content }: Mai
   )
 }
 
+type PopoverValueDict = {
+  [key: string]: string;
+}
+
 type HTMLWithPopoversProps = {
   htmlString: string;
+  popoverValueDict: PopoverValueDict
 };
 
-function HTMLWithPopovers({ htmlString }: HTMLWithPopoversProps) {
+function HTMLWithPopovers({ htmlString, popoverValueDict }: HTMLWithPopoversProps) {
   const bodyOnlyHTML = extractBodyHTML(htmlString);
 
   const options = {
@@ -98,21 +109,25 @@ function HTMLWithPopovers({ htmlString }: HTMLWithPopoversProps) {
         domNode.type === 'tag' &&
         domNode.name === 'span' &&
         domNode.attribs &&
-        domNode.attribs['data-recogfeatid']
+        domNode.attribs['data-feature-value-id']
       ) {
-        const spanProps = domNode.attribs;
-        const children = domToReact((domNode.children as DOMNode[]), options);
+        const featureValueId = domNode.attribs['data-feature-value-id'];
+        const educationalInstruction = popoverValueDict[featureValueId];
+        if (educationalInstruction) {
+          const spanProps = domNode.attribs;
+          const children = domToReact((domNode.children as DOMNode[]), options);
 
-        return (
-          <Popover>
-            <PopoverTrigger>
-              <span {...spanProps}>{children}</span>
-            </PopoverTrigger>
-            <PopoverSurface tabIndex={-1}>
-              Dies ist ein Beispiel-Inhalt
-            </PopoverSurface>
-          </Popover>
-        );
+          return (
+            <Popover openOnHover withArrow>
+              <PopoverTrigger>
+                <span {...spanProps}>{children}</span>
+              </PopoverTrigger>
+              <PopoverSurface tabIndex={-1} className={MailDetailMockStyles.MailDetailMock__Popover}>
+                { educationalInstruction }
+              </PopoverSurface>
+            </Popover>
+          );
+        }
       }
     },
   };
