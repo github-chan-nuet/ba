@@ -2,12 +2,10 @@ import {Button, tokens} from "@fluentui/react-components";
 import MarketingStyles from "@styles/Marketing.module.scss";
 import lines from '@assets/images/lines.svg';
 import { ShieldTask28Filled } from "@fluentui/react-icons";
-import {useRef, useEffect, useState} from 'react';
-import {Chart, CategoryScale, LinearScale, BarElement, type ChartOptions,} from 'chart.js';
-import { Bar } from 'react-chartjs-2';
 import Hero from "@components/(Marketing)/Hero";
 import FeatureGrid from "@components/(Marketing)/FeatureGrid";
 import { useOutletContext } from "react-router";
+import Stats from "@components/(Marketing)/Stats";
 
 export function meta() {
     return [
@@ -37,14 +35,7 @@ export default function Home() {
 
             <FeatureGrid />
 
-            <section className={MarketingStyles.Section + " " + MarketingStyles.PhishingAttacks}>
-                <div className={MarketingStyles.PhishingAttacks__text_container}>
-                    <h3 className={MarketingStyles.Section__title}>Phishing-Angriffe <br/> nehmen rasant zu</h3>
-                    <p className={MarketingStyles.Section__text}>Phishing-Angriffe kommen immer häufiger vor, dies bestätigt die amerikanische Sicherheitsbehörde FBI.
-                        Die Graphik weist die aus Phishing entstandene Schäden in den USA auf. Der Trend ist klar - Phishing-Angriffe häufen sich.</p>
-                </div>
-                <PhishingCostDiagram />
-            </section>
+            <Stats />
 
             <section className={MarketingStyles.Section + " " + MarketingStyles.SecurawareSolution}>
                 <div style={{
@@ -79,101 +70,3 @@ export default function Home() {
         </>
     );
 }
-
-
-Chart.register(CategoryScale, LinearScale, BarElement,);
-
-function PhishingCostDiagram() {
-    const chartRef = useRef(null);
-    const containerRef = useRef(null);
-    const [showChart, setShowChart] = useState(false);
-    const [isPortrait, setIsPortrait] = useState(false);
-
-    useEffect(() => {
-        setIsPortrait(window.matchMedia("(orientation: portrait)").matches)
-    }, []);
-
-    useEffect(() => {
-        const observer = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setShowChart(true);
-                    observer.disconnect();
-                }
-            },
-            { threshold: 1 }
-        );
-        if (containerRef.current) {
-            observer.observe(containerRef.current);
-        }
-        return () => observer.disconnect();
-    }, []);
-
-    const fontFamily = 'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"';
-
-    const options: ChartOptions<'bar'> = {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: {
-            duration: 2000,
-            easing: 'easeOutSine',
-        },
-        scales: {
-            y: {
-                min: 0,
-                max: 18_000_000_000,
-                ticks: {
-                    stepSize: 4_000_000_000,
-                    display: true,
-                    callback: function (tickValue: string | number) {
-                        if (tickValue === 0 || typeof tickValue === 'string') return '';
-                        return tickValue / 1_000_000_000 + ' Mrd. $';
-                    },
-                    font: {
-                        size: isPortrait ? 12 : 16,
-                        family: fontFamily,
-                    },
-                    color: 'black',
-                },
-            },
-            x: {
-                ticks: {
-                    font: {
-                        size: isPortrait ? 14 : 26,
-                        family: fontFamily,
-                    },
-                    color: 'black',
-                },
-            }
-        },
-        plugins: {
-            legend: {
-                display: false,
-            },
-            title: {
-                display: false,
-            },
-            tooltip: {
-                enabled: false,
-            },
-        },
-    };
-
-    const filledBar = [4_600_000_000, 7_000_000_000, 10_200_000_000, 12_600_000_000, 16_800_000_000];
-    const emptyBar = filledBar.map(() => 0);
-    const data = {
-        labels: ['2020', '2021', '2022', '2023', '2024'],
-        datasets: [
-            {
-                label: 'Aus Phishing entstandene Schäden in den USA',
-                data: showChart ? filledBar : emptyBar,
-                backgroundColor: '#d83b01',
-            },
-        ],
-    };
-    return (<div ref={containerRef} style={{maxWidth: "100%"}}>
-                <Bar ref={chartRef} options={options} data={data} style={{ width: "100%", height: "100%" }}/>
-            </div>);
-}
-
-
