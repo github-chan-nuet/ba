@@ -1,0 +1,52 @@
+@use '@styles/definitions' as *;
+@use '@styles/mixins' as *;
+@use '@styles/typography' as *;
+
+.CallToAction {
+  max-width: $container-7xl;
+  margin-inline: auto;
+  padding-block: 6rem;
+  padding-inline: 2.5rem;
+  border-radius: 1rem;
+
+  @include responsive(sm) {
+    padding-block: 8rem;
+  }
+
+  @include responsive(lg) {
+    padding-inline: 3.5rem;
+  }
+
+  &__Container {
+    @include responsive(lg) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  &__Title {
+    max-width: $container-2xl;
+
+    @include apply-text(4xl);
+    font-weight: $font-weight-semibold;
+    letter-spacing: -.025rem;
+
+    @include responsive(sm) {
+      @include apply-text(5xl);
+    }
+  }
+
+  &__Actions {
+    margin-top: 2.5rem;
+
+    display: flex;
+    column-gap: 1.5rem;
+    align-items: center;
+
+    @include responsive(lg) {
+      flex-shrink: 0;
+      margin-top: 0;
+    }
+  }
+}

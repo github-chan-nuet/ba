@@ -1,0 +1,68 @@
+@use '@styles/definitions' as *;
+@use '@styles/mixins' as *;
+@use '@styles/typography' as *;
+
+.Stats {
+  padding-block: 6rem;
+  max-width: $container-7xl;
+  margin-inline: auto;
+
+  @include responsive(sm) {
+    padding-block: 8rem;
+  }
+
+  &__Grid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 4rem;
+    margin-inline: auto;
+    max-width: $container-2xl;
+
+    @include responsive(sm) {
+      row-gap: 5rem;
+    }
+
+    @include responsive(lg) {
+      max-width: none;
+      margin-inline: 0;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+  }
+
+  &__Chart {
+    grid-column: span 3 / span 3;
+
+    min-height: 400px;
+
+    @include responsive(lg) {
+      order: 1;
+    }
+  }
+
+  &__Text {
+    grid-column: span 2 / span 2;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    @include responsive(lg) {
+      order: 2;
+    }
+  }
+
+  &__Title {
+    @include apply-text(4xl);
+    letter-spacing: -.025rem;
+    font-weight: $font-weight-semibold;
+
+    @include responsive(sm) {
+      @include apply-text(5xl);
+    }
+  }
+
+  &__Paragraph {
+    margin-top: 1.5rem;
+    @include apply-text(lg);
+  }
+}

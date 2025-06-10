@@ -1,4 +1,4 @@
-import { FluentProvider, Spinner, webLightTheme } from "@fluentui/react-components"
+import { FluentProvider, webLightTheme } from "@fluentui/react-components"
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router"
 import GlobalToaster from "./utils/toaster/GlobalToaster"
 import AuthProvider from "./utils/auth/AuthProvider"
@@ -6,6 +6,7 @@ import { client } from "./api/client.gen";
 
 import "./styles/reset.scss";
 import "./styles/app.scss";
+import Loading from "@components/(Marketing)/Loading";
 
 const token = typeof window !== "undefined" ? (window.localStorage.getItem('login-token') ?? undefined) : undefined;
 client.setConfig({
@@ -45,18 +46,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export function HydrateFallback() {
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100dvh'
-      }}
-    >
-      <Spinner
-        label="Lädt, bitte warten..."
-        labelPosition="below"
-      />
-    </div>
+    <Loading />
   )
 }
