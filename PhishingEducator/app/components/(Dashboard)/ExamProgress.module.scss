@@ -1,0 +1,7 @@
+.ExamProgress {
+  &__Actions {
+    display: flex;
+    gap: var(--spacingHorizontalS);
+    justify-content: space-between;
+  }
+}

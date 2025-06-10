@@ -4,8 +4,8 @@ import type { Route } from "./+types/exam";
 import { useState } from "react";
 import useAuth from "@utils/auth/useAuth";
 import { CheckmarkStarburst24Filled, DismissCircle24Filled } from "@fluentui/react-icons";
-import ExamProgress from "@components/ExamProgress";
-import ExamResults from "@components/ExamResults";
+import ExamProgress from "@components/(Dashboard)/ExamProgress";
+import ExamResults from "@components/(Dashboard)/ExamResults";
 
 import ExamStyles from "@styles/Exam.module.scss";
 
@@ -109,9 +109,7 @@ export default function Exam({ loaderData }: Route.ComponentProps) {
   return (
     <div>
       <Title1>{ exam.title }</Title1>
-      <div
-        className={`${ExamStyles.Exam__Container} ${ExamStyles.Exam__Container_inverted}`}
-      >
+      <div className={`${ExamStyles.Exam__Container} ${ExamStyles.Exam__Container_inverted}`}>
         <div className={ExamStyles.Exam__Questions}>
           { exam.questions.map((question, idx) => (
             <Question

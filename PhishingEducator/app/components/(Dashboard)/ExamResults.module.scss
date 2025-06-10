@@ -1,0 +1,17 @@
+.ExamResults {
+  &__Number {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  &__Label {
+    margin-left: 2rem;
+  }
+
+  &__Actions {
+    display: flex;
+    gap: var(--spacingHorizontalS);
+    justify-content: space-between;
+  }
+}
