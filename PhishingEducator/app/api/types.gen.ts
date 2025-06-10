@@ -100,7 +100,8 @@ export type PhishingSimulationRecognitionFeatureValue = {
     difficulty: number;
     value: string;
     title: string;
-    educationalInstruction: string;
+    generalEducationalInstruction: string;
+    educationalInstruction?: string;
 };
 
 export type ProblemDetail = {

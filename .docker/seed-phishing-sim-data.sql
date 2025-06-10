@@ -17,10 +17,10 @@ BEGIN
   VALUES (feat1_id, 'Domain', true, 'URL', 'Beim Umgang mit E-Mails sollte man Links stets mit Vorsicht behandeln, da Phishing-Versuche oft über täuschend echte URLs erfolgen. Auch wenn eine E-Mail seriös wirkt, kann sich hinter einem Link eine manipulierte Adresse verbergen. Schon kleine Abweichungen oder ungewöhnliche Domains sind Warnzeichen. Das Schloss-Symbol oder „https“ bieten keine Garantie für Sicherheit, da auch betrügerische Seiten verschlüsselt sein können. Geben Sie persönliche Daten niemals über einen Link in einer E-Mail ein. Im Zweifel ist es sicherer, die Webadresse selbst im Browser einzugeben.');
 
   -- Insert Recognition Feature Values
-  INSERT INTO phishing_simulation_recognition_feature_value (id, "value", "level", recognition_feature_fk, content_category_fk)
+  INSERT INTO phishing_simulation_recognition_feature_value (id, "value", "level", user_instruction, recognition_feature_fk, content_category_fk)
   VALUES
-    (val1_id, 'bank-of-switzerland.ch', 0, feat1_id, cc_id),
-    (val2_id, 'bamk-of-switzerland.ch', 1, feat1_id, cc_id);
+    (val1_id, 'bank-of-switzerland.ch', 0, '', feat1_id, cc_id),
+    (val2_id, 'bamk-of-switzerland.ch', 1, 'Phishing-Seiten nutzen oft URLs, die der echten Webseite sehr ähnlich sehen - zum Beispiel „bamk-of-switzerland.ch“ statt „bank-of-switzerland.ch“. Achte genau auf kleine Tippfehler oder ungewöhnliche Schreibweisen, um sicherzugehen, dass du wirklich auf der richtigen Seite bist. Im Zweifelsfall solltest du unter keinen Umständen dem Link folgen. Navigiere stattdessen manuell zur Webseite der Organisation, indem du die Webseite selbst im Suchfeld eintippst.', feat1_id, cc_id);
 
 
   -- Insert Content Templates

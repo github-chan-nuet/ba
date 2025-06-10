@@ -631,6 +631,8 @@ components:
           type: string
         title:
           type: string
+        generalEducationalInstruction:
+          type: string
         educationalInstruction:
           type: string
       required:
@@ -638,7 +640,7 @@ components:
         - difficulty
         - value
         - title
-        - educationalInstruction
+        - generalEducationalInstruction
 
     ProblemDetail:
       type: object

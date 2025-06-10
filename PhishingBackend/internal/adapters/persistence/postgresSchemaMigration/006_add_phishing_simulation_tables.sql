@@ -35,6 +35,7 @@ CREATE TABLE phishing_simulation_recognition_feature_value
   id                     uuid NOT NULL,
   "value"                text NOT NULL,
   "level"                int  NOT NULL,
+  user_instruction       text NOT NULL,
   recognition_feature_fk uuid NOT NULL,
   content_category_fk    uuid NOT NULL,
 
