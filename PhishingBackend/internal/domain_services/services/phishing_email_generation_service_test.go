@@ -17,6 +17,12 @@ func TestParseTemplate(t *testing.T) {
 	placeholderHandlers["A"] = createPlaceholderHandler("a")
 	placeholderHandlers["B"] = createPlaceholderHandler("b")
 	placeholderHandlers["C"] = createPlaceholderHandler("c")
+	placeholderHandlers["D"] = func(arg string, _ *domain_model.PhishingSimulationRun) (string, error) {
+		return "{{E}}", nil
+	}
+	placeholderHandlers["E"] = func(arg string, _ *domain_model.PhishingSimulationRun) (string, error) {
+		return "e", nil
+	}
 
 	tests := []struct {
 		name string
@@ -77,6 +83,11 @@ func TestParseTemplate(t *testing.T) {
 			name: "Template with surrounding text",
 			tpl:  "Hallo{{A}}Welt",
 			want: "HalloaWelt",
+		},
+		{
+			name: "Recursive template",
+			tpl:  "{{D}}",
+			want: "e",
 		},
 	}
 	for _, tt := range tests {
