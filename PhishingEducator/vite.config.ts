@@ -15,7 +15,7 @@ export default defineConfig({
 
   optimizeDeps: {
     exclude: ["@griffel/react"],
-    include: ["@fluentui/react-components", "@fluentui/react-icons", "@hey-api/client-fetch", "framer-motion", 'react-chartjs-2', 'chart.js']
+    include: ["@fluentui/react-components", "@fluentui/react-icons", "@hey-api/client-fetch", "framer-motion", 'react-chartjs-2', 'chart.js', 'html-react-parser']
   },
 
   server: {
