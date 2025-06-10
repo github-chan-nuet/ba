@@ -97,7 +97,6 @@ export type PhishingSimulationRun = {
 
 export type PhishingSimulationRecognitionFeatureValue = {
     id: string;
-    difficulty: number;
     value: string;
     title: string;
     generalEducationalInstruction: string;

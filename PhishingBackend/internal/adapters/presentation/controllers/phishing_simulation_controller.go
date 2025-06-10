@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"math/rand/v2"
 	"net/http"
 	"phishing_backend/internal/adapters/presentation/api"
 	"phishing_backend/internal/adapters/presentation/error_handling"
@@ -52,7 +51,6 @@ func toApiPhishingSimulationRun(run *domain_model.PhishingSimulationRun) *api.Ph
 	for i, recognitionFeatureValue := range run.RecognitionFeatureValues {
 		dtoRecognitionFeatureValue := api.PhishingSimulationRecognitionFeatureValue{
 			Id:                            recognitionFeatureValue.ID,
-			Difficulty:                    rand.Float32(), // TODO: Implement Logic
 			Value:                         recognitionFeatureValue.Value,
 			Title:                         recognitionFeatureValue.RecognitionFeature.Title,
 			GeneralEducationalInstruction: recognitionFeatureValue.RecognitionFeature.UserInstruction,

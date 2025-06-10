@@ -93,7 +93,6 @@ type Lesson struct {
 
 // PhishingSimulationRecognitionFeatureValue defines model for PhishingSimulationRecognitionFeatureValue.
 type PhishingSimulationRecognitionFeatureValue struct {
-	Difficulty                    float32            `json:"difficulty"`
 	EducationalInstruction        *string            `json:"educationalInstruction,omitempty"`
 	GeneralEducationalInstruction string             `json:"generalEducationalInstruction"`
 	Id                            openapi_types.UUID `json:"id"`

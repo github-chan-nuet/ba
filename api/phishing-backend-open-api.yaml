@@ -624,9 +624,6 @@ components:
         id:
           type: string
           format: uuid
-        difficulty:
-          type: number
-          format: float
         value:
           type: string
         title:
