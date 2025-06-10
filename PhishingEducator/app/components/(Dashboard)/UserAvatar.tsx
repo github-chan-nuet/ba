@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { Avatar, Popover, PopoverSurface, PopoverTrigger } from "@fluentui/react-components";
 import { AnimatePresence } from "framer-motion";
-import AvatarXPTooltip from "./AvatarXPTooltip";
+import AvatarXPTooltip from "@components/(Dashboard)/AvatarXPTooltip";
 import useAuth from "@utils/auth/useAuth";
-import UserPopover from "./UserPopover";
+import UserPopover from "@components/UserPopover";
+
+import UserAvatarStyles from './UserAvatar.module.scss'
 
 export default function UserAvatar() {
   const { user } = useAuth();
@@ -19,9 +21,7 @@ export default function UserAvatar() {
   }, [user?.totalExperience, prevXp]);
 
   return (
-    <div style={{
-      position: "relative"
-    }}>
+    <div className={UserAvatarStyles.UserAvatar}>
       <Popover withArrow={true} openOnHover={true}>
         <PopoverTrigger>
           <Avatar

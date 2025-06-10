@@ -1,8 +1,8 @@
 import { Button, Drawer, DrawerBody, DrawerHeader, DrawerHeaderTitle } from "@fluentui/react-components";
 import { Dismiss24Regular } from "@fluentui/react-icons";
 import { useEffect, useState } from "react";
-import LoginForm from "./LoginForm";
-import RegisterForm from "./RegisterForm";
+import LoginForm from "../LoginForm";
+import RegisterForm from "../RegisterForm";
 
 type AuthDrawerProps = {
   isOpen: boolean,

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, Outlet } from "react-router";
-import AuthDrawer from "@components/AuthDrawer";
+import AuthDrawer from "@components/(Marketing)/AuthDrawer";
 import MarketingStyles from "@styles/Marketing.module.scss";
 import logo from "@assets/images/securaware.png";
 import { Body1Stronger, ToggleButton } from "@fluentui/react-components";

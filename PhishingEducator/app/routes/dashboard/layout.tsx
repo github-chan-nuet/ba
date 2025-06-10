@@ -1,5 +1,5 @@
-import UserAvatar from "@components/UserAvatar";
-import Breadcrumbs from "@components/Breadcrumbs";
+import UserAvatar from "@components/(Dashboard)/UserAvatar";
+import Breadcrumbs from "@components/(Dashboard)/Breadcrumbs";
 import NavBar from "@components/NavBar";
 import { Outlet } from "react-router";
 

@@ -1,6 +1,6 @@
 import { Button, Divider, Spinner, Subtitle1, tokens } from "@fluentui/react-components";
 import { Link } from "react-router";
-import CircularProgress from "./CircularProgress";
+import CircularProgress from "./(Dashboard)/CircularProgress";
 import type { Exam } from "@api/index";
 
 import ExamStyles from "@styles/Exam.module.scss";
@@ -29,6 +29,7 @@ export default function ExamProgress({ exam, selectedAnswers, submissionDisabled
         <CircularProgress
           value={answeredQuestions}
           max={exam.questions.length}
+          ariaLabel="Fortschritt in der Prüfung"
         />
         <Divider />
         <div
