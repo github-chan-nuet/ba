@@ -3,10 +3,11 @@
 package reminder
 
 import (
-	"crypto/rand"
+	random "crypto/rand"
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"math/rand"
 	"phishing_backend/integration_tests"
 	"phishing_backend/internal/adapters/persistence"
 	"phishing_backend/internal/domain_model"
@@ -19,7 +20,7 @@ import (
 )
 
 func createRandomEmail() string {
-	return strings.ToLower(rand.Text()) + "@test.com"
+	return strings.ToLower(random.Text()) + "@test.com"
 }
 
 var (
@@ -55,7 +56,7 @@ func createReminderOrchestrator() (*services.ReminderOrchestratorImpl, *EmailSen
 
 func createAndSaveTemplate() *domain_model.ReminderEmailTemplate {
 	templ := domain_model.ReminderEmailTemplate{
-		Id:       1,
+		Id:       rand.Intn(1000),
 		Template: "Hallo {{ .Firstname }} {{ .Lastname }}",
 		Subject:  "Testemail",
 	}
