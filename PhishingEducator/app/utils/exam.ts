@@ -21,7 +21,6 @@ export const getWrongAnswerCount = (exam: CompletedExam): number => {
   return exam.questions.reduce((total, question) => total + getWrongAnswerCountForQuestion(question), 0);
 }
 
-// TODO: create constants for magic numbers
 export const getAchievedXP = (exam: CompletedExam): number => {
   const scorePerQuestion = 100 / exam.questions.length;
 

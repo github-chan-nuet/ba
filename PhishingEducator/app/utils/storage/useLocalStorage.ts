@@ -6,7 +6,6 @@ export default function useLocalStorage(key: string, initialValue: unknown) {
       const item = typeof window !== "undefined" ? window.localStorage.getItem(key) : null;
       return item ? JSON.parse(item) : initialValue;
     } catch (e) {
-      console.error(e);
       return initialValue;
     }
   });
@@ -15,7 +14,6 @@ export default function useLocalStorage(key: string, initialValue: unknown) {
     try {
       window.localStorage.setItem(key, JSON.stringify(value));
     } catch (e) {
-      console.error(e);
     }
   }, [key, value]);
 

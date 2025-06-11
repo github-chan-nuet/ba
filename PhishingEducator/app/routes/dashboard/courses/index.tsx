@@ -40,7 +40,6 @@ export default function Courses({ loaderData }: Route.ComponentProps) {
           setCompletions(() => result.data);
         }
       } catch (e) {
-        console.error('Failed to fetch completions', e);
       }
     };
     fetchCompletions();
