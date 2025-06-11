@@ -9,15 +9,6 @@ import (
 	"github.com/robfig/cron/v3"
 )
 
-func StartCronJob(d time.Duration, fn func(utc time.Time)) {
-	ticker := time.NewTicker(d)
-	defer ticker.Stop()
-	for {
-		now := <-ticker.C
-		fn(now.UTC())
-	}
-}
-
 func StartCronStyleJob(cronExpr string, fn func(utc time.Time)) (*cron.Cron, cron.EntryID, error) {
 	c := cron.New()
 
