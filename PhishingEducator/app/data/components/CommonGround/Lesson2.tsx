@@ -1,40 +1,29 @@
-import { Card, Title2 } from "@fluentui/react-components"
+import { Card, Subtitle1, Title2 } from "@fluentui/react-components"
 import { Link20Filled, PersonAlert20Filled, TextField20Filled, Warning20Filled } from "@fluentui/react-icons";
+
+import Styles from '@data/courses.module.scss'
 
 const Lesson2 = () => {
   return (
-    <article style={{ fontSize: 16 }}>
-      <Title2 as="h2" style={{ display: 'block', marginBottom: 16 }}>Was ist Phishing?</Title2>
-      <p style={{ color: '#4B5563', marginBottom: '16px' }}>
+    <article className={Styles.Lesson}>
+      <Title2 as="h2" className={Styles.Lesson__Title}>Was ist Phishing?</Title2>
+      <p className={`${Styles.Lesson__Section} ${Styles.Lesson__Paragraph}`}>
         Unter dem Begriff <strong>Phishing</strong> versteht man eine Methode des digitalen Betrugs.
-        Angreifer geben sich als vertrauenswürdige Quelle aus – zum Beispiel eine Bank, ein Kollege oder eine Behörde –
+        Angreifer geben sich als vertrauenswürdige Quelle aus - zum Beispiel eine Bank, ein Kollege oder eine Behörde -
         um an vertrauliche Informationen wie Passwörter, Kreditkartendaten oder Zugangsdaten zu gelangen.
       </p>
 
-      <p style={{ color: '#4B5563', marginBottom: '24px' }}>
+      <p className={`${Styles.Lesson__Section} ${Styles.Lesson__Paragraph}`}>
         Ziel ist es, durch Täuschung Personen dazu zu bringen, sensible Daten preiszugeben. Phishing zählt zu den
         häufigsten Cyberangriffsformen weltweit.
       </p>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-        gap: 16,
-        marginBottom: 24
-      }}>
+      <div className={`${Styles.Lesson__Section} ${Styles.Lesson__InfoCardGrid}`}>
         <Card>
-          <div style={{
-            padding: 16,
-            marginBottom: 16
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              marginBottom: 8,
-            }}>
+          <div className={Styles.Lesson__InfoCardContent}>
+            <div className={Styles.Lesson__InfoCardHead}>
               <PersonAlert20Filled color="#0EA5E9" />
-              <h2 style={{ fontSize: 20, fontWeight: 600 }}>Täuschung</h2>
+              <Subtitle1 as="h3">Täuschung</Subtitle1>
             </div>
             <p>
               Die Täter wirken oft täuschend echt. Sie imitieren bekannte Absender wie Banken, Online-Shops oder Kollegen. 
@@ -43,18 +32,10 @@ const Lesson2 = () => {
           </div>
         </Card>
         <Card>
-          <div style={{
-            padding: 16,
-            marginBottom: 16
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              marginBottom: 8,
-            }}>
+          <div className={Styles.Lesson__InfoCardContent}>
+            <div className={Styles.Lesson__InfoCardHead}>
               <Warning20Filled color="#F59E0B" />
-              <h2 style={{ fontSize: 20, fontWeight: 600 }}>Dringlichkeit</h2>
+              <Subtitle1 as="h3">Dringlichkeit</Subtitle1>
             </div>
             <p>
               Häufig setzen Angreifer unter Druck - z.B. durch angebliche Kontosperrungen oder Sicherheitswarnungen,
@@ -63,18 +44,10 @@ const Lesson2 = () => {
           </div>
         </Card>
         <Card>
-          <div style={{
-            padding: 16,
-            marginBottom: 16
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              marginBottom: 8,
-            }}>
+          <div className={Styles.Lesson__InfoCardContent}>
+            <div className={Styles.Lesson__InfoCardHead}>
               <Link20Filled color="#EF4444" />
-              <h2 style={{ fontSize: 20, fontWeight: 600 }}>Falsche Links oder Anhänge</h2>
+              <Subtitle1 as="h3">Falsche Links oder Anhänge</Subtitle1>
             </div>
             <p>
               In der Nachricht befinden sich oft gefälschte Links oder Anhänge. Diese führen zu manipulierten Webseiten 
@@ -83,18 +56,10 @@ const Lesson2 = () => {
           </div>
         </Card>
         <Card>
-          <div style={{
-            padding: 16,
-            marginBottom: 16
-          }}>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              marginBottom: 8,
-            }}>
+          <div className={Styles.Lesson__InfoCardContent}>
+            <div className={Styles.Lesson__InfoCardHead}>
               <TextField20Filled color="#8B5CF6" />
-              <h2 style={{ fontSize: 20, fontWeight: 600 }}>Dateneingabe</h2>
+              <Subtitle1 as="h3">Dateneingabe</Subtitle1>
             </div>
             <p>
               Auf gefälschten Seiten wird der Nutzer dazu aufgefordert, vertrauliche Daten wie Login-Informationen
@@ -104,7 +69,7 @@ const Lesson2 = () => {
         </Card>
       </div>
 
-      <p style={{ color: '#4B5563' }}>
+      <p className={`${Styles.Lesson__Section} ${Styles.Lesson__Paragraph}`}>
         Phishing ist deshalb so gefährlich, weil es oft sehr gut gemacht ist. Nur wer gut informiert ist,
         kann diese Angriffe erkennen und verhindern. Schulungen wie bei Securaware helfen dabei,
         die Merkmale frühzeitig zu identifizieren und sich selbst sowie andere zu schützen.

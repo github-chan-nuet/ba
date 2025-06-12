@@ -43,6 +43,23 @@
     }
   }
 
+  &__InfoCardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1rem;
+  }
+
+  &__InfoCardContent {
+    padding: 1rem;
+  }
+
+  &__InfoCardHead {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .5rem;
+  }
+
   &__Section {
     margin-bottom: 1.5rem;
   }
