@@ -3,7 +3,7 @@ import { Avatar, Popover, PopoverSurface, PopoverTrigger } from "@fluentui/react
 import { AnimatePresence } from "framer-motion";
 import AvatarXPTooltip from "@components/(Dashboard)/AvatarXPTooltip";
 import useAuth from "@utils/auth/useAuth";
-import UserPopover from "@components/UserPopover";
+import UserPopover from "@components/(Dashboard)/UserPopover";
 
 import UserAvatarStyles from './UserAvatar.module.scss'
 
