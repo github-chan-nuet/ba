@@ -8,6 +8,7 @@ import ExamProgress from "@components/(Dashboard)/ExamProgress";
 import ExamResults from "@components/(Dashboard)/ExamResults";
 
 import ExamStyles from "@styles/Exam.module.scss";
+import { Helmet } from "react-helmet-async";
 
 type UserAnswer = {
   questionId: string;
@@ -80,7 +81,7 @@ export default function Exam({ loaderData }: Route.ComponentProps) {
     if (!readyForSubmission) return;
 
     setIsLoading(true);
-    const { data: xpGain, error } = await completeExam({
+    const { data: xpGain } = await completeExam({
       path: {
         examId: exam.id
       },
@@ -103,7 +104,10 @@ export default function Exam({ loaderData }: Route.ComponentProps) {
   }
 
   return (
-    <div>
+    <>
+      <Helmet>
+        <title>Securaware - { exam.title } Prüfung</title>
+      </Helmet>
       <Title1>{ exam.title }</Title1>
       <div className={`${ExamStyles.Exam__Container} ${ExamStyles.Exam__Container_inverted}`}>
         <div className={ExamStyles.Exam__Questions}>
@@ -138,7 +142,7 @@ export default function Exam({ loaderData }: Route.ComponentProps) {
           />
         ) }
       </div>
-    </div>
+    </>
   );
 }
 
