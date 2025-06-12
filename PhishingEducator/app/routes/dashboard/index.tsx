@@ -1,6 +1,6 @@
 import { Title1 } from "@fluentui/react-components";
 import useAuth from "@utils/auth/useAuth"
-import WelcomeBanner from "@components/WelcomeBanner";
+import WelcomeBanner from "@components/(Dashboard)/WelcomeBanner";
 
 import DashboardStyles from '@styles/Dashboard.module.scss';
 

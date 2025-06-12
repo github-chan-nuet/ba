@@ -60,6 +60,26 @@
     background-color: #FFF;
     border-radius: var(--borderRadiusXLarge);
     padding: var(--spacingVerticalL) var(--spacingHorizontalXL);
+    cursor: pointer;
+    border: 1px solid #d2d2d7;
+
+    &[disabled], &[data-showresults="true"] {
+      cursor: not-allowed;
+    }
+    &[data-selected="true"] {
+      box-shadow: 0 0 0 4px var(--colorBrandBackground2Pressed);
+      border-color: var(--colorBrandBackground);
+
+      &[data-showresults="true"] {
+        box-shadow: 0 0 0 4px var(--colorStatusDangerBackground2);
+        border-color: var(--colorStatusDangerBackground3);
+
+        &[data-correct="true"] {
+          box-shadow: 0 0 0 4px var(--colorStatusSuccessBackground2);
+          border-color: var(--colorStatusSuccessBackground3);
+        }
+      }
+    }
 
     &CorrectionIndicator {
       position: absolute;

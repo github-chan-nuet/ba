@@ -1,7 +1,7 @@
 import { Body2, Title2 } from "@fluentui/react-components";
 import useAuth from "@utils/auth/useAuth";
 
-import WelcomeBannerStyles from "@styles/WelcomeBanner.module.scss";
+import WelcomeBannerStyles from "./WelcomeBanner.module.scss";
 
 export default function WelcomeBanner() {
   const { user } = useAuth();
