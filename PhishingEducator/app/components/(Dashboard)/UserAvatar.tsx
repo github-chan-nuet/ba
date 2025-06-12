@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { Avatar, Popover, PopoverSurface, PopoverTrigger } from "@fluentui/react-components";
 import { AnimatePresence } from "framer-motion";
-import AvatarXPTooltip from "./AvatarXPTooltip";
 import useAuth from "@utils/auth/useAuth";
-import UserPopover from "./UserPopover";
+import { Avatar, Popover, PopoverSurface, PopoverTrigger } from "@fluentui/react-components";
+import AvatarXPTooltip from "@components/(Dashboard)/AvatarXPTooltip";
+import UserPopover from "@components/(Dashboard)/UserPopover";
+
+import UserAvatarStyles from './UserAvatar.module.scss'
 
 export default function UserAvatar() {
   const { user } = useAuth();
@@ -11,7 +13,11 @@ export default function UserAvatar() {
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    if (typeof prevXp === "number" && user?.totalExperience !== undefined && user.totalExperience !== prevXp) {
+    if (
+      typeof prevXp === "number" &&
+      user?.totalExperience !== undefined &&
+      user.totalExperience !== prevXp
+    ) {
       setShowPopup(true);
     } else if (user?.totalExperience !== undefined) {
       setPrevXp(user.totalExperience);
@@ -19,9 +25,7 @@ export default function UserAvatar() {
   }, [user?.totalExperience, prevXp]);
 
   return (
-    <div style={{
-      position: "relative"
-    }}>
+    <div className={UserAvatarStyles.UserAvatar}>
       <Popover withArrow={true} openOnHover={true}>
         <PopoverTrigger>
           <Avatar

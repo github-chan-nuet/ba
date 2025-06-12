@@ -1,11 +1,12 @@
-import { Body1, Title1, Title3, tokens } from "@fluentui/react-components";
-import { completeExam, getCompletedExam, getExamsByExamId, type Answer, type CompletedExam, type Question } from "@api/index";
 import type { Route } from "./+types/exam";
 import { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import useAuth from "@utils/auth/useAuth";
-import { CheckmarkStarburst24Filled, DismissCircle24Filled } from "@fluentui/react-icons";
-import ExamProgress from "@components/ExamProgress";
-import ExamResults from "@components/ExamResults";
+import { completeExam, getCompletedExam, getExamsByExamId, type CompletedExam } from "@api/index";
+import { Title1 } from "@fluentui/react-components";
+import ExamProgress from "@components/(Dashboard)/(Exams)/ExamProgress";
+import ExamResults from "@components/(Dashboard)/(Exams)/ExamResults";
+import Question from "@components/(Dashboard)/(Exams)/Question";
 
 import ExamStyles from "@styles/Exam.module.scss";
 
@@ -43,15 +44,15 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
 
 export default function Exam({ loaderData }: Route.ComponentProps) {
   const { exam, completedExam } = loaderData;
-  if (!exam) {
-    throw new Response("Not Found", { status: 404 });
-  }
-
   const { onExperienceGain } = useAuth();
 
   const [selectedAnswers, setSelectedAnswers] = useState<UserAnswers>(completedExam?.questions?.map(q => ({ questionId: q.id, answers: q.userAnswers })) ?? []);
   const [examCompletion, setExamCompletion] = useState<CompletedExam|null>(completedExam ?? null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  
+  if (!exam) {
+    throw new Response("Not Found", { status: 404 });
+  }
 
   const readyForSubmission = exam.questions.every(q => selectedAnswers.find(sa => sa.questionId === q.id && sa.answers.length > 0));
 
@@ -80,16 +81,14 @@ export default function Exam({ loaderData }: Route.ComponentProps) {
     if (!readyForSubmission) return;
 
     setIsLoading(true);
-    const { data: xpGain, error } = await completeExam({
+    const { data: xpGain } = await completeExam({
       path: {
         examId: exam.id
       },
       body: selectedAnswers,
     });
 
-    if (error) {
-      console.error('Failed to complete Exam', error);
-    } else if (xpGain) {
+    if (xpGain) {
       onExperienceGain(xpGain.newExperienceGained, xpGain.newLevel);
 
       const { data: completedExam, error } = await getCompletedExam({
@@ -97,9 +96,7 @@ export default function Exam({ loaderData }: Route.ComponentProps) {
           examId: exam.id
         }
       });
-      if (error) {
-        console.error('Failed to fetch completed exam');
-      } else {
+      if (!error) {
         setExamCompletion(completedExam);
       }
     }
@@ -107,11 +104,12 @@ export default function Exam({ loaderData }: Route.ComponentProps) {
   }
 
   return (
-    <div>
+    <>
+      <Helmet>
+        <title>Securaware - { exam.title } Prüfung</title>
+      </Helmet>
       <Title1>{ exam.title }</Title1>
-      <div
-        className={`${ExamStyles.Exam__Container} ${ExamStyles.Exam__Container_inverted}`}
-      >
+      <div className={`${ExamStyles.Exam__Container} ${ExamStyles.Exam__Container_inverted}`}>
         <div className={ExamStyles.Exam__Questions}>
           { exam.questions.map((question, idx) => (
             <Question
@@ -144,96 +142,6 @@ export default function Exam({ loaderData }: Route.ComponentProps) {
           />
         ) }
       </div>
-    </div>
-  );
-}
-
-type QuestionProps = {
-  question: Question;
-  answers: Answer[];
-  selectedAnswers: string[];
-  questionNr: number;
-  totalQuestions: number;
-  correctAnswers: string[];
-  showResults: boolean;
-  onSetAnswers: (questionId: string, answerId: string) => void;
-};
-
-function Question({
-  question,
-  answers,
-  selectedAnswers,
-  questionNr,
-  totalQuestions,
-  correctAnswers,
-  showResults,
-  onSetAnswers
-}: QuestionProps) {
-  return (
-    <div className={ExamStyles.Exam__Question}>
-      <Body1>
-        Frage {questionNr} von {totalQuestions}
-      </Body1>
-      <Title3 className={ExamStyles.Exam__QuestionTitle}>
-        { question.question }
-      </Title3>
-      <div className={ExamStyles.Exam__Answers}>
-        { answers.map(answer => (
-          <Answer
-            key={answer.id}
-            answer={answer.answer}
-            isSelected={selectedAnswers.includes(answer.id)}
-            isCorrect={correctAnswers.includes(answer.id)}
-            isDisabled={false}
-            showResults={showResults}
-            onClick={() => onSetAnswers(question.id, answer.id)}
-          />
-        )) }
-      </div>
-    </div>
-  );
-}
-
-type AnswerProps = {
-  answer: string;
-  isSelected: boolean;
-  isCorrect: boolean;
-  isDisabled: boolean;
-  showResults: boolean;
-  onClick: () => void;
-};
-
-function Answer({
-  answer,
-  isSelected,
-  isCorrect,
-  isDisabled,
-  showResults,
-  onClick
-}: AnswerProps) {
-  return (
-    <div
-      className={ExamStyles.Exam__Answer}
-      style={{
-        cursor: isDisabled ? 'not-allowed' : 'pointer',
-        border: `1px solid ${isSelected ? (showResults ? (isCorrect ? tokens.colorStatusSuccessBackground3 : tokens.colorStatusDangerBackground3) : tokens.colorBrandBackground) : '#d2d2d7'}`,
-        boxShadow: isSelected ? `0 0 0 4px ${showResults ? (isCorrect ? tokens.colorStatusSuccessBackground2 : tokens.colorStatusDangerBackground2) : tokens.colorBrandBackground2Pressed}` : 'none',
-      }}
-      onClick={onClick}
-    >
-      { showResults && (
-        isCorrect ? 
-        <CheckmarkStarburst24Filled
-          color={tokens.colorStatusSuccessBackground3}
-          className={ExamStyles.Exam__AnswerCorrectionIndicator}
-        /> :
-        isSelected &&
-        <DismissCircle24Filled
-          color={tokens.colorStatusDangerBackground3}
-          className={ExamStyles.Exam__AnswerCorrectionIndicator}
-        />
-      ) }
-      { answer }
-    </div>
+    </>
   );
 }

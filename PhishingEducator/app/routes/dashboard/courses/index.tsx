@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
+import type { Route } from "./+types";
 import { Link } from "react-router";
-import useAuth from "@utils/auth/useAuth";
 import { getCourses, type CourseRecord } from "@data/courses";
+import { getAllLessonCompletionsOfUser } from "@api/index";
 import { Body1, Button, Card, CardFooter, CardHeader, ProgressBar, Subtitle1 } from "@fluentui/react-components";
 import { ArrowRight20Regular, Rocket20Regular } from "@fluentui/react-icons";
 
-import type { Route } from "./+types";
-import { getAllLessonCompletionsOfUser, type CourseCompletion } from "@api/index";
+import DashboardStyles from '@styles/Dashboard.module.scss';
 
 export function meta() {
   return [
@@ -24,34 +23,18 @@ export function meta() {
 
 export async function clientLoader() {
   const courses = await getCourses();
-  return { courses };
+  const { data: completions, error } = await getAllLessonCompletionsOfUser();
+  if (error) {
+    return { courses, completions: [] };
+  }
+  return { courses, completions };
 }
 
 export default function Courses({ loaderData }: Route.ComponentProps) {
-  const { courses } = loaderData;
-  const { token } = useAuth();
-  const [completions, setCompletions] = useState<CourseCompletion[]>([]);
-
-  useEffect(() => {
-    const fetchCompletions = async () => {
-      try {
-        const result = await getAllLessonCompletionsOfUser();
-        if (result.response.status === 200 && result.data) {
-          setCompletions(() => result.data);
-        }
-      } catch (e) {
-        console.error('Failed to fetch completions', e);
-      }
-    };
-    fetchCompletions();
-  }, [token]);
+  const { courses, completions } = loaderData;
 
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
-      gap: 16
-    }}>
+    <div className={DashboardStyles.Dashboard__Grid}>
       { courses.map((course: CourseRecord, idx: number) => (
         <CourseCard
           key={idx}
@@ -86,10 +69,7 @@ function CourseCard({
   return (
     <Card size="large">
       <CardHeader
-        style={{
-          marginBottom: 'auto',
-          gridAutoRows: 'min-content auto'
-        }}
+        className={DashboardStyles.Dashboard__GridCardHeader}
         header={<Subtitle1>{course.label}</Subtitle1>}
         description={<Body1>{course.description}</Body1>}
       />
@@ -102,15 +82,15 @@ function CourseCard({
             <Button appearance="primary">
               { completedPercentage <= 0 ? (
                 <>
-                  Starten <Rocket20Regular style={{ marginLeft: 8 }} />
+                  Starten <Rocket20Regular className="ml-2" />
                 </>
               ) : completedPercentage >= 1 ? (
                 <>
-                  Neu starten <Rocket20Regular style={{ marginLeft: 8 }} />
+                  Neu starten <Rocket20Regular className="ml-2" />
                 </>
               ) : (
                 <>
-                  Fortfahren <ArrowRight20Regular style={{ marginLeft: 8 }} />
+                  Fortfahren <ArrowRight20Regular className="ml-2" />
                 </>
               )}
             </Button>

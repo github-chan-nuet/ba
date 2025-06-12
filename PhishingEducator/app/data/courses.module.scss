@@ -1,0 +1,70 @@
+.Lesson {
+  font-size: 1rem;
+
+  &__Title,
+  &__Subtitle {
+    display: block;
+  }
+
+  &__TextBox {
+    background-color: var(--colorNeutralBackground3);
+    border-radius: .5rem;
+    padding: 1rem;
+  }
+
+  &__MessageBox {
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+
+    &[data-type="example"] {
+      background-color: var(--colorPaletteBlueBackground2);
+    }
+    &[data-type="example"] &Icon {
+      color: #2563EB
+    }
+    
+    &[data-type="notice"] {
+      background-color: var(--colorPaletteYellowBackground2);
+    }
+    &[data-type="notice"] &Icon {
+      color: #CA8A04
+    }
+
+    &[data-type="warning"] {
+      background-color: var(--colorPaletteRedBackground2);
+    }
+    &[data-type="warning"] &Icon {
+      color: #DC2626
+    }
+
+    &Inner {
+      display: flex;
+      gap: .5rem;
+    }
+  }
+
+  &__InfoCardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1rem;
+  }
+
+  &__InfoCardContent {
+    padding: 1rem;
+  }
+
+  &__InfoCardHead {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .5rem;
+  }
+
+  &__Section {
+    margin-bottom: 1.5rem;
+  }
+
+  &__Paragraph {
+    color: var(--colorNeutralForeground2);
+  }
+}

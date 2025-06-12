@@ -1,8 +1,10 @@
+import { useState, type ChangeEvent, type FormEvent } from "react";
+import useAuth from "@utils/auth/useAuth";
+import { useToaster } from "@utils/toaster/useToaster";
 import { Button, Checkbox, Divider, Drawer, DrawerBody, DrawerHeader, DrawerHeaderTitle, Field, Input, Spinner, Toast, ToastBody, ToastTitle } from "@fluentui/react-components";
 import { Dismiss24Regular } from "@fluentui/react-icons";
-import useAuth from "@utils/auth/useAuth";
-import { useState, type ChangeEvent, type FormEvent } from "react";
-import { useToaster } from "@utils/toaster/useToaster";
+
+import AuthFormStyles from '../AuthForm.module.scss';
 
 type ProfileDrawerProps = {
   isOpen: boolean;
@@ -53,6 +55,7 @@ export default function ProfileDrawer({ isOpen, setIsOpen }: ProfileDrawerProps)
         { intent: "success" }
       )
     } catch (e) {
+      console.error(e)
       dispatchToast(
         <Toast>
           <ToastTitle>Es ist ein Fehler aufgetreten!</ToastTitle>
@@ -60,7 +63,6 @@ export default function ProfileDrawer({ isOpen, setIsOpen }: ProfileDrawerProps)
         </Toast>,
         { intent: "error" }
       );
-      console.error(e);
     }
 
     clearTimeout(spinnerTimeout);
@@ -70,10 +72,10 @@ export default function ProfileDrawer({ isOpen, setIsOpen }: ProfileDrawerProps)
 
   return (
     <Drawer
+      className={AuthFormStyles.Drawer}
       position="end"
       open={isOpen}
       onOpenChange={(_, { open }) => setIsOpen(open)}
-      style={{ width: 500 }}
     >
       <DrawerHeader>
         <DrawerHeaderTitle
@@ -91,12 +93,8 @@ export default function ProfileDrawer({ isOpen, setIsOpen }: ProfileDrawerProps)
       </DrawerHeader>
       <DrawerBody>
         <form
+          className={AuthFormStyles.AuthForm}
           onSubmit={handleSave}
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 16
-          }}
         >
           <Field label="Vorname">
             <Input name="firstname" type="text" value={formData.firstname} onChange={handleChange} />
@@ -116,12 +114,7 @@ export default function ProfileDrawer({ isOpen, setIsOpen }: ProfileDrawerProps)
             label="Ich möchte von der automatisieren Phishing Simulation profitieren."
           />
 
-          <div
-            style={{
-              display: 'flex',
-              gap: 16
-            }}
-          >
+          <div className={AuthFormStyles.AuthForm__Actions}>
             <Button type="submit" appearance="primary">
               { showSpinner ? (
                 <Spinner size="tiny" />

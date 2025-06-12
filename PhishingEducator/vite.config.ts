@@ -9,13 +9,13 @@ export default defineConfig({
 
     // Add CJS interop plugin for Fluent UI packages until they are ESM compatible
     cjsInterop({
-      dependencies: ["@fluentui/react-components"]
+      dependencies: ["@fluentui/react-components", "react-helmet-async"]
     })
   ],
 
   optimizeDeps: {
     exclude: ["@griffel/react"],
-    include: ["@fluentui/react-components", "@fluentui/react-icons", "@hey-api/client-fetch", "framer-motion", 'html-react-parser', 'apexcharts', 'react-apexcharts']
+    include: ["@fluentui/react-components", "@fluentui/react-icons", "@hey-api/client-fetch", "framer-motion", 'html-react-parser', 'apexcharts', 'react-apexcharts', 'react-helmet-async']
   },
 
   server: {

@@ -10,7 +10,6 @@ REQUIRES A RUNNING DB INSTANCE
 ```bash
 docker build -f ./.docker/Dockerfile -t phishingbackend .
 docker run -d -p 8080:8080 --env-file ./.docker/phishing_backend.dev.env --name phishingbackend_instance phishingbackend 
-
 ```
 
 ## without docker
@@ -27,10 +26,6 @@ go build -o myapp
 open http://127.0.0.1:8080/api/health
 
 
-# Executing integration tests
-Laptop:  C:\Users\Pat\GolandProjects\securaware\PhishingBackend\integration_tests\setup
-Desktop: C:\Users\psche\GolandProjects\securaware\PhishingBackend\integration_tests\setup
-
 # Create mocks for unit tests
 ```bash
 mockgen -source="phishing_simulation_repository.go" -destination="phishing_simulation_repository_mock.go" -package=repositories
@@ -41,9 +36,4 @@ See [Google go-licenses GitHub project](https://github.com/google/go-licenses)
 ```bash
 go install github.com/google/go-licenses@latest
 go-licenses report ./... > report.csv
-```
-
-# Get number of lines
-```powershell
-(Get-ChildItem -Recurse -File | Get-Content | Measure-Object -Line).Lines
 ```

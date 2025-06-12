@@ -1,0 +1,13 @@
+.AvatarXPTooltip {
+  position: absolute;
+  bottom: -75%;
+  right: 0;
+  background-color: #742774;
+  color: #fff;
+  padding: .375rem .625rem;
+  border-radius: .375rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  font-size: 14px;
+  z-index: 100;
+  white-space: nowrap;
+}

@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
-import HeroStyles from './Hero.module.scss';
-import { ChevronCircleDown48Regular } from '@fluentui/react-icons';
 import { motion } from 'framer-motion';
+import { ChevronCircleDown48Regular } from '@fluentui/react-icons';
+
+import HeroStyles from './Hero.module.scss';
 
 type HeroProps = {
   title: ReactElement;

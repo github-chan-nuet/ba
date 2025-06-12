@@ -1,12 +1,12 @@
-import CommonGroundLesson1 from "./components/CommonGround/Lesson1";
-import CommonGroundLesson2 from "./components/CommonGround/Lesson2";
-import CommonGroundLesson3 from "./components/CommonGround/Lesson3";
-import CommonGroundLesson4 from "./components/CommonGround/Lesson4";
-import CommonGroundLesson5 from "./components/CommonGround/Lesson5";
+import CommonGroundLesson1 from "@data/components/CommonGround/Lesson1";
+import CommonGroundLesson2 from "@data/components/CommonGround/Lesson2";
+import CommonGroundLesson3 from "@data/components/CommonGround/Lesson3";
+import CommonGroundLesson4 from "@data/components/CommonGround/Lesson4";
+import CommonGroundLesson5 from "@data/components/CommonGround/Lesson5";
 
-import AngriffsvektorenLesson1 from "./components/Angriffsvektoren/Lesson1";
-import AngriffsvektorenLesson2 from "./components/Angriffsvektoren/Lesson2";
-import AngriffsvektorenLesson3 from "./components/Angriffsvektoren/Lesson3";
+import AngriffsvektorenLesson1 from "@data/components/Angriffsvektoren/Lesson1";
+import AngriffsvektorenLesson2 from "@data/components/Angriffsvektoren/Lesson2";
+import AngriffsvektorenLesson3 from "@data/components/Angriffsvektoren/Lesson3";
 
 export type CourseRecord = {
   id: string;
@@ -114,35 +114,5 @@ const staticCourses = {
         }
       ]
     },
-    /*
-    {
-      id: 'c567dff4-5bd0-4aeb-a629-43245010dc5b',
-      handle: 'sensitive-information',
-      label: 'Sensitive Informationen',
-      description: 'Erfahre, welche persönlichen Daten besonders schützenswert sind und warum Phishing-Angriffe genau auf sie abzielen.',
-      lessons: []
-    },
-    {
-      id: '3e06558f-b271-4b7a-a1e6-b07f32826a98',
-      handle: 'url-spoofing',
-      label: 'URL-Spoofing',
-      description: 'In diesem Kurs lernst du, wie manipulierte Links dich in die Falle locken - inklusive Techniken wie URL-Verkürzung oder homographische Angriffe.',
-      lessons: []
-    },
-    {
-      id: '53861952-01cf-48b8-b828-83b334eec936',
-      handle: 'indices',
-      label: 'Indizien',
-      description: 'Lerne, woran du Phishing-Versuche erkennst: von verdächtigen Absendern und Anhängen bis hin zu sprachlichen Auffälligkeiten und untypischem Kontext.',
-      lessons: []
-    },
-    {
-      id: '0a7ed75d-37f5-421f-ace9-e3689355d021',
-      handle: 'tools-against-phishing',
-      label: 'Tools gegen Phishing',
-      description: 'Entdecke hilfreiche Tools und Techniken zur Abwehr von Phishing - wie Multi-Faktor-Authentifizierung, Browser-Erweiterungen und Domain-Checker.',
-      lessons: []
-    }
-    */
   ] as Array<CourseRecord>,
 }

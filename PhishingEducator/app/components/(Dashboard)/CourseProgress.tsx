@@ -1,7 +1,7 @@
-import { CheckmarkCircle24Filled, Circle24Regular, PlayCircle24Regular } from "@fluentui/react-icons";
 import type { LessonRecord } from "@data/courses";
+import { CheckmarkCircle24Filled, Circle24Regular, PlayCircle24Regular } from "@fluentui/react-icons";
 
-import CourseProgressStyles from "@styles/CourseProgress.module.scss";
+import CourseProgressStyles from "./CourseProgress.module.scss";
 import { Body1, Body2, tokens } from "@fluentui/react-components";
 
 type CourseProgressProps = {
@@ -12,17 +12,12 @@ type CourseProgressProps = {
 
 export default function CourseProgress({ lessons, currentLesson, completedLessons }: CourseProgressProps) {
   return (
-    <div className={CourseProgressStyles.Container}>
+    <div className={CourseProgressStyles.CourseProgress}>
       { lessons.map((lesson, idx, lessons) => {
         const isCurrent = lesson === currentLesson;
         return (
-          <div className={CourseProgressStyles.Step} key={idx}>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              gap: '.25rem'
-            }}>
+          <div className={CourseProgressStyles.CourseProgress__Step} key={idx}>
+            <div className={CourseProgressStyles.CourseProgress__StepIndicators}>
               { isCurrent ? (
                 <PlayCircle24Regular color="black" />
               ) : completedLessons.includes(lesson.id) ? (
@@ -31,19 +26,9 @@ export default function CourseProgress({ lessons, currentLesson, completedLesson
                 <Circle24Regular color="black" />
               ) }
               { idx !== lessons.length - 1 &&
-                <div style={{
-                  width: 1,
-                  flex: 1,
-                  backgroundColor: "black"
-                }}></div> }
+                <div className={CourseProgressStyles.CourseProgress__Line}></div> }
             </div>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                marginBottom: '.75rem'
-              }}
-            >
+            <div className={CourseProgressStyles.CourseProgress__StepTexts}>
               <Body2>{lesson.label}</Body2>
               <Body1>{lesson.description}</Body1>
             </div>

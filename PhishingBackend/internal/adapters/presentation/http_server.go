@@ -12,17 +12,21 @@ import (
 )
 
 func SetupHttpServer(d *adapters.Dependencies) {
-	sMux := NewSecurawareServeMux(d)
-	cors := CorsMiddleware{Handler: sMux}
-	panicRec := PanicRecoveryMiddleware{Handler: &cors}
+	handler := NewHttpHandler(d)
 	addr := os.Getenv("PHBA_WEBSERVER_ADDR")
 	slog.Info("Web server listening...", "address", addr)
-	err := http.ListenAndServe(addr, &panicRec)
+	err := http.ListenAndServe(addr, handler)
 	slog.Error("Web server stopped", "error", err)
 	os.Exit(1)
 }
 
-func NewSecurawareServeMux(d *adapters.Dependencies) *http.ServeMux {
+func NewHttpHandler(d *adapters.Dependencies) http.Handler {
+	sMux := newSecurawareEndpointHandler(d)
+	cors := CorsMiddleware{Handler: sMux}
+	return &PanicRecoveryMiddleware{Handler: &cors}
+}
+
+func newSecurawareEndpointHandler(d *adapters.Dependencies) http.Handler {
 	// controllers
 	userController := controllers.UserController{
 		Authenticator:     d.Authenticator,

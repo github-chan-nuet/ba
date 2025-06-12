@@ -1,8 +1,10 @@
-import { Body1, Button, Card, CardFooter, CardHeader, ProgressBar, Subtitle1 } from "@fluentui/react-components";
-import { getExams, type Exam } from "@api/index";
 import type { Route } from "./+types";
 import { Link } from "react-router";
+import { getExams, type Exam } from "@api/index";
+import { Body1, Button, Card, CardFooter, CardHeader, ProgressBar, Subtitle1 } from "@fluentui/react-components";
 import { Rocket20Regular } from "@fluentui/react-icons";
+
+import DashboardStyles from '@styles/Dashboard.module.scss';
 
 export function meta() {
   return [
@@ -21,7 +23,6 @@ export function meta() {
 export async function clientLoader() {
   const { data, error } = await getExams();
   if (error) {
-    console.error(error);
     return { exams: [] };
   }
   return { exams: data };
@@ -31,11 +32,7 @@ export default function Exams({ loaderData }: Route.ComponentProps) {
   const { exams } = loaderData;
 
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
-      gap: 16
-    }}>
+    <div className={DashboardStyles.Dashboard__Grid}>
       { exams.map((exam: Exam, idx: number) => (
         <ExamCard
           key={idx}
@@ -58,10 +55,7 @@ function ExamCard({
   return (
     <Card size="large">
       <CardHeader
-        style={{
-          marginBottom: 'auto',
-          gridAutoRows: 'min-content auto'
-        }}
+        className={DashboardStyles.Dashboard__GridCardHeader}
         header={<Subtitle1>{exam.title}</Subtitle1>}
         description={<Body1>{exam.description}</Body1>}
       />
@@ -72,7 +66,7 @@ function ExamCard({
         action={
           <Link to={path}>
             <Button appearance="primary">
-              Starten <Rocket20Regular style={{ marginLeft: 8 }} />
+              Starten <Rocket20Regular className="ml-2" />
             </Button>
           </Link>
         }

@@ -9,6 +9,8 @@
   padding-inline: 2.5rem;
   border-radius: 1rem;
 
+  background-color: var(--colorBrandBackground2);
+
   @include responsive(sm) {
     padding-block: 8rem;
   }
@@ -48,5 +50,10 @@
       flex-shrink: 0;
       margin-top: 0;
     }
+  }
+
+  &__Button {
+    width: 15rem;
+    height: 4rem;
   }
 }

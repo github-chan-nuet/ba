@@ -33,9 +33,9 @@ unit-test-phishingbackend:
   artifacts:
     when: always
     paths:
-      - PhishingBackend/testResults.xml
+      - PhishingBackend/internal/testResults.xml
     reports:
-      junit: PhishingBackend/testResults.xml
+      junit: PhishingBackend/internal/testResults.xml
 
 integration-test-phishingbackend:
   stage: test

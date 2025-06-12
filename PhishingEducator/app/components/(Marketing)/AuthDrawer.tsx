@@ -1,8 +1,10 @@
+import { useEffect, useState } from "react";
 import { Button, Drawer, DrawerBody, DrawerHeader, DrawerHeaderTitle } from "@fluentui/react-components";
 import { Dismiss24Regular } from "@fluentui/react-icons";
-import { useEffect, useState } from "react";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
+
+import AuthFormStyles from '../AuthForm.module.scss';
 
 type AuthDrawerProps = {
   isOpen: boolean,
@@ -13,17 +15,17 @@ export default function AuthDrawer({ isOpen, setIsOpen }: AuthDrawerProps) {
   const [authContent, setAuthContent] = useState("login");
 
   useEffect(() => {
-    if (isOpen === false) {
+    if (isOpen) {
       setAuthContent("login");
     }
   }, [isOpen]);
 
   return (
     <Drawer
+      className={AuthFormStyles.Drawer}
       position="end"
       open={isOpen}
       onOpenChange={(_, { open }) => setIsOpen(open)}
-      style={{ width: "500px" }}
     >
       <DrawerHeader>
         <DrawerHeaderTitle

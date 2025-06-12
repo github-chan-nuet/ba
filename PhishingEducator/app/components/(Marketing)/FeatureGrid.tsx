@@ -1,7 +1,8 @@
-import { FoodFishRegular, MailRegular, PenRegular, TrophyRegular } from '@fluentui/react-icons';
-import FeatureGridStyles from './FeatureGrid.module.scss';
-import { tokens } from '@fluentui/react-components';
 import { cloneElement, type ReactElement } from 'react';
+import { tokens } from '@fluentui/react-components';
+import { FoodFishRegular, MailRegular, PenRegular, TrophyRegular } from '@fluentui/react-icons';
+
+import FeatureGridStyles from './FeatureGrid.module.scss';
 
 export default function FeatureGrid() {
   return (
@@ -52,12 +53,7 @@ function Feature({ icon, title, description }: FeatureProps) {
   return (
     <div>
         <dt className={FeatureGridStyles.Feature__Top}>
-          <div
-            className={FeatureGridStyles.Feature__Icon}
-            style={{
-              backgroundColor: tokens.colorBrandBackground
-            }}
-          >
+          <div className={FeatureGridStyles.Feature__Icon}>
             { coloredIcon }
           </div>
           { title }

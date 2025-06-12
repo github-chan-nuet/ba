@@ -111,6 +111,7 @@ func (r *ReminderOrchestratorImpl) prepareAndSendReminders(toPrepares *[]userRem
 			reminder.EmailTemplate = newRandTemp
 			reminder.TemplateFk = newRandTemp.Id
 		}
+		reminder.ID = uuid.New()
 		r.sendAndSaveReminder(&reminder, idToActualTemplate[reminder.TemplateFk])
 	}
 }

@@ -1,9 +1,10 @@
-import { Button, Divider, Spinner, Subtitle1, tokens } from "@fluentui/react-components";
 import { Link } from "react-router";
-import CircularProgress from "./CircularProgress";
 import type { Exam } from "@api/index";
+import { Button, Divider, Spinner, Subtitle1 } from "@fluentui/react-components";
+import CircularProgress from "@components/(Dashboard)/CircularProgress";
 
 import ExamStyles from "@styles/Exam.module.scss";
+import ExamProgressStyles from './ExamProgress.module.scss';
 
 type UserAnswer = {
   questionId: string;
@@ -29,15 +30,10 @@ export default function ExamProgress({ exam, selectedAnswers, submissionDisabled
         <CircularProgress
           value={answeredQuestions}
           max={exam.questions.length}
+          ariaLabel="Fortschritt in der Prüfung"
         />
         <Divider />
-        <div
-          style={{
-            display: 'flex',
-            gap: tokens.spacingHorizontalS,
-            justifyContent: 'space-between'
-          }}
-        >
+        <div className={ExamProgressStyles.ExamProgress__Actions}>
           <Link to="/dashboard/exams">
             <Button appearance="secondary">
               Zurück

@@ -1,8 +1,10 @@
-import { Button, Field, Input } from "@fluentui/react-components";
-import useAuth from "@utils/auth/useAuth";
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import useAuth from "@utils/auth/useAuth";
 import { useToaster } from "@utils/toaster/useToaster";
-import ErrorToast from "./ErrorToast";
+import { Button, Field, Input } from "@fluentui/react-components";
+import ErrorToast from "@components/ErrorToast";
+
+import AuthFormStyles from '../AuthForm.module.scss';
 
 type LoginFormProps = {
   onSwitchToRegister?: () => void
@@ -36,19 +38,14 @@ export default function LoginForm({
           { intent: "error"}
         )
       }
-      console.error(e);
     }
   }
 
   return (
     <>
       <form
+        className={AuthFormStyles.AuthForm}
         onSubmit={handleLogin}
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 16
-        }}
       >
         <Field label="E-Mail" required>
           <Input name="email" type="email" onChange={handleChange} />
@@ -56,10 +53,7 @@ export default function LoginForm({
         <Field label="Passwort" required>
           <Input name="password" type="password" onChange={handleChange} />
         </Field>
-        <div style={{
-          display: 'flex',
-          gap: 16
-        }}>
+        <div className={AuthFormStyles.AuthForm__Actions}>
           <Button type="submit" appearance="primary">Login</Button>
           <Button appearance="secondary" onClick={onSwitchToRegister}>Ich besitze noch kein Konto</Button>
         </div>

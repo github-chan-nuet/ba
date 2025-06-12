@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import useAuth from "@utils/auth/useAuth";
+import type { Route } from "./+types/lesson";
 import { useNavigate } from "react-router";
+import { Helmet } from "react-helmet-async";
+import useAuth from "@utils/auth/useAuth";
 import { createLessonCompletion, getLessonCompletionsOfCourseAndUser } from "@api/index";
 import { getCourse } from "@data/courses";
 import { Button, Title1 } from "@fluentui/react-components";
-import CourseProgress from "@components/CourseProgress";
-import type { Route } from "./+types/lesson";
+import CourseProgress from "@components/(Dashboard)/CourseProgress";
 
 import CourseLessonStyles from '@styles/CourseLesson.module.scss';
 
@@ -20,39 +20,24 @@ export async function clientLoader({ params }: Route.ClientLoaderArgs) {
   const course = await getCourse(params.courseHandle);
   if (course) {
     const lesson = course.lessons.find(lesson => lesson.handle === params.lessonHandle);
-    return { course, lesson };
+    const { data: completedLessons } = await getLessonCompletionsOfCourseAndUser({
+      path: {
+        courseId: course.id
+      }
+    });
+    return { course, lesson, completedLessons: completedLessons ?? [] };
   }
-  return { course, lesson: null };
+  return { course, lesson: null, completedLessons: [] };
 }
 
 export default function CourseLesson({ loaderData }: Route.ComponentProps) {
-  const { course, lesson } = loaderData;
+  const { onExperienceGain } = useAuth();
+  const navigate = useNavigate();
+
+  const { course, lesson, completedLessons } = loaderData;
   if (!course || !lesson) {
     throw new Response("Not Found", { status: 404 });
   }
-
-  const { token, onExperienceGain } = useAuth();
-  const navigate = useNavigate();
-  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
-
-  // TODO: Nach clientLoader verschieben
-  useEffect(() => {
-    const fetchCompletions = async () => {
-      try {
-        const result = await getLessonCompletionsOfCourseAndUser({
-          path: {
-            courseId: course.id
-          }
-        });
-        if (result.response.status === 200 && result.data) {
-          setCompletedLessons(() => result.data);
-        }
-      } catch (e) {
-        console.error('Failed to fetch completions', e);
-      }
-    };
-    fetchCompletions();
-  }, [token, course.id]);
 
   const currentPath = location.pathname.split('/').pop();
   const currentIndex = course.lessons.findIndex(lesson => lesson.handle === currentPath);
@@ -60,21 +45,16 @@ export default function CourseLesson({ loaderData }: Route.ComponentProps) {
   const handleNextClick = async () => {
     if (currentIndex !== -1) {
       const currentLesson = course.lessons[currentIndex];
-      try {
-        const resp = await createLessonCompletion({
-          path: {
-            courseId: course.id,
-          },
-          body: {
-            lessonId: currentLesson.id,
-          }
-        });
-        if (resp.data && resp.response.status === 201) {
-          setCompletedLessons(lessonIds => [...lessonIds, currentLesson.id]);
-          onExperienceGain(resp.data.newExperienceGained, resp.data.newLevel);
+      const resp = await createLessonCompletion({
+        path: {
+          courseId: course.id,
+        },
+        body: {
+          lessonId: currentLesson.id,
         }
-      } catch (e) {
-        console.error('Failed to create completion', e);
+      });
+      if (resp.data && resp.response.status === 201) {
+        onExperienceGain(resp.data.newExperienceGained, resp.data.newLevel);
       }
     }
 
@@ -87,21 +67,20 @@ export default function CourseLesson({ loaderData }: Route.ComponentProps) {
   }
 
   return (
-    <div>
+    <>
+      <Helmet>
+        <title>Securaware - { course.label } Kurs</title>
+      </Helmet>
       <Title1>{ course.label }</Title1>
       <div className={CourseLessonStyles.Container}>
-        <div style={{
-          maxWidth: 900
-        }}>
+        <div className={CourseLessonStyles.Content}>
           {lesson.contentElement}
-          <div style={{
-            marginTop: 24
-          }}>
+          <div className={CourseLessonStyles.Actions}>
             <Button appearance="primary" onClick={handleNextClick}>Weiter</Button>
           </div>
         </div>
         <CourseProgress lessons={course.lessons} currentLesson={lesson} completedLessons={completedLessons} />
       </div>
-    </div>
+    </>
   );
 }
