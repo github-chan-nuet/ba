@@ -35,7 +35,7 @@ func (template *PhishingSimulationContentTemplate) GetScoredCombinations(
 		return scoredCombinations
 	}
 
-	combinations := getCombinations(recognitionFeatures.List(), 2)
+	combinations := getPowerSet(recognitionFeatures.List(), 2)
 	for _, comb := range combinations {
 		// Iterate over applicableRecognitionFeatures
 		// if in comb then select the respective level x > 1
@@ -130,9 +130,9 @@ func (template *PhishingSimulationContentTemplate) getApplicableRecognitionFeatu
 }
 
 func extractRecognitionFeaturesUsed(v string) utils.Set[string] {
-	var values utils.Set[string]
+	values := utils.NewSet[string]()
 
-	re := regexp.MustCompile(`\{RecognitionFeature\{([^}]+)\}\}`)
+	re := regexp.MustCompile(`\{RecognitionFeature\{(.*?)\}\}`)
 	matches := re.FindAllStringSubmatch(v, -1)
 
 	for _, match := range matches {
@@ -140,7 +140,7 @@ func extractRecognitionFeaturesUsed(v string) utils.Set[string] {
 			values.Add(match[1])
 		}
 	}
-	return values
+	return *values
 }
 
 func find[T any](slice []T, predicate func(T) bool) *T {
@@ -162,7 +162,7 @@ func findAll[T any](slice []T, predicate func(T) bool) []T {
 	return result
 }
 
-func getCombinations[T any](elements []T, maxSize int) [][]T {
+func getPowerSet[T any](elements []T, maxSize int) [][]T {
 	var result [][]T
 	var comb []T
 
