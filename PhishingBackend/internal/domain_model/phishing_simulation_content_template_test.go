@@ -15,7 +15,7 @@ func TestGetPowerSet(t *testing.T) {
 
 	// then
 	wantSet := [][]int{{1}, {1, 2}, {1, 3}, {2}, {2, 3}, {3}}
-	assert.Equal(t, wantSet, c)
+	assert.ElementsMatch(t, wantSet, c)
 }
 
 func TestExtractRecognitionFeaturesUsed(t *testing.T) {
@@ -26,7 +26,7 @@ func TestExtractRecognitionFeaturesUsed(t *testing.T) {
 	s := extractRecognitionFeaturesUsed(input)
 
 	// then
-	assert.Equal(t, []string{"Voice", "A", "Aa"}, s.List())
+	assert.ElementsMatch(t, []string{"Voice", "A", "Aa"}, s.List())
 }
 
 func TestFind(t *testing.T) {
@@ -77,7 +77,7 @@ func TestFindAllNoMatch(t *testing.T) {
 	assert.Empty(t, result)
 }
 
-func TestGetApplicableRecognitionFeatures_Success(t *testing.T) {
+func TestGetApplicableRecognitionFeaturesSuccess(t *testing.T) {
 	// given
 	template := PhishingSimulationContentTemplate{
 		Subject: "{RecognitionFeature{Name1}}",
@@ -95,7 +95,7 @@ func TestGetApplicableRecognitionFeatures_Success(t *testing.T) {
 	assert.Equal(t, 3, len(features.List()))
 }
 
-func TestGetApplicableRecognitionFeatures_UndefinedFeature(t *testing.T) {
+func TestGetApplicableRecognitionFeaturesUndefinedFeature(t *testing.T) {
 	// given
 	template := PhishingSimulationContentTemplate{
 		Content: "{RecognitionFeature{Unknown}}",
@@ -110,7 +110,7 @@ func TestGetApplicableRecognitionFeatures_UndefinedFeature(t *testing.T) {
 	assert.Equal(t, "Undefined RecognitionFeature used in template", err.Error())
 }
 
-func TestGetScoredCombinations_Basic(t *testing.T) {
+func TestGetScoredCombinationsBasic(t *testing.T) {
 	// given
 	categoryID := uuid.New()
 	featureID := uuid.New()
@@ -143,7 +143,7 @@ func TestGetScoredCombinations_Basic(t *testing.T) {
 	assert.Equal(t, 1, len(result[0].RecognitionFeatureValues))
 }
 
-func TestGetApplicableRecognitionFeatures_OnlyAlwaysApplicable(t *testing.T) {
+func TestGetApplicableRecognitionFeaturesOnlyAlwaysApplicable(t *testing.T) {
 	// given
 	template := PhishingSimulationContentTemplate{
 		Content: "No feature used",
@@ -159,7 +159,7 @@ func TestGetApplicableRecognitionFeatures_OnlyAlwaysApplicable(t *testing.T) {
 	assert.ElementsMatch(t, []PhishingSimulationRecognitionFeature{def}, result.List())
 }
 
-func TestGetApplicableRecognitionFeatures_DuplicateUsage(t *testing.T) {
+func TestGetApplicableRecognitionFeaturesDuplicateUsage(t *testing.T) {
 	// given
 	template := PhishingSimulationContentTemplate{
 		Content: "{RecognitionFeature{Feat}} and again {RecognitionFeature{Feat}}",
@@ -174,7 +174,7 @@ func TestGetApplicableRecognitionFeatures_DuplicateUsage(t *testing.T) {
 	assert.Len(t, result.List(), 1)
 }
 
-func TestGetScoredCombinations_NoMatchingVulnerability(t *testing.T) {
+func TestGetScoredCombinationsNoMatchingVulnerability(t *testing.T) {
 	// given
 	categoryID := uuid.New()
 	featureID := uuid.New()
@@ -206,7 +206,7 @@ func TestGetScoredCombinations_NoMatchingVulnerability(t *testing.T) {
 	assert.Equal(t, float32(1), result[0].Score)
 }
 
-func TestGetScoredCombinations_ArithmeticMeanFallback(t *testing.T) {
+func TestGetScoredCombinationsArithmeticMeanFallback(t *testing.T) {
 	// given
 	categoryID1 := uuid.New()
 	categoryID2 := uuid.New()
@@ -241,7 +241,7 @@ func TestGetScoredCombinations_ArithmeticMeanFallback(t *testing.T) {
 	assert.InDelta(t, 3.0, result[0].Score, 0.01) // mean of 2 and 4
 }
 
-func TestGetScoredCombinations_LevelCorrectedToMin1(t *testing.T) {
+func TestGetScoredCombinationsLevelCorrectedToMin1(t *testing.T) {
 	// given
 	categoryID := uuid.New()
 	featureID := uuid.New()
