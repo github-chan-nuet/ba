@@ -1,23 +1,18 @@
 import { Subtitle1, Title2 } from "@fluentui/react-components";
 
+import Styles from '@data/courses.module.scss'
+
 const Lesson3 = () => {
   return (
-    <article style={{ fontSize: 16 }}>
-      <Title2 as="h2" style={{ display: 'block', marginBottom: 16 }}>Telefonanruf</Title2>
-      <p style={{ color: '#4B5563', marginBottom: '24px' }}>
+    <article className={Styles.Lesson}>
+      <Title2 as="h2" className={Styles.Lesson__Title}>Telefonanruf</Title2>
+      <p className={`${Styles.Lesson__Section} ${Styles.Lesson__Paragraph}`}>
         Phishing per Telefonanruf - auch als "Voice Phishing" oder "Vishing" bekannt - ist eine besonders persönliche Methode, um Opfer zu täuschen. 
         Angreifer rufen gezielt Personen an und geben sich als vertrauenswürdige Institutionen wie Banken, IT-Support, Polizei oder Unternehmen aus.
       </p>
 
-      <section
-        style={{
-          background: "#DBEAFE",
-          borderRadius: 8,
-          padding: 16,
-          marginBottom: 24
-        }}
-      >
-        <Subtitle1 as="h3" style={{ display: 'block' }}>Typische Szenarien</Subtitle1>
+      <section className={`${Styles.Lesson__Section} ${Styles.Lesson__TextBox}`}>
+        <Subtitle1 as="h3" className={Styles.Lesson__Subtitle}>Typische Szenarien</Subtitle1>
         <ul>
           <li>Ein angeblicher Bankmitarbeiter meldet eine verdächtige Kontobewegung.</li>
           <li>Der Anrufer behauptet, es liege ein technisches Problem vor, das dringend gelöst werden müsse.</li>
@@ -25,12 +20,12 @@ const Lesson3 = () => {
         </ul>
       </section>
 
-      <p style={{ color: '#4B5563', marginBottom: 24 }}>
+      <p className={`${Styles.Lesson__Section} ${Styles.Lesson__Paragraph}`}>
         Die Betrüger stellen dabei gezielte Fragen nach PINs, Passwörtern, TANs oder persönlichen Daten. Ziel ist es, Zugang zu Konten zu erhalten oder Folgeangriffe vorzubereiten.
         Das direkte Gespräch baut Vertrauen auf - Opfer fühlen sich unter Druck gesetzt, schnell zu handeln und geben dadurch Informationen preis, die sie schriftlich niemals teilen würden.
       </p>
 
-      <p style={{ color: '#4B5563' }}>
+      <p className={`${Styles.Lesson__Section} ${Styles.Lesson__Paragraph}`}>
         <strong>Es ist deshalb wichtig, stets wachsam zu sein.</strong> Echte Institutionen fordern <strong>nie</strong> telefonisch die Herausgabe sensibler Zugangsdaten!
       </p>
     </article>

@@ -1,27 +1,24 @@
-import { Card, Title2 } from "@fluentui/react-components";
+import { Card, Subtitle1, Title2 } from "@fluentui/react-components";
 import { BuildingBank20Filled, ContactCard20Filled, Mail20Filled, Money20Filled, ShieldError20Filled } from "@fluentui/react-icons";
+
+import Styles from '@data/courses.module.scss'
 
 const Lesson4 = () => {
   return (
-    <article style={{ fontSize: 16 }}>
-      <Title2 as="h2" style={{ display: 'block', marginBottom: 16 }}>Konsequenzen von Phishing</Title2>
-      <p style={{ color: '#4B5563', marginBottom: '24px' }}>
+    <article className={Styles.Lesson}>
+      <Title2 as="h2" className={Styles.Lesson__Title}>Konsequenzen von Phishing</Title2>
+      <p className={`${Styles.Lesson__Section} ${Styles.Lesson__Paragraph}`}>
         Phishing kann schwerwiegende Folgen haben – sowohl für Einzelpersonen als auch für Unternehmen. 
         Die Konsequenzen reichen von finanziellen Verlusten über Identitätsdiebstahl bis hin zu erheblichen 
         Schäden für die Reputation und Sicherheit eines Unternehmens.
       </p>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-        gap: 16,
-        marginBottom: 48
-      }}>
+      <section className={`${Styles.Lesson__Section} ${Styles.Lesson__InfoCardGrid}`}>
         <Card>
-          <div style={{ padding: '16px', marginBottom: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+          <div className={Styles.Lesson__InfoCardContent}>
+            <div className={Styles.Lesson__InfoCardHead}>
               <Money20Filled color="#EF4444" />
-              <h2 style={{ fontSize: '20px', fontWeight: '600' }}>Finanzielle Verluste</h2>
+              <Subtitle1 as="h3">Finanzielle Verluste</Subtitle1>
             </div>
             <p>
               Betroffene verlieren durch betrügerische Überweisungen, Einkäufe oder Kontoabbuchungen oft viel Geld.
@@ -31,10 +28,10 @@ const Lesson4 = () => {
         </Card>
 
         <Card>
-          <div style={{ padding: '16px', marginBottom: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+          <div className={Styles.Lesson__InfoCardContent}>
+            <div className={Styles.Lesson__InfoCardHead}>
               <ContactCard20Filled color="#F59E0B" />
-              <h2 style={{ fontSize: '20px', fontWeight: '600' }}>Identitätsdiebstahl</h2>
+              <Subtitle1 as="h3">Identitätsdiebstahl</Subtitle1>
             </div>
             <p>
               Persönliche Daten wie Name, Adresse oder Sozialversicherungsnummer können missbraucht werden,
@@ -44,10 +41,10 @@ const Lesson4 = () => {
         </Card>
 
         <Card>
-          <div style={{ padding: '16px', marginBottom: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+          <div className={Styles.Lesson__InfoCardContent}>
+            <div className={Styles.Lesson__InfoCardHead}>
               <ShieldError20Filled color="#10B981" />
-              <h2 style={{ fontSize: '20px', fontWeight: '600' }}>Reputationsschäden</h2>
+              <Subtitle1 as="h3">Reputationsschäden</Subtitle1>
             </div>
             <p>
               Firmen, die von Phishing betroffen sind, verlieren oft das Vertrauen ihrer Kunden. 
@@ -55,21 +52,16 @@ const Lesson4 = () => {
             </p>
           </div>
         </Card>
-      </div>
+      </section>
 
-      <Title2 as="h2" style={{ display: 'block', marginBottom: 16 }}>Beispiele für schwerwiegende Phishing-Attacken</Title2>
+      <Title2 as="h2" className={Styles.Lesson__Title}>Beispiele für schwerwiegende Phishing-Attacken</Title2>
 
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
-        gap: 16,
-        marginBottom: 24
-      }}>
+      <section className={`${Styles.Lesson__Section} ${Styles.Lesson__InfoCardGrid}`}>
         <Card>
-          <div style={{ padding: '16px', marginBottom: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+          <div className={Styles.Lesson__InfoCardContent}>
+            <div className={Styles.Lesson__InfoCardHead}>
               <BuildingBank20Filled color="#6366F1" />
-              <h2 style={{ fontSize: '20px', fontWeight: '600' }}>2016: Angriff auf Hillary Clintons Wahlkampfleiter</h2>
+              <Subtitle1 as="h3">2016: Angriff auf Hillary Clintons Wahlkampfleiter</Subtitle1>
             </div>
             <p>
               Der Wahlkampfleiter von Hillary Clinton, John Podesta, wurde Opfer einer Phishing-E-Mail. 
@@ -80,10 +72,10 @@ const Lesson4 = () => {
         </Card>
 
         <Card>
-          <div style={{ padding: '16px', marginBottom: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+          <div className={Styles.Lesson__InfoCardContent}>
+            <div className={Styles.Lesson__InfoCardHead}>
               <Mail20Filled color="#EC4899" />
-              <h2 style={{ fontSize: '20px', fontWeight: '600' }}>2020: Twitter-Hack</h2>
+              <Subtitle1 as="h3">2020: Twitter-Hack</Subtitle1>
             </div>
             <p>
               Über Social Engineering und Phishing wurden Twitter-Mitarbeiter dazu gebracht, Zugangsdaten preiszugeben. 
@@ -92,9 +84,9 @@ const Lesson4 = () => {
             </p>
           </div>
         </Card>
-      </div>
+      </section>
 
-      <p style={{ color: '#4B5563' }}>
+      <p className={`${Styles.Lesson__Section} ${Styles.Lesson__Paragraph}`}>
         Diese Beispiele zeigen, wie gefährlich Phishing sein kann. Securaware hilft dir, solche Angriffe zu erkennen
         und dich effektiv zu schützen.
       </p>

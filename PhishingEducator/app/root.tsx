@@ -1,12 +1,13 @@
-import { FluentProvider, webLightTheme } from "@fluentui/react-components"
+import { HelmetProvider } from "react-helmet-async";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router"
-import GlobalToaster from "./utils/toaster/GlobalToaster"
-import AuthProvider from "./utils/auth/AuthProvider"
-import { client } from "./api/client.gen";
+import { FluentProvider, webLightTheme } from "@fluentui/react-components"
+import GlobalToaster from "@utils/toaster/GlobalToaster"
+import AuthProvider from "@utils/auth/AuthProvider"
+import { client } from "@api/client.gen";
+import Loading from "@components/(Marketing)/Loading";
 
 import "./styles/reset.scss";
 import "./styles/app.scss";
-import Loading from "@components/(Marketing)/Loading";
 
 const token = typeof window !== "undefined" ? (window.localStorage.getItem('login-token') ?? undefined) : undefined;
 client.setConfig({
@@ -16,10 +17,12 @@ client.setConfig({
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Outlet />
-      <GlobalToaster />
-    </AuthProvider>
+    <HelmetProvider>
+      <AuthProvider>
+        <Outlet />
+        <GlobalToaster />
+      </AuthProvider>
+    </HelmetProvider>
   )
 }
 

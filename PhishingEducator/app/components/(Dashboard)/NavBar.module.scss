@@ -1,7 +1,7 @@
 .NavBar {
   position: sticky;
   top: 0;
-  overflow-y: auto;
+  overflow-y: visible;
   width: 95px;
   height: 100dvh;
   
@@ -11,12 +11,12 @@
   flex-direction: column;
   justify-content: space-between;
 
-  &__items {
+  &__Items {
     display: flex;
     flex-direction: column;
   }
 
-  &__item {
+  &__Item {
     cursor: pointer;
     display: flex;
     flex-direction: column;
@@ -24,12 +24,14 @@
     padding: .5rem .25rem;
     gap: .125rem;
 
+    position: relative;
+
     &:hover {
       text-decoration: underline;
     }
   }
 
-  &__itemLabel {
+  &__ItemLabel {
     text-align: center;
   }
 }

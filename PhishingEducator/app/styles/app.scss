@@ -17,59 +17,18 @@ a {
   margin-inline: calc(-1 * var(--fui-Card--size));
 }
 
+.shrink-0 {
+  flex-shrink: 0;
+}
+
+.block {
+  display: block;
+}
+
+.ml-2 {
+  margin-left: .5rem;
+}
+
 .color-gray-500 {
   color: $color-gray-500;
-}
-
-.Dashboard {
-  &__container {
-    display: flex;
-    height: 100dvh;
-  }
-
-  &__main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    height: 100dvh;
-    overflow: hidden;
-    
-    padding-top: 2rem;
-    padding-left: 2rem;
-  }
-
-  &__header {
-    margin-bottom: 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    padding-right: 2rem;
-  }
-
-  &__content {
-    flex: 1;
-    overflow-y: auto;
-  }
-
-  &__innerContent {
-    padding-right: 2rem;
-    padding-bottom: 2rem;
-  }
-}
-
-@media screen and (max-width: 1680px) {
-  html {
-    font-size: 12pt;
-  }
-}
-
-@media screen and (max-width: 736px) {
-  html {
-    font-size: 9pt;
-  }
-}
-
-@media screen and (max-width: 360px) {
-  html {
-    font-size: 10pt;
-  }
 }

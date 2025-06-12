@@ -1,12 +1,9 @@
-import { useEffect, useState } from "react";
+import type { Route } from "./+types";
 import { Link } from "react-router";
-import useAuth from "@utils/auth/useAuth";
-import { getCourses, type CourseRecord } from "@data/courses";
 import { Body1, Button, Card, CardFooter, CardHeader, ProgressBar, Subtitle1 } from "@fluentui/react-components";
 import { ArrowRight20Regular, Rocket20Regular } from "@fluentui/react-icons";
-
-import type { Route } from "./+types";
-import { getAllLessonCompletionsOfUser, type CourseCompletion } from "@api/index";
+import { getCourses, type CourseRecord } from "@data/courses";
+import { getAllLessonCompletionsOfUser } from "@api/index";
 
 export function meta() {
   return [
@@ -24,26 +21,15 @@ export function meta() {
 
 export async function clientLoader() {
   const courses = await getCourses();
-  return { courses };
+  const { data: completions, error } = await getAllLessonCompletionsOfUser();
+  if (error) {
+    return { courses, completions: [] };
+  }
+  return { courses, completions };
 }
 
 export default function Courses({ loaderData }: Route.ComponentProps) {
-  const { courses } = loaderData;
-  const { token } = useAuth();
-  const [completions, setCompletions] = useState<CourseCompletion[]>([]);
-
-  useEffect(() => {
-    const fetchCompletions = async () => {
-      try {
-        const result = await getAllLessonCompletionsOfUser();
-        if (result.response.status === 200 && result.data) {
-          setCompletions(() => result.data);
-        }
-      } catch (e) {
-      }
-    };
-    fetchCompletions();
-  }, [token]);
+  const { courses, completions } = loaderData;
 
   return (
     <div style={{

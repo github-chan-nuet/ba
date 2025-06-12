@@ -1,8 +1,8 @@
-import { getPhishingSimulationRun } from "@api/index"
 import type { Route } from "./+types/phishing-simulation"
+import { Navigate } from "react-router"
+import { getPhishingSimulationRun } from "@api/index"
 import HeaderSection from "@components/(Marketing)/HeaderSection"
 import VulnerabilityEducator from "@components/(Marketing)/VulnerabilityEducator"
-import { Navigate } from "react-router"
 
 export function meta() {
   return [
