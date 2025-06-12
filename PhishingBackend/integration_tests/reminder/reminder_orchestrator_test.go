@@ -95,6 +95,6 @@ func TestShouldSendOutReminder(t *testing.T) {
 	sut.ExecuteReminderJob()
 
 	// then
-	wantEmail := []domain_model.Email{getWantMail(*user, templ)}
+	wantEmail := getWantMail(*user, templ)
 	assert.Contains(t, emailSender.sentEmail, wantEmail)
 }
