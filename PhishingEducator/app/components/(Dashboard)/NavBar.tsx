@@ -14,32 +14,34 @@ export default function NavBar() {
   const styles = useStyles();
 
   return (
-    <div className={NavBarStyles.NavBar}>
-      <div className={NavBarStyles.NavBar__Items}>
-        <NavBarItem
-          label="Securaware"
-          iconBaseName="Home"
-          href="/dashboard"
-          matchOnSubPages={false}
-        />
-        <NavBarItem
-          label="Online-Kurse"
-          iconBaseName="Lightbulb"
-          href="/dashboard/courses"
-        />
-        <NavBarItem
-          label="Prüfungen"
-          iconBaseName="BookQuestionMark"
-          href="/dashboard/exams"
-        />
-      </div>
+    <aside className={NavBarStyles.NavBar}>
+      <nav className={NavBarStyles.NavBar__Items}>
+        <ul>
+          <NavBarItem
+            label="Securaware"
+            iconBaseName="Home"
+            href="/dashboard"
+            matchOnSubPages={false}
+          />
+          <NavBarItem
+            label="Online-Kurse"
+            iconBaseName="Lightbulb"
+            href="/dashboard/courses"
+          />
+          <NavBarItem
+            label="Prüfungen"
+            iconBaseName="BookQuestionMark"
+            href="/dashboard/exams"
+          />
+        </ul>
+      </nav>
       <div className={NavBarStyles.NavBar__Items}>
         <button className={`${NavBarStyles.NavBar__Item} ${styles.focusIndicator}`} onClick={onLogout}>
           <FluentIcons.SignOut24Regular />
           <span className={NavBarStyles.NavBar__ItemLabel}>Abmelden</span>
         </button>
       </div>
-    </div>
+    </aside>
   )
 }
 
@@ -64,21 +66,23 @@ function NavBarItem({ href, label, iconBaseName, matchOnSubPages = true }: NavBa
   const styles = useStyles();
 
   return (
-    <NavLink
-      to={href}
-      end={!matchOnSubPages}
-      className={`${NavBarStyles.NavBar__Item} ${styles.focusIndicator}`}
-    >
-      {({ isActive }) => (
-        <>
-          { isActive ? (
-            <IconActiveComponent color={tokens.colorNeutralForeground2BrandSelected} />
-          ) : (
-            <IconComponent />
-          )}
-          <span className={NavBarStyles.NavBar__ItemLabel}>{label}</span>
-        </>
-      )}
-    </NavLink>
+    <li>
+      <NavLink
+        to={href}
+        end={!matchOnSubPages}
+        className={`${NavBarStyles.NavBar__Item} ${styles.focusIndicator}`}
+      >
+        {({ isActive }) => (
+          <>
+            { isActive ? (
+              <IconActiveComponent color={tokens.colorNeutralForeground2BrandSelected} />
+            ) : (
+              <IconComponent />
+            )}
+            <span className={NavBarStyles.NavBar__ItemLabel}>{label}</span>
+          </>
+        )}
+      </NavLink>
+    </li>
   )
 }

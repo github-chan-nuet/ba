@@ -20,7 +20,7 @@ export default function DashboardHome() {
   const { user } = useAuth();
 
   return (
-    <div
+    <main
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -29,6 +29,6 @@ export default function DashboardHome() {
     >
       <Title1>Schön dich zu sehen, {user?.firstname}!</Title1>
       <WelcomeBanner />
-    </div>
+    </main>
   )
 }
