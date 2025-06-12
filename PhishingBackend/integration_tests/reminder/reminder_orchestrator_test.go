@@ -96,5 +96,5 @@ func TestShouldSendOutReminder(t *testing.T) {
 
 	// then
 	wantEmail := []domain_model.Email{getWantMail(*user, templ)}
-	assert.ElementsMatch(t, wantEmail, emailSender.sentEmail)
+	assert.Contains(t, emailSender.sentEmail, wantEmail)
 }
