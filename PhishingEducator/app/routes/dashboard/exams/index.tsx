@@ -21,7 +21,6 @@ export function meta() {
 export async function clientLoader() {
   const { data, error } = await getExams();
   if (error) {
-    console.error(error);
     return { exams: [] };
   }
   return { exams: data };

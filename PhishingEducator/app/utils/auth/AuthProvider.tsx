@@ -31,7 +31,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     } catch (e) {
       setToken(null);
       setUser(null);
-      console.error(e);
     }
   }, [setToken, token]);
 

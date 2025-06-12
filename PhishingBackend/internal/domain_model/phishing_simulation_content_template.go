@@ -4,7 +4,7 @@ import (
 	"errors"
 	"log/slog"
 	"math"
-	"phishing_backend/internal/utils"
+	"phishing_backend/internal/domain_model/utils"
 	"regexp"
 
 	"github.com/google/uuid"
@@ -35,7 +35,7 @@ func (template *PhishingSimulationContentTemplate) GetScoredCombinations(
 		return scoredCombinations
 	}
 
-	combinations := utils.Combinations(recognitionFeatures.List(), 2)
+	combinations := getPowerSet(recognitionFeatures.List(), 2)
 	for _, comb := range combinations {
 		// Iterate over applicableRecognitionFeatures
 		// if in comb then select the respective level x > 1
@@ -44,10 +44,10 @@ func (template *PhishingSimulationContentTemplate) GetScoredCombinations(
 		var score float32 = 0
 		for _, feature := range recognitionFeatures.List() {
 			level := 0
-			if utils.Find(comb, func(f PhishingSimulationRecognitionFeature) bool {
+			if find(comb, func(f PhishingSimulationRecognitionFeature) bool {
 				return f.ID == feature.ID
 			}) != nil {
-				vulnerability := utils.Find(
+				vulnerability := find(
 					vulnerabilities,
 					func(vuln PhishingSimulationUserVulnerability) bool {
 						return *vuln.ContentCategory == *template.ContentCategory && vuln.RecognitionFeature.ID == feature.ID
@@ -56,7 +56,7 @@ func (template *PhishingSimulationContentTemplate) GetScoredCombinations(
 					score += vulnerability.Score
 					level = int(math.Round(float64(vulnerability.Score)))
 				} else {
-					mostMatchingVulnerabilities := utils.FindAll(
+					mostMatchingVulnerabilities := findAll(
 						vulnerabilities,
 						func(vuln PhishingSimulationUserVulnerability) bool {
 							return vuln.RecognitionFeature.ID == feature.ID
@@ -116,7 +116,7 @@ func (template *PhishingSimulationContentTemplate) getApplicableRecognitionFeatu
 	}
 
 	for _, feat := range applicableTotal.List() {
-		defition := utils.Find(recognitionFeatureDefinitions, func(def PhishingSimulationRecognitionFeature) bool {
+		defition := find(recognitionFeatureDefinitions, func(def PhishingSimulationRecognitionFeature) bool {
 			return def.Name == feat
 		})
 
@@ -130,9 +130,9 @@ func (template *PhishingSimulationContentTemplate) getApplicableRecognitionFeatu
 }
 
 func extractRecognitionFeaturesUsed(v string) utils.Set[string] {
-	var values utils.Set[string]
+	values := utils.NewSet[string]()
 
-	re := regexp.MustCompile(`\{RecognitionFeature\{([^}]+)\}\}`)
+	re := regexp.MustCompile(`\{RecognitionFeature\{(.*?)\}\}`)
 	matches := re.FindAllStringSubmatch(v, -1)
 
 	for _, match := range matches {
@@ -140,5 +140,51 @@ func extractRecognitionFeaturesUsed(v string) utils.Set[string] {
 			values.Add(match[1])
 		}
 	}
-	return values
+	return *values
+}
+
+func find[T any](slice []T, predicate func(T) bool) *T {
+	for i := range slice {
+		if predicate(slice[i]) {
+			return &slice[i]
+		}
+	}
+	return nil
+}
+
+func findAll[T any](slice []T, predicate func(T) bool) []T {
+	var result []T
+	for i := range slice {
+		if predicate(slice[i]) {
+			result = append(result, slice[i])
+		}
+	}
+	return result
+}
+
+func getPowerSet[T any](elements []T, maxSize int) [][]T {
+	var result [][]T
+	var comb []T
+
+	var backtrack func(start int)
+	backtrack = func(start int) {
+		if len(comb) > 0 && len(comb) <= maxSize {
+			// make a copy of comb and append to result
+			temp := make([]T, len(comb))
+			copy(temp, comb)
+			result = append(result, temp)
+		}
+		if len(comb) == maxSize {
+			return
+		}
+
+		for i := start; i < len(elements); i++ {
+			comb = append(comb, elements[i])
+			backtrack(i + 1)
+			comb = comb[:len(comb)-1]
+		}
+	}
+
+	backtrack(0)
+	return result
 }

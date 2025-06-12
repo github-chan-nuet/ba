@@ -87,9 +87,7 @@ export default function Exam({ loaderData }: Route.ComponentProps) {
       body: selectedAnswers,
     });
 
-    if (error) {
-      console.error('Failed to complete Exam', error);
-    } else if (xpGain) {
+    if (xpGain) {
       onExperienceGain(xpGain.newExperienceGained, xpGain.newLevel);
 
       const { data: completedExam, error } = await getCompletedExam({
@@ -97,9 +95,7 @@ export default function Exam({ loaderData }: Route.ComponentProps) {
           examId: exam.id
         }
       });
-      if (error) {
-        console.error('Failed to fetch completed exam');
-      } else {
+      if (!error) {
         setExamCompletion(completedExam);
       }
     }

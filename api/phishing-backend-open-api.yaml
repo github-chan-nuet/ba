@@ -2,23 +2,25 @@ openapi: 3.0.0
 info:
   title: Phishing Backend - OpenAPI 3.0
   description: |-
-    todo
+    This API is designed for a sophisticated phishing awareness training platform that goes beyond simple educational content. It creates an engaging, gamified learning environment where users progress through structured courses, take assessments, and participate in realistic phishing simulations.
   contact:
     email: mischa.binder@ost.ch
-  version: 0.0.1
+  version: 1.0.0
 servers:
   - url: "/api"
 tags:
   - name: User
     description: User and authentication related
-  - name: Completion
+  - name: Course Completion
     description: Keeps track of the users progress regarding the online courses
   - name: Exam
     description: Related to completing exams
+  - name: Phishing Simulation
+    description: Related to retrieving data to display for the email based phishing simulation
 paths:
   "/users":
     post:
-      summary: todo
+      summary: Creates a user
       tags:
         - User
       operationId: createUser
@@ -63,7 +65,7 @@ paths:
     get:
       security:
         - bearerAuth: [ ]
-      summary: todo
+      summary: Gets details about a user
       tags:
         - User
       operationId: getUser
@@ -71,7 +73,7 @@ paths:
         - $ref: "#/components/parameters/userId"
       responses:
         '200':
-          description: todo
+          description: The actual user
           content:
             application/json:
               schema:
@@ -88,7 +90,7 @@ paths:
     patch:
       security:
         - bearerAuth: [ ]
-      summary: todo
+      summary: Updates the given user
       tags:
         - User
       operationId: updateUser
@@ -115,10 +117,9 @@ paths:
     get:
       security:
         - bearerAuth: [ ]
-      summary: TODO
       tags:
-        - Completion
-      description: TODO
+        - Course Completion
+      summary: Get all lesson completions
       operationId: getAllLessonCompletionsOfUser
       responses:
         '200':
@@ -142,10 +143,9 @@ paths:
     get:
       security:
         - bearerAuth: [ ]
-      summary: TODO
+      summary: Get a specific lesson completions
       tags:
-        - Completion
-      description: TODO
+        - Course Completion
       operationId: getLessonCompletionsOfCourseAndUser
       parameters:
         - $ref: "#/components/parameters/courseId"
@@ -171,10 +171,9 @@ paths:
     post:
       security:
         - bearerAuth: [ ]
-      summary: TODO
+      summary: Mark a lesson as completed
       tags:
-        - Completion
-      description: TODO
+        - Course Completion
       operationId: createLessonCompletion
       parameters: 
         - $ref: "#/components/parameters/courseId"
@@ -204,13 +203,13 @@ paths:
 
   "/exams":
     get:
-      summary: TODO
+      summary: Get all exams
       tags:
         - Exam
       description: getExams
       responses:
         '200':
-          description: todo
+          description: the exam
           content:
             application/json:
               schema:
@@ -222,7 +221,7 @@ paths:
 
   "/exams/{examId}":
     get:
-      summary: TODO
+      summary: Get a specific exam
       tags:
         - Exam
       description: getExam
@@ -230,7 +229,7 @@ paths:
         - $ref: "#/components/parameters/examId"
       responses:
         '200':
-          description: todo
+          description: An exam
           content:
             application/json:
               schema:
@@ -248,11 +247,10 @@ paths:
     post:
       security:
         - bearerAuth: [ ]
-      summary: TODO
+      summary: Complete an exam by sending all the answers.
       tags:
         - Exam
       operationId: completeExam
-      description: TODO
       parameters:
         - $ref: "#/components/parameters/examId"
       requestBody:
@@ -262,7 +260,7 @@ paths:
               "$ref": "#/components/schemas/ExamCompletion"
       responses:
         '200':
-          description: todo
+          description: The gained experience by solving the exam
           content:
             application/json:
               schema:
@@ -279,16 +277,15 @@ paths:
     get:
       security:
         - bearerAuth: [ ]
-      summary: TODO
+      summary: Get the completed exam including the solution
       tags:
         - Exam
       operationId: getCompletedExam
-      description: TODO
       parameters:
         - $ref: "#/components/parameters/examId"
       responses:
         '200':
-          description: todo
+          description: completed exam including the solution
           content:
             application/json:
               schema:
@@ -301,18 +298,18 @@ paths:
           $ref: "#/components/responses/ProblemDetail"
         '500':
           $ref: "#/components/responses/ProblemDetail"
+
   "/phishing-simulation/runs/{phishingSimulationRunId}":
     get:
-      summary: TODO
+      summary: Get the phishing simulation run
       tags:
         - Phishing Simulation
       operationId: getPhishingSimulationRun
-      description: TODO
       parameters:
         - $ref: "#/components/parameters/phishingSimulationRunId"
       responses:
         '200':
-          description: TODO
+          description: The phishing simulation run
           content:
             application/json:
               schema:

@@ -48,7 +48,6 @@ export default function CourseLesson({ loaderData }: Route.ComponentProps) {
           setCompletedLessons(() => result.data);
         }
       } catch (e) {
-        console.error('Failed to fetch completions', e);
       }
     };
     fetchCompletions();
@@ -74,7 +73,6 @@ export default function CourseLesson({ loaderData }: Route.ComponentProps) {
           onExperienceGain(resp.data.newExperienceGained, resp.data.newLevel);
         }
       } catch (e) {
-        console.error('Failed to create completion', e);
       }
     }
 

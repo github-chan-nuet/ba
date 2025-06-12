@@ -36,7 +36,6 @@ export default function LoginForm({
           { intent: "error"}
         )
       }
-      console.error(e);
     }
   }
 

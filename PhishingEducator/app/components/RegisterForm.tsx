@@ -23,7 +23,6 @@ export default function RegisterForm() {
         <ErrorToast error={error} />,
         { intent: "error" }
       );
-      console.error(error);
       return;
     }
     try {
@@ -33,7 +32,6 @@ export default function RegisterForm() {
         <ErrorToast error={e} />,
         { intent: "error" }
       );
-      console.error(e);
     }
   }
 

@@ -60,7 +60,6 @@ export default function ProfileDrawer({ isOpen, setIsOpen }: ProfileDrawerProps)
         </Toast>,
         { intent: "error" }
       );
-      console.error(e);
     }
 
     clearTimeout(spinnerTimeout);

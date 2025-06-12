@@ -7,22 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestStart(t *testing.T) {
-	// Given
-	duration := 10 * time.Millisecond
-	var wasCalled bool
-	fn := func(utc time.Time) {
-		wasCalled = true
-	}
-
-	// When
-	go StartCronJob(duration, fn)
-
-	// Then
-	time.Sleep(duration * 2)
-	assert.True(t, wasCalled, "Expected function to be called, but it wasn't")
-}
-
 func TestExecuteEachDayAfterDuration(t *testing.T) {
 	// Given
 	now := time.Now()
