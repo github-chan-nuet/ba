@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function useLocalStorage(key: string, initialValue: unknown) {
   const [value, setValue] = useState(() => {
@@ -10,13 +10,12 @@ export default function useLocalStorage(key: string, initialValue: unknown) {
     }
   });
 
-  const setItem = (newVal: unknown) => {
+  useEffect(() => {
     try {
       window.localStorage.setItem(key, JSON.stringify(value));
-      setValue(newVal);
     } catch (e) {
     }
-  };
+  }, [key, value]);
 
-  return [value, setItem];
+  return [value, setValue];
 }
