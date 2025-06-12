@@ -15,7 +15,7 @@ export default function AuthDrawer({ isOpen, setIsOpen }: AuthDrawerProps) {
   const [authContent, setAuthContent] = useState("login");
 
   useEffect(() => {
-    if (isOpen === false) {
+    if (isOpen) {
       setAuthContent("login");
     }
   }, [isOpen]);

@@ -13,7 +13,11 @@ export default function UserAvatar() {
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    if (typeof prevXp === "number" && user?.totalExperience !== undefined && user.totalExperience !== prevXp) {
+    if (
+      typeof prevXp === "number" &&
+      user?.totalExperience !== undefined &&
+      user.totalExperience !== prevXp
+    ) {
       setShowPopup(true);
     } else if (user?.totalExperience !== undefined) {
       setPrevXp(user.totalExperience);
