@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Link, Outlet } from "react-router";
+import { Body1Stronger, ToggleButton } from "@fluentui/react-components";
 import AuthDrawer from "@components/(Marketing)/AuthDrawer";
+import Footer from "@components/(Marketing)/Footer";
+
 import MarketingStyles from "@styles/Marketing.module.scss";
 import logo from "@assets/images/securaware.png";
-import { Body1Stronger, ToggleButton } from "@fluentui/react-components";
-import Footer from "@components/(Marketing)/Footer";
 
 export default function MarketingLayout() {
   const [isAuthDrawerOpen, setIsAuthDrawerOpen] = useState(false);
