@@ -1,7 +1,22 @@
 {
   "name": "phishing-educator",
+  "description": "React Frontend Application for the Security Awareness Plattform Securaware",
   "private": true,
   "version": "0.1.0",
+  "homepage": "https://www.securaware.ch/",
+  "bugs": {
+    "email": "mischa.binder@ost.ch"
+  },
+  "contributors": [
+    {
+      "name": "Patrick Scheidegger",
+      "email": "patrick.scheidegger@ost.ch"
+    },
+    {
+      "name": "Mischa Binder",
+      "email": "mischa.binder@ost.ch"
+    }
+  ],
   "type": "module",
   "scripts": {
     "lint": "eslint .",
