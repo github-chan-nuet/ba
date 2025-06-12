@@ -4,6 +4,7 @@ html {
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -229,8 +230,8 @@ button,
 html [type="button"],
 [type="reset"],
 [type="submit"] {
-  appearance: button;
   -webkit-appearance: button;
+  appearance: button;
 }
 
 button::-moz-focus-inner,
@@ -251,8 +252,8 @@ input[type="date"],
 input[type="time"],
 input[type="datetime-local"],
 input[type="month"] {
-  appearance: listbox;
   -webkit-appearance: listbox;
+  appearance: listbox;
 }
 
 textarea {
@@ -290,8 +291,8 @@ progress {
 
 [type="search"] {
   outline-offset: -2px;
-  appearance: none;
   -webkit-appearance: none;
+  appearance: none;
 }
 
 [type="search"]::-webkit-search-cancel-button,
@@ -337,8 +338,8 @@ button, input, select, textarea {
 }
 
 input[type=number] {
-  appearance: textfield;
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 /* ol => w3c spec, see https://www.w3.org/TR/html5/rendering.html#lists */
