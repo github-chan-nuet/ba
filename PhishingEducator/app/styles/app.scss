@@ -17,6 +17,14 @@ a {
   margin-inline: calc(-1 * var(--fui-Card--size));
 }
 
+.shrink-0 {
+  flex-shrink: 0;
+}
+
+.block {
+  display: block;
+}
+
 .color-gray-500 {
   color: $color-gray-500;
 }
@@ -53,23 +61,5 @@ a {
   &__innerContent {
     padding-right: 2rem;
     padding-bottom: 2rem;
-  }
-}
-
-@media screen and (max-width: 1680px) {
-  html {
-    font-size: 12pt;
-  }
-}
-
-@media screen and (max-width: 736px) {
-  html {
-    font-size: 9pt;
-  }
-}
-
-@media screen and (max-width: 360px) {
-  html {
-    font-size: 10pt;
   }
 }
