@@ -4,6 +4,8 @@ import { Dismiss24Regular } from "@fluentui/react-icons";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
 
+import AuthFormStyles from '../AuthForm.module.scss';
+
 type AuthDrawerProps = {
   isOpen: boolean,
   setIsOpen: (value: React.SetStateAction<boolean>) => void
@@ -20,10 +22,10 @@ export default function AuthDrawer({ isOpen, setIsOpen }: AuthDrawerProps) {
 
   return (
     <Drawer
+      className={AuthFormStyles.Drawer}
       position="end"
       open={isOpen}
       onOpenChange={(_, { open }) => setIsOpen(open)}
-      style={{ width: "500px" }}
     >
       <DrawerHeader>
         <DrawerHeaderTitle

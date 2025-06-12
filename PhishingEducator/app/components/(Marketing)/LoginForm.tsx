@@ -4,7 +4,7 @@ import { useToaster } from "@utils/toaster/useToaster";
 import { Button, Field, Input } from "@fluentui/react-components";
 import ErrorToast from "@components/ErrorToast";
 
-import AuthFormStyles from './AuthForm.module.scss';
+import AuthFormStyles from '../AuthForm.module.scss';
 
 type LoginFormProps = {
   onSwitchToRegister?: () => void

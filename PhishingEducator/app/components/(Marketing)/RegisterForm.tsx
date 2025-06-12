@@ -5,7 +5,7 @@ import { createUser } from "@api/index";
 import { Button, Field, Input } from "@fluentui/react-components";
 import ErrorToast from "@components/ErrorToast";
 
-import AuthFormStyles from './AuthForm.module.scss';
+import AuthFormStyles from '../AuthForm.module.scss';
 
 export default function RegisterForm() {
   const { dispatchToast } = useToaster();
