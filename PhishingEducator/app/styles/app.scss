@@ -43,19 +43,19 @@ a {
     overflow: hidden;
     
     padding-top: 2rem;
-    padding-left: 2rem;
   }
 
   &__header {
     margin-bottom: 1.5rem;
     display: flex;
     justify-content: space-between;
-    padding-right: 2rem;
+    padding-inline: 2rem;
   }
 
   &__content {
     flex: 1;
     overflow-y: auto;
+    padding-left: 2rem;
   }
 
   &__innerContent {
