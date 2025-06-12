@@ -116,15 +116,15 @@ func (template *PhishingSimulationContentTemplate) getApplicableRecognitionFeatu
 	}
 
 	for _, feat := range applicableTotal.List() {
-		defition := find(recognitionFeatureDefinitions, func(def PhishingSimulationRecognitionFeature) bool {
+		definition := find(recognitionFeatureDefinitions, func(def PhishingSimulationRecognitionFeature) bool {
 			return def.Name == feat
 		})
 
-		if defition == nil {
+		if definition == nil {
 			err := errors.New("Undefined RecognitionFeature used in template")
 			return nil, err
 		}
-		resultSet.Add(*defition)
+		resultSet.Add(*definition)
 	}
 	return resultSet, nil
 }
