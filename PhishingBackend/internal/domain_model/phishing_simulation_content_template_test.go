@@ -19,11 +19,59 @@ func TestGetPowerSet(t *testing.T) {
 
 func TestExtractRecognitionFeaturesUsed(t *testing.T) {
 	// given
-	input := "{RecognitionFeature{Face}} {RecognitionFeature{Voice}} {RecognitionFeature{A}} {RecognitionFeature{Aa}}"
+	input := "Lorem Ipsum {RecognitionFeature{Voice}} {RecognitionFeature{A}} {RecognitionFeature{Aa}}"
 
 	// when
 	s := extractRecognitionFeaturesUsed(input)
 
 	// then
-	assert.Equal(t, s, s)
+	assert.Equal(t, []string{"Voice", "A", "Aa"}, s.List())
+}
+
+func TestFind(t *testing.T) {
+	// given
+	ints := []int{1, 3, 5, 7, 2}
+	isEven := func(i int) bool { return i%2 == 0 }
+
+	// when
+	result := find(ints, isEven)
+
+	// then
+	assert.Equal(t, 2, *result)
+}
+
+func TestFindNoMatch(t *testing.T) {
+	// given
+	ints := []int{1, 3, 5, 7}
+	isEven := func(i int) bool { return i%2 == 0 }
+
+	// when
+	result := find(ints, isEven)
+
+	// then
+	assert.Nil(t, result)
+}
+
+func TestFindAll(t *testing.T) {
+	// given
+	ints := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	isEven := func(i int) bool { return i%2 == 0 }
+
+	// when
+	result := findAll(ints, isEven)
+
+	// then
+	assert.ElementsMatch(t, []int{2, 4, 6, 8}, result)
+}
+
+func TestFindAllNoMatch(t *testing.T) {
+	// given
+	ints := []int{1, 3, 5, 7, 9}
+	isEven := func(i int) bool { return i%2 == 0 }
+
+	// when
+	result := findAll(ints, isEven)
+
+	// then
+	assert.Empty(t, result)
 }
