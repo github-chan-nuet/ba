@@ -1,5 +1,5 @@
-import { Body2, Title2 } from "@fluentui/react-components";
 import useAuth from "@utils/auth/useAuth";
+import { Body2, Title2 } from "@fluentui/react-components";
 
 import WelcomeBannerStyles from "./WelcomeBanner.module.scss";
 

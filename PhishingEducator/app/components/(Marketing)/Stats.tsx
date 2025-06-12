@@ -1,4 +1,5 @@
 import Chart from 'react-apexcharts';
+
 import StatsStyles from './Stats.module.scss';
 
 export default function Stats() {

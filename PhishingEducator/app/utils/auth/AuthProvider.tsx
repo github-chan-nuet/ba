@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import useLocalStorage from "@utils/storage/useLocalStorage";
-import AuthContext from "./AuthContext";
 import { getUser, loginAndReturnJwtToken, updateUser as patchUser, type User, type UserPatchModel } from "@api/index";
 import { client } from "@api/client.gen";
+import AuthContext from "./AuthContext";
 
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();

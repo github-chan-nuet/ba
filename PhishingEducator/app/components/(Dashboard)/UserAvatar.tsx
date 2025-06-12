@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Avatar, Popover, PopoverSurface, PopoverTrigger } from "@fluentui/react-components";
 import { AnimatePresence } from "framer-motion";
-import AvatarXPTooltip from "@components/(Dashboard)/AvatarXPTooltip";
 import useAuth from "@utils/auth/useAuth";
+import { Avatar, Popover, PopoverSurface, PopoverTrigger } from "@fluentui/react-components";
+import AvatarXPTooltip from "@components/(Dashboard)/AvatarXPTooltip";
 import UserPopover from "@components/(Dashboard)/UserPopover";
 
 import UserAvatarStyles from './UserAvatar.module.scss'

@@ -1,7 +1,7 @@
-import { Button, Divider, Spinner, Subtitle1 } from "@fluentui/react-components";
 import { Link } from "react-router";
-import CircularProgress from "@components/(Dashboard)/CircularProgress";
 import type { Exam } from "@api/index";
+import { Button, Divider, Spinner, Subtitle1 } from "@fluentui/react-components";
+import CircularProgress from "@components/(Dashboard)/CircularProgress";
 
 import ExamStyles from "@styles/Exam.module.scss";
 import ExamProgressStyles from './ExamProgress.module.scss';

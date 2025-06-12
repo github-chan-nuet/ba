@@ -1,4 +1,5 @@
 import { Spinner } from '@fluentui/react-components';
+
 import LoadingStyles from './Loading.module.scss';
 
 export default function Loading() {

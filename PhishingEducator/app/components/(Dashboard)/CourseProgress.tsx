@@ -1,5 +1,5 @@
-import { CheckmarkCircle24Filled, Circle24Regular, PlayCircle24Regular } from "@fluentui/react-icons";
 import type { LessonRecord } from "@data/courses";
+import { CheckmarkCircle24Filled, Circle24Regular, PlayCircle24Regular } from "@fluentui/react-icons";
 
 import CourseProgressStyles from "./CourseProgress.module.scss";
 import { Body1, Body2, tokens } from "@fluentui/react-components";

@@ -1,9 +1,9 @@
 import type { Route } from "./+types";
 import { Link } from "react-router";
-import { Body1, Button, Card, CardFooter, CardHeader, ProgressBar, Subtitle1 } from "@fluentui/react-components";
-import { ArrowRight20Regular, Rocket20Regular } from "@fluentui/react-icons";
 import { getCourses, type CourseRecord } from "@data/courses";
 import { getAllLessonCompletionsOfUser } from "@api/index";
+import { Body1, Button, Card, CardFooter, CardHeader, ProgressBar, Subtitle1 } from "@fluentui/react-components";
+import { ArrowRight20Regular, Rocket20Regular } from "@fluentui/react-icons";
 
 import DashboardStyles from '@styles/Dashboard.module.scss';
 
