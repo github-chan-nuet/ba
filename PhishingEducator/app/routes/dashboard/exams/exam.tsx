@@ -1,9 +1,9 @@
 import type { Route } from "./+types/exam";
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";
-import { Title1 } from "@fluentui/react-components";
 import useAuth from "@utils/auth/useAuth";
 import { completeExam, getCompletedExam, getExamsByExamId, type CompletedExam } from "@api/index";
+import { Title1 } from "@fluentui/react-components";
 import ExamProgress from "@components/(Dashboard)/(Exams)/ExamProgress";
 import ExamResults from "@components/(Dashboard)/(Exams)/ExamResults";
 import Question from "@components/(Dashboard)/(Exams)/Question";

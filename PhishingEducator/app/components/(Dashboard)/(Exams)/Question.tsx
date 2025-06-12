@@ -1,5 +1,5 @@
-import { Body1, Title3 } from "@fluentui/react-components";
 import type { Answer as AnswerType, Question } from "@api/index";
+import { Body1, Title3 } from "@fluentui/react-components";
 import Answer from "./Answer";
 
 import ExamStyles from '@styles/Exam.module.scss';

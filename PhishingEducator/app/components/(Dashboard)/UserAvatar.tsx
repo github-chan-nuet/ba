@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Avatar, Popover, PopoverSurface, PopoverTrigger } from "@fluentui/react-components";
 import { AnimatePresence } from "framer-motion";
-import AvatarXPTooltip from "@components/(Dashboard)/AvatarXPTooltip";
 import useAuth from "@utils/auth/useAuth";
+import { Avatar, Popover, PopoverSurface, PopoverTrigger } from "@fluentui/react-components";
+import AvatarXPTooltip from "@components/(Dashboard)/AvatarXPTooltip";
 import UserPopover from "@components/(Dashboard)/UserPopover";
 
 import UserAvatarStyles from './UserAvatar.module.scss'
@@ -13,7 +13,11 @@ export default function UserAvatar() {
   const [showPopup, setShowPopup] = useState(false);
 
   useEffect(() => {
-    if (typeof prevXp === "number" && user?.totalExperience !== undefined && user.totalExperience !== prevXp) {
+    if (
+      typeof prevXp === "number" &&
+      user?.totalExperience !== undefined &&
+      user.totalExperience !== prevXp
+    ) {
       setShowPopup(true);
     } else if (user?.totalExperience !== undefined) {
       setPrevXp(user.totalExperience);

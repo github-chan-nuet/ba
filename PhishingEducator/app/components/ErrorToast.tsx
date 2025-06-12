@@ -1,5 +1,5 @@
+import type { ProblemDetail } from "@api/index";
 import { Toast, ToastTitle } from "@fluentui/react-components";
-import type { ProblemDetail } from "app/api";
 
 const isProblemDetail = (error: unknown) => {
   return (

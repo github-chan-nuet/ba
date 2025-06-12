@@ -1,10 +1,10 @@
 import type { Route } from "./+types/lesson";
 import { useNavigate } from "react-router";
 import { Helmet } from "react-helmet-async";
-import { Button, Title1 } from "@fluentui/react-components";
 import useAuth from "@utils/auth/useAuth";
 import { createLessonCompletion, getLessonCompletionsOfCourseAndUser } from "@api/index";
 import { getCourse } from "@data/courses";
+import { Button, Title1 } from "@fluentui/react-components";
 import CourseProgress from "@components/(Dashboard)/CourseProgress";
 
 import CourseLessonStyles from '@styles/CourseLesson.module.scss';

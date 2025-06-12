@@ -1,9 +1,10 @@
-import { DismissRegular, SquareMultipleRegular, SubtractRegular } from '@fluentui/react-icons';
-import MailDetailMockStyles from './MailDetailMock.module.scss';
-import { Avatar, Card, Popover, PopoverSurface, PopoverTrigger } from '@fluentui/react-components';
 import parse, { domToReact } from 'html-react-parser';
 import type { DOMNode } from 'html-dom-parser';
 import type { PhishingSimulationRecognitionFeatureValue } from '@api/index';
+import { Avatar, Card, Popover, PopoverSurface, PopoverTrigger } from '@fluentui/react-components';
+import { DismissRegular, SquareMultipleRegular, SubtractRegular } from '@fluentui/react-icons';
+
+import MailDetailMockStyles from './MailDetailMock.module.scss';
 
 type MailDetailMockProps = {
   sentAt: string;

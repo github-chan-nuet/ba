@@ -1,9 +1,9 @@
-import { HelmetProvider } from "react-helmet-async";
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from "react-router"
-import { FluentProvider, webLightTheme } from "@fluentui/react-components"
+import { HelmetProvider } from "react-helmet-async";
 import GlobalToaster from "@utils/toaster/GlobalToaster"
 import AuthProvider from "@utils/auth/AuthProvider"
 import { client } from "@api/client.gen";
+import { FluentProvider, webLightTheme } from "@fluentui/react-components"
 import Loading from "@components/(Marketing)/Loading";
 
 import "./styles/reset.scss";

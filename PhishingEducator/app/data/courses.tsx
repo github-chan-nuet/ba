@@ -1,12 +1,12 @@
-import CommonGroundLesson1 from "./components/CommonGround/Lesson1";
-import CommonGroundLesson2 from "./components/CommonGround/Lesson2";
-import CommonGroundLesson3 from "./components/CommonGround/Lesson3";
-import CommonGroundLesson4 from "./components/CommonGround/Lesson4";
-import CommonGroundLesson5 from "./components/CommonGround/Lesson5";
+import CommonGroundLesson1 from "@data/components/CommonGround/Lesson1";
+import CommonGroundLesson2 from "@data/components/CommonGround/Lesson2";
+import CommonGroundLesson3 from "@data/components/CommonGround/Lesson3";
+import CommonGroundLesson4 from "@data/components/CommonGround/Lesson4";
+import CommonGroundLesson5 from "@data/components/CommonGround/Lesson5";
 
-import AngriffsvektorenLesson1 from "./components/Angriffsvektoren/Lesson1";
-import AngriffsvektorenLesson2 from "./components/Angriffsvektoren/Lesson2";
-import AngriffsvektorenLesson3 from "./components/Angriffsvektoren/Lesson3";
+import AngriffsvektorenLesson1 from "@data/components/Angriffsvektoren/Lesson1";
+import AngriffsvektorenLesson2 from "@data/components/Angriffsvektoren/Lesson2";
+import AngriffsvektorenLesson3 from "@data/components/Angriffsvektoren/Lesson3";
 
 export type CourseRecord = {
   id: string;

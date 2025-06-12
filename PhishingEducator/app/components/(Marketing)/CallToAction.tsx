@@ -1,7 +1,8 @@
-import { Button } from '@fluentui/react-components';
-import CallToActionStyles from './CallToAction.module.scss';
-import { ShieldTask28Filled } from '@fluentui/react-icons';
 import { useOutletContext } from 'react-router';
+import { Button } from '@fluentui/react-components';
+import { ShieldTask28Filled } from '@fluentui/react-icons';
+
+import CallToActionStyles from './CallToAction.module.scss';
 
 type MarketingContext = {setAuthOpen: () => void};
 

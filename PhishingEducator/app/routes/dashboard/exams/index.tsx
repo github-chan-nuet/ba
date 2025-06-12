@@ -1,7 +1,7 @@
-import { Body1, Button, Card, CardFooter, CardHeader, ProgressBar, Subtitle1 } from "@fluentui/react-components";
-import { getExams, type Exam } from "@api/index";
 import type { Route } from "./+types";
 import { Link } from "react-router";
+import { getExams, type Exam } from "@api/index";
+import { Body1, Button, Card, CardFooter, CardHeader, ProgressBar, Subtitle1 } from "@fluentui/react-components";
 import { Rocket20Regular } from "@fluentui/react-icons";
 
 import DashboardStyles from '@styles/Dashboard.module.scss';

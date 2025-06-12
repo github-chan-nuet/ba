@@ -1,7 +1,7 @@
 import { NavLink } from "react-router";
+import useAuth from "@utils/auth/useAuth";
 import { createFocusOutlineStyle, makeStyles, tokens } from "@fluentui/react-components";
 import * as FluentIcons from "@fluentui/react-icons";
-import useAuth from "@utils/auth/useAuth";
 
 import NavBarStyles from "./NavBar.module.scss";
 
