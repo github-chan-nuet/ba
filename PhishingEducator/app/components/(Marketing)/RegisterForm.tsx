@@ -1,9 +1,11 @@
-import { Button, Field, Input } from "@fluentui/react-components";
-import { createUser } from "@api/index";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import useAuth from "@utils/auth/useAuth";
 import { useToaster } from "@utils/toaster/useToaster";
-import { useState, type ChangeEvent, type FormEvent } from "react";
-import ErrorToast from "./ErrorToast";
+import { createUser } from "@api/index";
+import { Button, Field, Input } from "@fluentui/react-components";
+import ErrorToast from "@components/ErrorToast";
+
+import AuthFormStyles from './AuthForm.module.scss';
 
 export default function RegisterForm() {
   const { dispatchToast } = useToaster();
@@ -37,12 +39,8 @@ export default function RegisterForm() {
 
   return (
     <form
+      className={AuthFormStyles.AuthForm}
       onSubmit={handleRegister}
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 16
-      }}
     >
       <Field label="Vorname" required>
         <Input name="firstname" type="text" onChange={handleChange} />
@@ -56,12 +54,7 @@ export default function RegisterForm() {
       <Field label="Passwort" required>
         <Input name="password" type="password" onChange={handleChange} />
       </Field>
-      <div
-        style={{
-          display: 'flex',
-          gap: 16
-        }}
-      >
+      <div className={AuthFormStyles.AuthForm__Actions}>
         <Button type="submit" appearance="primary">Registrieren</Button>
       </div>
     </form>
