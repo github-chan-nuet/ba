@@ -5,6 +5,8 @@ import { ArrowRight20Regular, Rocket20Regular } from "@fluentui/react-icons";
 import { getCourses, type CourseRecord } from "@data/courses";
 import { getAllLessonCompletionsOfUser } from "@api/index";
 
+import DashboardStyles from '@styles/Dashboard.module.scss';
+
 export function meta() {
   return [
     { title: 'Securaware - Online-Kurse' },
@@ -32,11 +34,7 @@ export default function Courses({ loaderData }: Route.ComponentProps) {
   const { courses, completions } = loaderData;
 
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))',
-      gap: 16
-    }}>
+    <div className={DashboardStyles.Dashboard__Grid}>
       { courses.map((course: CourseRecord, idx: number) => (
         <CourseCard
           key={idx}
@@ -71,10 +69,7 @@ function CourseCard({
   return (
     <Card size="large">
       <CardHeader
-        style={{
-          marginBottom: 'auto',
-          gridAutoRows: 'min-content auto'
-        }}
+        className={DashboardStyles.Dashboard__GridCardHeader}
         header={<Subtitle1>{course.label}</Subtitle1>}
         description={<Body1>{course.description}</Body1>}
       />
@@ -87,15 +82,15 @@ function CourseCard({
             <Button appearance="primary">
               { completedPercentage <= 0 ? (
                 <>
-                  Starten <Rocket20Regular style={{ marginLeft: 8 }} />
+                  Starten <Rocket20Regular className="ml-2" />
                 </>
               ) : completedPercentage >= 1 ? (
                 <>
-                  Neu starten <Rocket20Regular style={{ marginLeft: 8 }} />
+                  Neu starten <Rocket20Regular className="ml-2" />
                 </>
               ) : (
                 <>
-                  Fortfahren <ArrowRight20Regular style={{ marginLeft: 8 }} />
+                  Fortfahren <ArrowRight20Regular className="ml-2" />
                 </>
               )}
             </Button>
