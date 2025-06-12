@@ -1,36 +1,27 @@
-import useAuth from "@utils/auth/useAuth";
-import * as FluentIcons from "@fluentui/react-icons";
-
-import NavBarStyles from "@styles/NavBar.module.scss";
 import { NavLink } from "react-router";
 import { createFocusOutlineStyle, makeStyles, tokens } from "@fluentui/react-components";
+import * as FluentIcons from "@fluentui/react-icons";
+import useAuth from "@utils/auth/useAuth";
+
+import NavBarStyles from "./NavBar.module.scss";
+
+const useStyles = makeStyles({
+  focusIndicator: createFocusOutlineStyle()
+});
 
 export default function NavBar() {
   const { onLogout } = useAuth();
+  const styles = useStyles();
 
   return (
     <div className={NavBarStyles.NavBar}>
-      <div className={NavBarStyles.NavBar__items}>
+      <div className={NavBarStyles.NavBar__Items}>
         <NavBarItem
           label="Securaware"
           iconBaseName="Home"
           href="/dashboard"
           matchOnSubPages={false}
         />
-        { /*
-        <NavBarItem
-          label="Phishing-Simulation"
-          iconBaseName="MailWarning"
-          href="/dashboard/phishing-simulation"
-        />
-        */ }
-        { /*
-        <NavBarItem
-          label="Leaderboard"
-          iconBaseName="Trophy"
-          href="/dashboard/leaderboard"
-        />
-        */ }
         <NavBarItem
           label="Online-Kurse"
           iconBaseName="Lightbulb"
@@ -42,10 +33,10 @@ export default function NavBar() {
           href="/dashboard/exams"
         />
       </div>
-      <div className={NavBarStyles.NavBar__items}>
-        <button className={NavBarStyles.NavBar__item} onClick={onLogout}>
+      <div className={NavBarStyles.NavBar__Items}>
+        <button className={`${NavBarStyles.NavBar__Item} ${styles.focusIndicator}`} onClick={onLogout}>
           <FluentIcons.SignOut24Regular />
-          <span className={NavBarStyles.NavBar__itemLabel}>Abmelden</span>
+          <span className={NavBarStyles.NavBar__ItemLabel}>Abmelden</span>
         </button>
       </div>
     </div>
@@ -64,12 +55,6 @@ type NavBarItemProps = {
   matchOnSubPages?: boolean
 };
 
-const useStyles = makeStyles({
-  focusIndicator: createFocusOutlineStyle({
-    selector: 'focus-within'
-  })
-});
-
 function NavBarItem({ href, label, iconBaseName, matchOnSubPages = true }: NavBarItemProps) {
   const iconKey = `${iconBaseName}24Regular` as Regular24Keys;
   const iconKeyActive = `${iconBaseName}24Filled` as Filled24Keys;
@@ -82,7 +67,7 @@ function NavBarItem({ href, label, iconBaseName, matchOnSubPages = true }: NavBa
     <NavLink
       to={href}
       end={!matchOnSubPages}
-      className={`${NavBarStyles.NavBar__item} ${styles.focusIndicator}`}
+      className={`${NavBarStyles.NavBar__Item} ${styles.focusIndicator}`}
     >
       {({ isActive }) => (
         <>
@@ -91,7 +76,7 @@ function NavBarItem({ href, label, iconBaseName, matchOnSubPages = true }: NavBa
           ) : (
             <IconComponent />
           )}
-          <span className={NavBarStyles.NavBar__itemLabel}>{label}</span>
+          <span className={NavBarStyles.NavBar__ItemLabel}>{label}</span>
         </>
       )}
     </NavLink>

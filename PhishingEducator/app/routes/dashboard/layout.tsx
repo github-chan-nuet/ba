@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
 import UserAvatar from "@components/(Dashboard)/UserAvatar";
 import Breadcrumbs from "@components/(Dashboard)/Breadcrumbs";
-import NavBar from "@components/NavBar";
+import NavBar from "@components/(Dashboard)/NavBar";
 
 import DashboardStyles from '@styles/Dashboard.module.scss';
 
