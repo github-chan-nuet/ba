@@ -5,6 +5,7 @@ import (
 	"github.com/google/uuid"
 	"math"
 	. "phishing_backend/internal/domain_model"
+	"phishing_backend/internal/domain_model/utils"
 	"phishing_backend/internal/domain_services/interfaces/repositories"
 	"time"
 )
@@ -89,15 +90,15 @@ func (e *ExamCompletionServiceImpl) createUserAndActualAnswer(exam *Exam, qComps
 	qIdMap := make(map[uuid.UUID]userAndActualAnswer, len(exam.Questions))
 	// fill correct answers and total answers
 	for _, question := range exam.Questions {
-		correctAs := make(UuidSet)
+		correctAs := utils.NewSet[uuid.UUID]()
 		for _, answer := range question.Answers {
 			if answer.IsCorrect {
-				correctAs[answer.ID] = struct{}{}
+				correctAs.Add(answer.ID)
 			}
 		}
 		qIdMap[question.ID] = userAndActualAnswer{
 			totalAnswers:   len(question.Answers),
-			correctAnswers: correctAs,
+			correctAnswers: *correctAs,
 		}
 	}
 	// fill user answers
@@ -107,7 +108,7 @@ func (e *ExamCompletionServiceImpl) createUserAndActualAnswer(exam *Exam, qComps
 			return nil, ErrQuestionNotExisting
 		}
 		q := qIdMap[qComp.QuestionId]
-		q.userAnswers = toMap(&qComp.Answers)
+		q.userAnswers = toSet(&qComp.Answers)
 		qIdMap[qComp.QuestionId] = q
 	}
 	responses := make([]userAndActualAnswer, len(exam.Questions))
@@ -119,20 +120,18 @@ func (e *ExamCompletionServiceImpl) createUserAndActualAnswer(exam *Exam, qComps
 	return &responses, nil
 }
 
-func toMap[V comparable](array *[]V) map[V]struct{} {
-	m := make(map[V]struct{}, len(*array))
+func toSet[V comparable](array *[]V) utils.Set[V] {
+	s := utils.NewSet[V]()
 	for _, v := range *array {
-		m[v] = struct{}{}
+		s.Add(v)
 	}
-	return m
+	return *s
 }
-
-type UuidSet map[uuid.UUID]struct{}
 
 type userAndActualAnswer struct {
 	totalAnswers   int
-	correctAnswers UuidSet
-	userAnswers    UuidSet
+	correctAnswers utils.Set[uuid.UUID]
+	userAnswers    utils.Set[uuid.UUID]
 }
 
 // A: set of answers the user thinks are correct
@@ -140,17 +139,7 @@ type userAndActualAnswer struct {
 // ex: A={1,4,5}, B={1,3} -> |(A - B) U (B - A)| = |{4,5} U {3}| = |{3,4,5}| = 3
 func (u *userAndActualAnswer) getNumberOfWrongOrMissingAnswers() int {
 	wrong := 0
-	// B - A
-	for val := range u.correctAnswers {
-		if _, exists := u.userAnswers[val]; !exists {
-			wrong++
-		}
-	}
-	// A - B
-	for val := range u.userAnswers {
-		if _, exists := u.correctAnswers[val]; !exists {
-			wrong++
-		}
-	}
+	wrong += u.correctAnswers.Difference(&u.userAnswers).Size()
+	wrong += u.userAnswers.Difference(&u.correctAnswers).Size()
 	return wrong
 }

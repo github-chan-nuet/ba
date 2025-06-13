@@ -32,3 +32,22 @@ func (s *Set[T]) Union(other *Set[T]) *Set[T] {
 	}
 	return result
 }
+
+func (s *Set[T]) Contains(value T) bool {
+	_, found := s.elements[value]
+	return found
+}
+
+func (s *Set[T]) Size() int {
+	return len(s.elements)
+}
+
+func (s *Set[T]) Difference(other *Set[T]) *Set[T] {
+	result := NewSet[T]()
+	for key := range s.elements {
+		if !other.Contains(key) {
+			result.Add(key)
+		}
+	}
+	return result
+}
