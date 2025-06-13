@@ -19,7 +19,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 /**
- * todo
+ * Creates a user
  */
 export const createUser = <ThrowOnError extends boolean = false>(options?: Options<CreateUserData, ThrowOnError>) => {
     return (options?.client ?? _heyApiClient).post<CreateUserResponse, CreateUserError, ThrowOnError>({
@@ -47,7 +47,7 @@ export const loginAndReturnJwtToken = <ThrowOnError extends boolean = false>(opt
 };
 
 /**
- * todo
+ * Gets details about a user
  */
 export const getUser = <ThrowOnError extends boolean = false>(options: Options<GetUserData, ThrowOnError>) => {
     return (options.client ?? _heyApiClient).get<GetUserResponse, GetUserError, ThrowOnError>({
@@ -63,7 +63,7 @@ export const getUser = <ThrowOnError extends boolean = false>(options: Options<G
 };
 
 /**
- * todo
+ * Updates the given user
  */
 export const updateUser = <ThrowOnError extends boolean = false>(options: Options<UpdateUserData, ThrowOnError>) => {
     return (options.client ?? _heyApiClient).patch<unknown, UpdateUserError, ThrowOnError>({
@@ -83,8 +83,7 @@ export const updateUser = <ThrowOnError extends boolean = false>(options: Option
 };
 
 /**
- * TODO
- * TODO
+ * Get all lesson completions
  */
 export const getAllLessonCompletionsOfUser = <ThrowOnError extends boolean = false>(options?: Options<GetAllLessonCompletionsOfUserData, ThrowOnError>) => {
     return (options?.client ?? _heyApiClient).get<GetAllLessonCompletionsOfUserResponse, GetAllLessonCompletionsOfUserError, ThrowOnError>({
@@ -100,8 +99,7 @@ export const getAllLessonCompletionsOfUser = <ThrowOnError extends boolean = fal
 };
 
 /**
- * TODO
- * TODO
+ * Get a specific lesson completions
  */
 export const getLessonCompletionsOfCourseAndUser = <ThrowOnError extends boolean = false>(options: Options<GetLessonCompletionsOfCourseAndUserData, ThrowOnError>) => {
     return (options.client ?? _heyApiClient).get<GetLessonCompletionsOfCourseAndUserResponse, GetLessonCompletionsOfCourseAndUserError, ThrowOnError>({
@@ -117,8 +115,7 @@ export const getLessonCompletionsOfCourseAndUser = <ThrowOnError extends boolean
 };
 
 /**
- * TODO
- * TODO
+ * Mark a lesson as completed
  */
 export const createLessonCompletion = <ThrowOnError extends boolean = false>(options: Options<CreateLessonCompletionData, ThrowOnError>) => {
     return (options.client ?? _heyApiClient).post<CreateLessonCompletionResponse, CreateLessonCompletionError, ThrowOnError>({
@@ -138,7 +135,7 @@ export const createLessonCompletion = <ThrowOnError extends boolean = false>(opt
 };
 
 /**
- * TODO
+ * Get all exams
  * getExams
  */
 export const getExams = <ThrowOnError extends boolean = false>(options?: Options<GetExamsData, ThrowOnError>) => {
@@ -149,7 +146,7 @@ export const getExams = <ThrowOnError extends boolean = false>(options?: Options
 };
 
 /**
- * TODO
+ * Get a specific exam
  * getExam
  */
 export const getExamsByExamId = <ThrowOnError extends boolean = false>(options: Options<GetExamsByExamIdData, ThrowOnError>) => {
@@ -160,8 +157,7 @@ export const getExamsByExamId = <ThrowOnError extends boolean = false>(options: 
 };
 
 /**
- * TODO
- * TODO
+ * Get the completed exam including the solution
  */
 export const getCompletedExam = <ThrowOnError extends boolean = false>(options: Options<GetCompletedExamData, ThrowOnError>) => {
     return (options.client ?? _heyApiClient).get<GetCompletedExamResponse, GetCompletedExamError, ThrowOnError>({
@@ -177,8 +173,7 @@ export const getCompletedExam = <ThrowOnError extends boolean = false>(options: 
 };
 
 /**
- * TODO
- * TODO
+ * Complete an exam by sending all the answers.
  */
 export const completeExam = <ThrowOnError extends boolean = false>(options: Options<CompleteExamData, ThrowOnError>) => {
     return (options.client ?? _heyApiClient).post<CompleteExamResponse, CompleteExamError, ThrowOnError>({
@@ -198,8 +193,7 @@ export const completeExam = <ThrowOnError extends boolean = false>(options: Opti
 };
 
 /**
- * TODO
- * TODO
+ * Get the phishing simulation run
  */
 export const getPhishingSimulationRun = <ThrowOnError extends boolean = false>(options: Options<GetPhishingSimulationRunData, ThrowOnError>) => {
     return (options.client ?? _heyApiClient).get<GetPhishingSimulationRunResponse, GetPhishingSimulationRunError, ThrowOnError>({

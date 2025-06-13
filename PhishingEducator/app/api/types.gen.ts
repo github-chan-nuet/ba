@@ -245,7 +245,7 @@ export type GetUserError = GetUserErrors[keyof GetUserErrors];
 
 export type GetUserResponses = {
     /**
-     * todo
+     * The actual user
      */
     200: User;
 };
@@ -435,7 +435,7 @@ export type GetExamsError = GetExamsErrors[keyof GetExamsErrors];
 
 export type GetExamsResponses = {
     /**
-     * todo
+     * the exam
      */
     200: Array<Exam>;
 };
@@ -477,7 +477,7 @@ export type GetExamsByExamIdError = GetExamsByExamIdErrors[keyof GetExamsByExamI
 
 export type GetExamsByExamIdResponses = {
     /**
-     * todo
+     * An exam
      */
     200: Exam;
 };
@@ -519,7 +519,7 @@ export type GetCompletedExamError = GetCompletedExamErrors[keyof GetCompletedExa
 
 export type GetCompletedExamResponses = {
     /**
-     * todo
+     * completed exam including the solution
      */
     200: CompletedExam;
 };
@@ -561,7 +561,7 @@ export type CompleteExamError = CompleteExamErrors[keyof CompleteExamErrors];
 
 export type CompleteExamResponses = {
     /**
-     * todo
+     * The gained experience by solving the exam
      */
     200: ExperienceGain;
 };
@@ -603,7 +603,7 @@ export type GetPhishingSimulationRunError = GetPhishingSimulationRunErrors[keyof
 
 export type GetPhishingSimulationRunResponses = {
     /**
-     * TODO
+     * The phishing simulation run
      */
     200: PhishingSimulationRun;
 };
