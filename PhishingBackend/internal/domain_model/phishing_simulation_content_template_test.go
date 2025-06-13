@@ -81,8 +81,8 @@ func TestFindAllNoMatch(t *testing.T) {
 func TestGetApplicableRecognitionFeaturesSuccess(t *testing.T) {
 	// given
 	template := PhishingSimulationContentTemplate{
-		Subject: "{RecognitionFeature{Name1}}",
-		Content: "{RecognitionFeature{Name2}}",
+		Subject: "{{RecognitionFeature Name1}}",
+		Content: "{{RecognitionFeature Name2}}",
 	}
 	def1 := PhishingSimulationRecognitionFeature{Name: "Name1", IsAlwaysApplicable: false}
 	def2 := PhishingSimulationRecognitionFeature{Name: "Name2", IsAlwaysApplicable: false}
@@ -99,7 +99,7 @@ func TestGetApplicableRecognitionFeaturesSuccess(t *testing.T) {
 func TestGetApplicableRecognitionFeaturesUndefinedFeature(t *testing.T) {
 	// given
 	template := PhishingSimulationContentTemplate{
-		Content: "{RecognitionFeature{Unknown}}",
+		Content: "{{RecognitionFeature Unknown}}",
 	}
 
 	// when
@@ -116,7 +116,7 @@ func TestGetScoredCombinationsBasic(t *testing.T) {
 	categoryID := uuid.New()
 	featureID := uuid.New()
 	template := &PhishingSimulationContentTemplate{
-		Subject:           "{RecognitionFeature{Name1}}",
+		Subject:           "{{RecognitionFeature Name1}}",
 		ContentCategoryFk: categoryID,
 		ContentCategory:   &PhishingSimulationContentCategory{ID: categoryID},
 	}
@@ -163,7 +163,7 @@ func TestGetApplicableRecognitionFeaturesOnlyAlwaysApplicable(t *testing.T) {
 func TestGetApplicableRecognitionFeaturesDuplicateUsage(t *testing.T) {
 	// given
 	template := PhishingSimulationContentTemplate{
-		Content: "{RecognitionFeature{Feat}} and again {RecognitionFeature{Feat}}",
+		Content: "{{RecognitionFeature Feat}} and again {{RecognitionFeature Feat}}",
 	}
 	def := PhishingSimulationRecognitionFeature{Name: "Feat", IsAlwaysApplicable: false}
 
@@ -180,7 +180,7 @@ func TestGetScoredCombinationsNoMatchingVulnerability(t *testing.T) {
 	categoryID := uuid.New()
 	featureID := uuid.New()
 	template := &PhishingSimulationContentTemplate{
-		Subject:           "{RecognitionFeature{Feat}}",
+		Subject:           "{{RecognitionFeature Feat}}",
 		ContentCategoryFk: categoryID,
 		ContentCategory:   &PhishingSimulationContentCategory{ID: categoryID},
 	}
@@ -213,7 +213,7 @@ func TestGetScoredCombinationsArithmeticMeanFallback(t *testing.T) {
 	categoryID2 := uuid.New()
 	featureID := uuid.New()
 	template := &PhishingSimulationContentTemplate{
-		Subject:           "{RecognitionFeature{Feat}}",
+		Subject:           "{{RecognitionFeature Feat}}",
 		ContentCategoryFk: categoryID1,
 		ContentCategory:   &PhishingSimulationContentCategory{ID: categoryID1},
 	}
@@ -247,7 +247,7 @@ func TestGetScoredCombinationsLevelCorrectedToMin1(t *testing.T) {
 	categoryID := uuid.New()
 	featureID := uuid.New()
 	template := &PhishingSimulationContentTemplate{
-		Subject:           "{RecognitionFeature{Feat}}",
+		Subject:           "{{RecognitionFeature Feat}}",
 		ContentCategoryFk: categoryID,
 		ContentCategory:   &PhishingSimulationContentCategory{ID: categoryID},
 	}
