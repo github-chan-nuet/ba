@@ -21,6 +21,3 @@ certificatesResolvers:
 providers:
   file:
     filename: "/etc/traefik/traefik_dynamic.yaml"
-
-log:
-  level: DEBUG
