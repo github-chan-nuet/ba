@@ -132,7 +132,7 @@ func (template *PhishingSimulationContentTemplate) getApplicableRecognitionFeatu
 func extractRecognitionFeaturesUsed(v string) utils.Set[string] {
 	values := utils.NewSet[string]()
 
-	re := regexp.MustCompile(`\{RecognitionFeature\{(.*?)\}\}`)
+	re := regexp.MustCompile(`{{RecognitionFeature (.*?)}}`)
 	matches := re.FindAllStringSubmatch(v, -1)
 
 	for _, match := range matches {

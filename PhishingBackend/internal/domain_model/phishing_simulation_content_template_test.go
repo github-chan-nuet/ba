@@ -1,9 +1,10 @@
 package domain_model
 
 import (
+	"testing"
+
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestGetPowerSet(t *testing.T) {
@@ -20,7 +21,7 @@ func TestGetPowerSet(t *testing.T) {
 
 func TestExtractRecognitionFeaturesUsed(t *testing.T) {
 	// given
-	input := "Lorem Ipsum {RecognitionFeature{Voice}} {RecognitionFeature{A}} {RecognitionFeature{Aa}}"
+	input := "Lorem Ipsum {{RecognitionFeature Voice}} {{RecognitionFeature A}} {{EducationalLink Arg}} {{RecognitionFeature Aa}}"
 
 	// when
 	s := extractRecognitionFeaturesUsed(input)
