@@ -3,7 +3,10 @@ import { index, layout, route, type RouteConfig } from "@react-router/dev/routes
 export default [
   layout("routes/(Marketing)/layout.tsx", [
     index("routes/(Marketing)/index.tsx"),
-    route("phishing-simulation", "routes/(Marketing)/phishing-simulation.tsx")
+    route("phishing-simulation", "routes/(Marketing)/phishing-simulation.tsx"),
+
+    // Catch-all route (404)
+    route("*", "routes/(Marketing)/not-found.tsx")
   ]),
   layout("routes/(Utils)/protected.tsx", [
     route("dashboard", "routes/dashboard/layout.tsx", [
