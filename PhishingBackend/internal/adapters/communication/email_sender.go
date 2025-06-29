@@ -2,12 +2,16 @@ package communication
 
 import (
 	"bytes"
+	"crypto/rand"
+	"encoding/base64"
+	"fmt"
 	"log/slog"
 	"mime"
 	"mime/quotedprintable"
 	"net/smtp"
 	"phishing_backend/internal/domain_model"
 	"phishing_backend/internal/domain_services/interfaces/email"
+	"time"
 )
 
 var _ email.EmailSender = (*EmailSenderImpl)(nil)
@@ -27,11 +31,31 @@ func (e *EmailSenderImpl) Send(email *domain_model.Email) error {
 
 	to := []string{email.Recipient}
 
+	if email.Sender == "" {
+		email.Sender = "Securaware <info@securaware.ch>"
+	}
+
+	// Generate Date header in RFC1123Z format (compatible with RFC5322)
+	date := time.Now().UTC().Format(time.RFC1123Z)
+
+	// Generate a Message-ID header
+	// Format: <timestamp.randomString@securaware.ch>
+	timestamp := time.Now().UnixNano()
+	randomPart := make([]byte, 8)
+	if _, err := rand.Read(randomPart); err != nil {
+		// fallback if rand fails
+		randomPart = []byte("fallback")
+	}
+	randomStr := base64.RawURLEncoding.EncodeToString(randomPart)
+	messageID := fmt.Sprintf("<%d.%s@securaware.ch>", timestamp, randomStr)
+
 	encodedSubject := mime.QEncoding.Encode("utf-8", email.Subject)
 
 	msg.WriteString("From: " + email.Sender + newLine)
 	msg.WriteString("To: " + email.Recipient + newLine)
 	msg.WriteString("Subject: " + encodedSubject + newLine)
+	msg.WriteString("Date: " + date + newLine)
+	msg.WriteString("Message-ID: " + messageID + newLine)
 	msg.WriteString("MIME-Version: 1.0" + newLine)
 	msg.WriteString("Content-Type: text/html; charset=utf-8" + newLine)
 	msg.WriteString("Content-Transfer-Encoding: quoted-printable" + newLine)
