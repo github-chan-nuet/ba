@@ -25,7 +25,88 @@ BEGIN
 
   -- Insert Content Templates
   INSERT INTO phishing_simulation_content_template (id, "subject", content, content_category_fk)
-  VALUES (template1_id, 'Verdächtige Aktivitäten in deinem E-Banking-Zugang erkannt!', '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /></head><body>Hallo,<br /><br />Wir haben verdächtige Aktivitäten in Ihrem E-Banking-Konto festgestellt. Klicken Sie {{EducationLink hier}} um Ihr Konto zu schützen!</body></html>', cc_id);
+  VALUES (
+    template1_id,
+    'Verdächtige Aktivitäten in deinem E-Banking-Zugang erkannt!',
+    $html$
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bank of Switzerland - Wichtiger Sicherheitshinweis</title>
+  <style>
+    body {
+      margin:0;
+      padding:0;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333333;
+    }
+    .container {
+      width:100%;
+      padding:20px 0;
+    }
+    .content {
+      max-width:600px;
+      margin:0 auto;
+      background-color:#ffffff;
+      border:1px solid #dddddd;
+      border-radius:4px;
+      padding:20px;
+    }
+    .header {
+      text-align:center;
+      padding-bottom:20px;
+    }
+    .logo {
+      max-width:150px;
+      margin-bottom:10px;
+    }
+    .button {
+      display:inline-block;
+      padding:12px 24px;
+      margin-top:20px;
+      background-color:#0056b3;
+      color:#ffffff;
+      text-decoration:none;
+      border-radius:4px;
+      font-weight:bold;
+    }
+    .footer {
+      font-size:12px;
+      color:#888888;
+      text-align:center;
+      margin-top:20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <div class="header">
+        <img src="https://securaware.ch/logos/bank-of-switzerland.png" alt="Bank of Switzerland" class="logo">
+      </div>
+      <p>Sehr geehrte Kundin, sehr geehrter Kunde,</p>
+      <p>wir haben ungewöhnliche Aktivitäten in Ihrem Online-Banking-Konto festgestellt. Aus Sicherheitsgründen wurde der Zugriff vorübergehend eingeschränkt.</p>
+      <p>Um Ihr Konto zu überprüfen und den vollen Zugriff wiederherzustellen, bestätigen Sie bitte Ihre Identität über den untenstehenden Link:</p>
+      <p style="text-align:center;">
+        {{EducationLink Verifizieren}}
+      </p>
+      <p>Falls Sie diese Aktivität nicht autorisiert haben, kontaktieren Sie uns bitte umgehend über den Kundenservice.</p>
+      <p>Wir danken Ihnen für Ihre Aufmerksamkeit und Ihr Verständnis.</p>
+      <p>Freundliche Grüße,<br>
+      Ihr Sicherheitsteam der Bank of Switzerland</p>
+      <div class="footer">
+        Dies ist eine automatisch generierte Nachricht. Bitte antworten Sie nicht auf diese E-Mail.
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+    $html$,
+    cc_id
+  );
 
 END
 $$;
