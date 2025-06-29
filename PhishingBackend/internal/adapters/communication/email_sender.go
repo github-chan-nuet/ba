@@ -24,6 +24,9 @@ type EmailSenderImpl struct {
 	SmtpAddr   string
 	SmtpHost   string
 	SendMailFn func(addr string, a smtp.Auth, from string, to []string, msg []byte) error
+
+	NowFn   func() time.Time // inject clock (for testing purposes)
+	MsgIDFn func() string    // inject message-id generator (for testing purposes)
 }
 
 func (e *EmailSenderImpl) Send(email *domain_model.Email) error {
@@ -36,18 +39,27 @@ func (e *EmailSenderImpl) Send(email *domain_model.Email) error {
 	}
 
 	// Generate Date header in RFC1123Z format (compatible with RFC5322)
-	date := time.Now().UTC().Format(time.RFC1123Z)
+	now := time.Now()
+	if e.NowFn != nil {
+		now = e.NowFn()
+	}
+	date := now.UTC().Format(time.RFC1123Z)
 
 	// Generate a Message-ID header
 	// Format: <timestamp.randomString@securaware.ch>
-	timestamp := time.Now().UnixNano()
-	randomPart := make([]byte, 8)
-	if _, err := rand.Read(randomPart); err != nil {
-		// fallback if rand fails
-		randomPart = []byte("fallback")
+	var messageID string
+	if e.MsgIDFn != nil {
+		messageID = e.MsgIDFn()
+	} else {
+		timestamp := now.UnixNano()
+		randomPart := make([]byte, 8)
+		if _, err := rand.Read(randomPart); err != nil {
+			// fallback if rand fails
+			randomPart = []byte("fallback")
+		}
+		randomStr := base64.RawURLEncoding.EncodeToString(randomPart)
+		messageID = fmt.Sprintf("<%d.%s@securaware.ch>", timestamp, randomStr)
 	}
-	randomStr := base64.RawURLEncoding.EncodeToString(randomPart)
-	messageID := fmt.Sprintf("<%d.%s@securaware.ch>", timestamp, randomStr)
 
 	encodedSubject := mime.QEncoding.Encode("utf-8", email.Subject)
 
