@@ -76,9 +76,9 @@ func (template *PhishingSimulationContentTemplate) GetScoredCombinations(
 						level = int(math.Round(float64(arithMean)))
 					}
 				}
-				if level < 1 {
-					level = 1
-				}
+			}
+			if level < 1 {
+				level = 1
 			}
 
 			if feature.RecognitionFeatureValues != nil && len(*feature.RecognitionFeatureValues) > 0 {
