@@ -1,0 +1,21 @@
+@use '@styles/definitions' as *;
+@use '@styles/mixins' as *;
+@use '@styles/typography' as *;
+
+.MailDetailMock__Shadow {
+  margin-top: 1rem;
+  @include apply-text(sm);
+
+  a {
+    color: blue;
+    text-decoration: underline;
+  }
+
+  span[data-feature-value-id] {
+    display: inline-block;
+    padding: 4px var(--spacingHorizontalS);
+    margin: 3px;
+    border-radius: var(--borderRadiusMedium);
+    border: var(--strokeWidthThin) solid var(--colorNeutralStroke1);
+  }
+}

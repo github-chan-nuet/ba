@@ -72,23 +72,6 @@
   &__MailSenderName {
     color: var(--colorBrandForeground1);
   }
-  &__MailBody {
-    margin-top: 1rem;
-    @include apply-text(sm);
-
-    a {
-      color: blue;
-      text-decoration: underline;
-    }
-
-    span[data-feature-value-id] {
-      display: inline-block;
-      padding: 4px var(--spacingHorizontalS);
-      margin: 3px;
-      border-radius: var(--borderRadiusMedium);
-      border: var(--strokeWidthThin) solid var(--colorNeutralStroke1);
-    }
-  }
 
   &__Popover {
     max-width: 400px;

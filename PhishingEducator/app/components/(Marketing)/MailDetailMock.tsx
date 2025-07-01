@@ -1,3 +1,4 @@
+import ShadowDOM from 'react-shadow';
 import parse, { domToReact } from 'html-react-parser';
 import type { DOMNode } from 'html-dom-parser';
 import type { PhishingSimulationRecognitionFeatureValue } from '@api/index';
@@ -5,6 +6,7 @@ import { Avatar, Card, Popover, PopoverSurface, PopoverTrigger } from '@fluentui
 import { DismissRegular, SquareMultipleRegular, SubtractRegular } from '@fluentui/react-icons';
 
 import MailDetailMockStyles from './MailDetailMock.module.scss';
+import MailDetailMockShadowStyles from './MailDetailMock.shadow.scss?inline';
 
 type MailDetailMockProps = {
   sentAt: string;
@@ -68,7 +70,6 @@ export default function MailDetailMock({ sentAt, sender, subject, content, recog
           </div>
         </div>
         <div
-          className={MailDetailMockStyles.MailDetailMock__MailBody}
           onClickCapture={(event) => {
             event.preventDefault();
             event.stopPropagation();
@@ -92,7 +93,7 @@ type HTMLWithPopoversProps = {
 };
 
 function HTMLWithPopovers({ htmlString, popoverValueDict }: HTMLWithPopoversProps) {
-  const bodyOnlyHTML = extractBodyHTML(htmlString);
+  const extractedParts = extractPartsFromHTML(htmlString);
 
   const options = {
     replace: (domNode: DOMNode) => {
@@ -123,11 +124,26 @@ function HTMLWithPopovers({ htmlString, popoverValueDict }: HTMLWithPopoversProp
     },
   };
 
-  return <div>{ parse(bodyOnlyHTML, options) }</div>
+  return (
+    <ShadowDOM.div>
+      <style>
+        {MailDetailMockShadowStyles}
+        {extractedParts.styles}
+      </style>
+      <div className="MailDetailMock__Shadow">
+        { parse(extractedParts.body, options) }
+      </div>
+    </ShadowDOM.div>
+  );
 };
 
-function extractBodyHTML(html: string): string {
+function extractPartsFromHTML(html: string): { body: string, styles: string } {
   const parser = new DOMParser();
   const doc = parser.parseFromString(html, 'text/html');
-  return doc.body.innerHTML;
+  const styleTags = doc.querySelectorAll('style');
+  let styles = '';
+  styleTags.forEach(styleTag => {
+    styles += styleTag.textContent;
+  });
+  return { body: doc.body.innerHTML, styles };
 }
