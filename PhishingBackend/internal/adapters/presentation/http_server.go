@@ -56,6 +56,10 @@ func newSecurawareEndpointHandler(d *adapters.Dependencies) http.Handler {
 	// health
 	routes.Add("/api/health", http.MethodGet, controllers.GetHealth)
 
+	// monitoring
+	controllers.SetupPrometheus()
+	routes.Add("/metrics", http.MethodGet, controllers.GetMetrics)
+
 	// lesson completions
 	routes.Add("/api/courses/{courseId}/completions", http.MethodGet, lessonCompletionController.GetLessonCompletionsOfCourseAndUser)
 	routes.Add("/api/courses/{courseId}/completions", http.MethodPost, lessonCompletionController.CreateLessonCompletion)
